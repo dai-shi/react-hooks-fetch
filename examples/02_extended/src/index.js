@@ -12,7 +12,7 @@ const Err = ({ error }) => (
 
 const Loading = () => <span>Loading...</span>;
 
-const DisplayRemoteData = () => {
+const PostRemoteData = () => {
   const opts = useMemo(() => ({
     method: 'POST',
     body: JSON.stringify({
@@ -27,14 +27,14 @@ const DisplayRemoteData = () => {
   if (loading) return <Loading />;
   return (
     <span>
-      RemoteData:
+      Result:
       {data}
     </span>
   );
 };
 
 const App = () => (
-  <DisplayRemoteData />
+  <PostRemoteData />
 );
 
 ReactDOM.render(<App />, document.getElementById('app'));
