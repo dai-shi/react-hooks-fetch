@@ -3,7 +3,7 @@ react-hooks-fetch
 
 [![Build Status](https://travis-ci.com/dai-shi/react-hooks-fetch.svg?branch=master)](https://travis-ci.com/dai-shi/react-hooks-fetch)
 [![npm version](https://badge.fury.io/js/react-hooks-fetch.svg)](https://badge.fury.io/js/react-hooks-fetch)
-![bundle size](https://badgen.net/bundlephobia/minzip/react-hooks-fetch)
+[![bundle size](https://badgen.net/bundlephobia/minzip/react-hooks-fetch)](https://bundlephobia.com/result?p=react-hooks-fetch)
 
 A React custom hook for Fetch API
 
