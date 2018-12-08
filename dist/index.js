@@ -1,11 +1,15 @@
 "use strict";
 
-require("core-js/modules/es6.object.define-property");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.useFetch = void 0;
+
+require("core-js/modules/es6.array.for-each");
+
+require("core-js/modules/es6.array.filter");
+
+require("core-js/modules/es6.object.define-property");
 
 require("core-js/modules/es6.promise");
 
@@ -26,6 +30,10 @@ require("core-js/modules/es6.array.is-array");
 require("regenerator-runtime/runtime");
 
 var _react = require("react");
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -63,6 +71,11 @@ var useFetch = function useFetch(input) {
       data = _useState6[0],
       setData = _useState6[1];
 
+  var controller = (0, _react.useRef)(new AbortController());
+  var abort = (0, _react.useCallback)(function () {
+    return controller.current.abort();
+  });
+
   var _opts$readBody = opts.readBody,
       readBody = _opts$readBody === void 0 ? function (body) {
     return body.json();
@@ -81,7 +94,9 @@ var useFetch = function useFetch(input) {
               setLoading(true);
               _context.prev = 1;
               _context.next = 4;
-              return fetch(input, init);
+              return fetch(input, _objectSpread({
+                signal: controller.current.signal
+              }, init));
 
             case 4:
               response = _context.sent;
@@ -126,7 +141,8 @@ var useFetch = function useFetch(input) {
   return {
     error: error,
     loading: loading,
-    data: data
+    data: data,
+    abort: abort
   };
 };
 
