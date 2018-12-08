@@ -8,6 +8,7 @@ export type UseFetch<Data> = (input: string | Request, opts?: Opts<Data>) => {
   error: Error | void,
   loading: boolean,
   data: Data | void,
+  abort: () => void,
 };
 
 // tslint:disable-next-line:no-any
