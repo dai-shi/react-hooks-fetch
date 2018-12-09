@@ -88,60 +88,75 @@ var useFetch = function useFetch(input) {
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee() {
-      var response, body;
+      var controller, response, body;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              controller = new AbortController();
+              abortController.current = controller;
+              setError(null);
               setLoading(true);
-              abort();
-              abortController.current = new AbortController();
-              _context.prev = 3;
-              _context.next = 6;
+              setData(null);
+              _context.prev = 5;
+              _context.next = 8;
               return fetch(input, _objectSpread({
                 signal: abortController.current.signal
               }, init));
 
-            case 6:
+            case 8:
               response = _context.sent;
 
               if (!response.ok) {
-                _context.next = 14;
+                _context.next = 16;
                 break;
               }
 
-              _context.next = 10;
+              _context.next = 12;
               return readBody(response);
 
-            case 10:
+            case 12:
               body = _context.sent;
-              setData(body);
-              _context.next = 15;
+
+              if (abortController.current === controller) {
+                setData(body);
+                setLoading(false);
+                abortController.current = null;
+              }
+
+              _context.next = 17;
               break;
 
-            case 14:
-              setError(new Error(response.statusText));
-
-            case 15:
-              _context.next = 20;
-              break;
+            case 16:
+              if (abortController.current === controller) {
+                setError(new Error(response.statusText));
+                setLoading(false);
+                abortController.current = null;
+              }
 
             case 17:
-              _context.prev = 17;
-              _context.t0 = _context["catch"](3);
-              setError(_context.t0);
+              _context.next = 22;
+              break;
 
-            case 20:
-              abortController.current = null;
-              setLoading(false);
+            case 19:
+              _context.prev = 19;
+              _context.t0 = _context["catch"](5);
+
+              if (abortController.current === controller) {
+                setError(_context.t0);
+                setLoading(false);
+                abortController.current = null;
+              }
 
             case 22:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[3, 17]]);
+      }, _callee, this, [[5, 19]]);
     }))();
+
+    return abort;
   }, [input, opts]);
   return {
     error: error,
