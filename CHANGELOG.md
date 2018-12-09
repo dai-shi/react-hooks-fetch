@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Fix unmount warning
 
 ## [0.4.0] - 2018-12-09
 ### Changed

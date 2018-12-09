@@ -53,7 +53,13 @@ export const useFetch = (input, opts = defaultOpts) => {
         }
       }
     })();
-    return abort;
+    const cleanup = () => {
+      if (abortController.current) {
+        abortController.current.abort();
+        abortController.current = null;
+      }
+    };
+    return cleanup;
   }, [input, opts]);
   return {
     error,
