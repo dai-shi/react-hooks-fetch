@@ -11,8 +11,12 @@ export const useFetch = (input, opts = defaultOpts) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
-  const controller = useRef(new AbortController());
-  const abort = useCallback(() => controller.current.abort(), []);
+  const abortController = useRef(null);
+  const abort = useCallback(() => {
+    if (abortController.current) {
+      abortController.current.abort();
+    }
+  }, []);
   const {
     readBody = body => body.json(),
     ...init
@@ -20,9 +24,11 @@ export const useFetch = (input, opts = defaultOpts) => {
   useEffect(() => {
     (async () => {
       setLoading(true);
+      abort();
+      abortController.current = new AbortController();
       try {
         const response = await fetch(input, {
-          signal: controller.current.signal,
+          signal: abortController.current.signal,
           ...init,
         });
         if (response.ok) {
@@ -34,6 +40,7 @@ export const useFetch = (input, opts = defaultOpts) => {
       } catch (e) {
         setError(e);
       }
+      abortController.current = null;
       setLoading(false);
     })();
   }, [input, opts]);

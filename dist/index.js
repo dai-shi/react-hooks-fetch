@@ -71,9 +71,11 @@ var useFetch = function useFetch(input) {
       data = _useState6[0],
       setData = _useState6[1];
 
-  var controller = (0, _react.useRef)(new AbortController());
+  var abortController = (0, _react.useRef)(null);
   var abort = (0, _react.useCallback)(function () {
-    return controller.current.abort();
+    if (abortController.current) {
+      abortController.current.abort();
+    }
   }, []);
 
   var _opts$readBody = opts.readBody,
@@ -92,50 +94,53 @@ var useFetch = function useFetch(input) {
           switch (_context.prev = _context.next) {
             case 0:
               setLoading(true);
-              _context.prev = 1;
-              _context.next = 4;
+              abort();
+              abortController.current = new AbortController();
+              _context.prev = 3;
+              _context.next = 6;
               return fetch(input, _objectSpread({
-                signal: controller.current.signal
+                signal: abortController.current.signal
               }, init));
 
-            case 4:
+            case 6:
               response = _context.sent;
 
               if (!response.ok) {
-                _context.next = 12;
+                _context.next = 14;
                 break;
               }
 
-              _context.next = 8;
+              _context.next = 10;
               return readBody(response);
 
-            case 8:
+            case 10:
               body = _context.sent;
               setData(body);
-              _context.next = 13;
+              _context.next = 15;
               break;
 
-            case 12:
+            case 14:
               setError(new Error(response.statusText));
 
-            case 13:
-              _context.next = 18;
+            case 15:
+              _context.next = 20;
               break;
 
-            case 15:
-              _context.prev = 15;
-              _context.t0 = _context["catch"](1);
+            case 17:
+              _context.prev = 17;
+              _context.t0 = _context["catch"](3);
               setError(_context.t0);
 
-            case 18:
+            case 20:
+              abortController.current = null;
               setLoading(false);
 
-            case 19:
+            case 22:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[1, 15]]);
+      }, _callee, this, [[3, 17]]);
     }))();
   }, [input, opts]);
   return {
