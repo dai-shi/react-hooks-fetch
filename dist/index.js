@@ -156,7 +156,14 @@ var useFetch = function useFetch(input) {
       }, _callee, this, [[5, 19]]);
     }))();
 
-    return abort;
+    var cleanup = function cleanup() {
+      if (abortController.current) {
+        abortController.current.abort();
+        abortController.current = null;
+      }
+    };
+
+    return cleanup;
   }, [input, opts]);
   return {
     error: error,
