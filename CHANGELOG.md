@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Fix type definition
 
 ## [0.3.0] - 2018-12-09
 ### Changed
