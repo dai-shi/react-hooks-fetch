@@ -23,10 +23,10 @@ const DisplayRemoteData: React.FC<{ id: string }> = ({ id }) => {
   if (error) return <Err error={error} />;
   if (loading) return <Loading abort={abort} />;
   return (
-    <span>
-    RemoteData:
-    {data.title}
-    </span>
+    <div>
+      RemoteData:
+      {data.title}
+    </div>
   );
 };
 

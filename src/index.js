@@ -23,9 +23,11 @@ export const useFetch = (input, opts = defaultOpts) => {
   } = opts;
   useEffect(() => {
     (async () => {
+      const controller = new AbortController();
+      abortController.current = controller;
+      setError(null);
       setLoading(true);
-      abort();
-      abortController.current = new AbortController();
+      setData(null);
       try {
         const response = await fetch(input, {
           signal: abortController.current.signal,
@@ -33,16 +35,25 @@ export const useFetch = (input, opts = defaultOpts) => {
         });
         if (response.ok) {
           const body = await readBody(response);
-          setData(body);
-        } else {
+          if (abortController.current === controller) {
+            setData(body);
+            setLoading(false);
+            abortController.current = null;
+          }
+        } else if (abortController.current === controller) {
           setError(new Error(response.statusText));
+          setLoading(false);
+          abortController.current = null;
         }
       } catch (e) {
-        setError(e);
+        if (abortController.current === controller) {
+          setError(e);
+          setLoading(false);
+          abortController.current = null;
+        }
       }
-      abortController.current = null;
-      setLoading(false);
     })();
+    return abort;
   }, [input, opts]);
   return {
     error,

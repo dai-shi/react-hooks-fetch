@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Better abort support
 
 ## [0.2.0] - 2018-12-08
 ### Added
