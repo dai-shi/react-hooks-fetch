@@ -74,7 +74,7 @@ var useFetch = function useFetch(input) {
   var controller = (0, _react.useRef)(new AbortController());
   var abort = (0, _react.useCallback)(function () {
     return controller.current.abort();
-  });
+  }, []);
 
   var _opts$readBody = opts.readBody,
       readBody = _opts$readBody === void 0 ? function (body) {

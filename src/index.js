@@ -12,7 +12,7 @@ export const useFetch = (input, opts = defaultOpts) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   const controller = useRef(new AbortController());
-  const abort = useCallback(() => controller.current.abort());
+  const abort = useCallback(() => controller.current.abort(), []);
   const {
     readBody = body => body.json(),
     ...init
