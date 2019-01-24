@@ -3,12 +3,7 @@ import ReactDOM from 'react-dom';
 
 import { useFetch } from 'react-hooks-fetch';
 
-const Err = ({ error }) => (
-  <span>
-    Error:
-    {error.message}
-  </span>
-);
+const Err = ({ error }) => <span>Error:{error.message}</span>;
 
 const Loading = () => <span>Loading...</span>;
 

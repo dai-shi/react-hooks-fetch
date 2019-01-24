@@ -3,13 +3,7 @@ import * as React from 'react';
 import { useFetch } from 'react-hooks-fetch';
 
 const Err: React.SFC<{ error: Error }> = ({ error }) => (
-  <span>
-    Error:
-    [
-    {error.name}
-    ]
-    {error.message}
-  </span>
+  <span>Error:[{error.name}]{error.message}</span>
 );
 
 const Loading: React.SFC<{ abort: () => void }> = ({ abort }) => (
@@ -29,12 +23,7 @@ const DisplayRemoteData: React.FC<{ id: string }> = ({ id }) => {
   } = useFetch(url);
   if (error) return <Err error={error} />;
   if (loading) return <Loading abort={abort} />;
-  return (
-    <div>
-      RemoteData:
-      {data.title}
-    </div>
-  );
+  return <div>RemoteData:{data.title}</div>;
 };
 
 export default DisplayRemoteData;
