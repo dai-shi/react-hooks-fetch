@@ -23,7 +23,8 @@
     "examples:minimal": "DIR=01_minimal EXT=js webpack-dev-server",
     "examples:extended": "DIR=02_extended EXT=js webpack-dev-server",
     "examples:typescript": "DIR=03_typescript webpack-dev-server",
-    "examples:abort": "DIR=04_abort webpack-dev-server"
+    "examples:abort": "DIR=04_abort webpack-dev-server",
+    "examples:headers": "DIR=05_headers webpack-dev-server"
   },
   "keywords": [
     "react",
