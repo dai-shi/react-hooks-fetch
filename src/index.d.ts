@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Body, Request, RequestInit } from 'node-fetch';
 
 type Opts<Data> = RequestInit & {

@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic spec should create a component 1`] = `
+<div>
+  <span>
+    Loading...
+  </span>
+</div>
+`;
+
+exports[`basic spec should create a component 2`] = `
+<div>
+  <span>
+    RemoteData: 
+    test data
+  </span>
+</div>
+`;
