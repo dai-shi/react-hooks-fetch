@@ -1,7 +1,19 @@
-import React, { useMemo } from 'react';
+import React, { useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import { useFetch } from 'react-hooks-fetch';
+
+// this can be too naive
+const useMemoSafe = (create, inputs) => {
+  const memoized = useRef();
+  const prevInputs = useRef([]);
+  if (prevInputs.current.length !== inputs.length
+    || prevInputs.current.some((x, i) => x !== inputs[i])) {
+    prevInputs.current = inputs;
+    memoized.current = create();
+  }
+  return memoized.current;
+};
 
 const Err = ({ error }) => <span>Error:{error.message}</span>;
 
@@ -10,8 +22,7 @@ const Loading = () => <span>Loading...</span>;
 const readBody = body => body.text();
 
 const PostRemoteData = ({ userId, title, body }) => {
-  // FIXME we need useSafeMemo or alike
-  const opts = useMemo(() => ({
+  const opts = useMemoSafe(() => ({
     method: 'POST',
     body: JSON.stringify({
       userId,
