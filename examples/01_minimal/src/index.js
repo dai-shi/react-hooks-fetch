@@ -11,12 +11,7 @@ const DisplayRemoteData = () => {
   const { error, loading, data } = useFetch('https://jsonplaceholder.typicode.com/posts/1');
   if (error) return <Err error={error} />;
   if (loading) return <Loading />;
-  return (
-    <span>
-      RemoteData:
-      {data.title}
-    </span>
-  );
+  return <span>RemoteData:{data.title}</span>;
 };
 
 const App = () => (

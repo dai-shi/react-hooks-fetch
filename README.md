@@ -26,7 +26,7 @@ const DisplayRemoteData = () => {
   if (error) return <span>Error: {error.message}</span>;
   if (loading) return <span>Loading...</span>;
   return (
-    <span>RemoteData: {data}</span>
+    <span>RemoteData:{data}</span>
   );
 };
 

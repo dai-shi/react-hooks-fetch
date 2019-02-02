@@ -11,7 +11,7 @@ exports[`basic spec should create a component 1`] = `
 exports[`basic spec should create a component 2`] = `
 <div>
   <span>
-    RemoteData: 
+    RemoteData:
     test data
   </span>
 </div>
