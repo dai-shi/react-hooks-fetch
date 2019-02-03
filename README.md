@@ -7,6 +7,16 @@ react-hooks-fetch
 
 A React custom hook for Fetch API
 
+History
+-------
+
+This library has been changed over time.
+Here's the list of various implementations.
+
+- [Initial version](https://github.com/dai-shi/react-hooks-fetch/tree/dab13e04b81b92ab41a06705c837f8ad87fb9608)
+- [AbortController support](https://github.com/dai-shi/react-hooks-fetch/tree/767cba39180c88be2960061028004e32aaea6e4b)
+- [Suspense support](https://github.com/dai-shi/react-hooks-fetch/tree/e7027c0042df35bee029849c3fea84f9bdfb1b55)
+
 Install
 -------
 
