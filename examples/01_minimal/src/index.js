@@ -7,8 +7,10 @@ const Err = ({ error }) => <span>Error:{error.message}</span>;
 
 const Loading = () => <span>Loading...</span>;
 
+const opts = { noSuspense: true };
+
 const DisplayRemoteData = () => {
-  const { error, loading, data } = useFetch('https://jsonplaceholder.typicode.com/posts/1');
+  const { error, loading, data } = useFetch('https://jsonplaceholder.typicode.com/posts/1', opts);
   if (error) return <Err error={error} />;
   if (loading) return <Loading />;
   return <span>RemoteData:{data.title}</span>;

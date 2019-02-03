@@ -13,6 +13,7 @@ const opts = {
     'X-My-Header': 'hello',
     'X-Your-Header': 'world',
   },
+  noSuspense: true,
 };
 
 const DisplayRemoteData = () => {

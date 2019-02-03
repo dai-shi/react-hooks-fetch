@@ -8,8 +8,10 @@ const Err: React.SFC<{ error: Error }> = ({ error }) => (
 
 const Loading = () => <span>Loading...</span>;
 
+const opts = { noSuspense: true };
+
 const DisplayRemoteData: React.FC<{ id: string }> = ({ id }) => {
-  const { error, loading, data } = useFetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
+  const { error, loading, data } = useFetch(`https://jsonplaceholder.typicode.com/posts/${id}`, opts);
   if (error) return <Err error={error} />;
   if (loading) return <Loading />;
   return <span>RemoteData:{data.title}</span>;

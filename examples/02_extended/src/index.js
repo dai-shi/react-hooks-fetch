@@ -30,6 +30,7 @@ const PostRemoteData = ({ userId, title, body }) => {
       body,
     }),
     readBody,
+    noSuspense: true,
   }), [userId, title, body]);
   const { error, loading, data } = useFetch('https://jsonplaceholder.typicode.com/posts', opts);
   if (error) return <Err error={error} />;

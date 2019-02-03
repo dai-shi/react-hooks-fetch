@@ -17,13 +17,38 @@ npm install react-hooks-fetch
 Usage
 -----
 
+With Suspense:
+
+```javascript
+import React, { Suspense } from 'react';
+import { useFetch } from 'react-hooks-fetch';
+
+const DisplayRemoteData = () => {
+  const { error, data } = useFetch('http://...');
+  if (error) return <span>Error:{error.message}</span>;
+  if (!data) return null;
+  return (
+    <span>RemoteData:{data}</span>
+  );
+};
+
+const App = () => (
+  <Suspense fallback={<span>Loading...</span>}>
+    <DisplayRemoteData />
+  </Suspense>
+);
+```
+
+Without Suspense:
+
 ```javascript
 import React from 'react';
 import { useFetch } from 'react-hooks-fetch';
 
+const opts = { noSuspense: true };
 const DisplayRemoteData = () => {
-  const { error, loading, data } = useFetch('http://...');
-  if (error) return <span>Error: {error.message}</span>;
+  const { error, loading, data } = useFetch('http://...', opts);
+  if (error) return <span>Error:{error.message}</span>;
   if (loading) return <span>Loading...</span>;
   return (
     <span>RemoteData:{data}</span>

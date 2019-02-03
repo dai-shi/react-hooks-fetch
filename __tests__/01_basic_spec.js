@@ -18,8 +18,9 @@ describe('basic spec', () => {
 
   it('should create a component', async () => {
     fetch.mockResponse(JSON.stringify('test data'));
+    const opts = { noSuspense: true };
     const DisplayRemoteData = () => {
-      const { error, loading, data } = useFetch('http://...');
+      const { error, loading, data } = useFetch('http://...', opts);
       if (error) return <span>Error: {error.message}</span>;
       if (loading) return <span>Loading...</span>;
       return (
