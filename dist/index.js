@@ -29,13 +29,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var forcedReducer = function forcedReducer(state) {
   return !state;
@@ -43,6 +43,12 @@ var forcedReducer = function forcedReducer(state) {
 
 var useForceUpdate = function useForceUpdate() {
   return (0, _react.useReducer)(forcedReducer, false)[1];
+};
+
+var createFetchError = function createFetchError(response) {
+  var err = new Error("".concat(response.status, " ").concat(response.statusText));
+  err.name = 'FetchError';
+  return err;
 };
 
 var createPromiseResolver = function createPromiseResolver() {
@@ -65,45 +71,42 @@ var defaultReadBody = function defaultReadBody(body) {
 var useFetch = function useFetch(input) {
   var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultOpts;
   var forceUpdate = useForceUpdate();
-  var started = (0, _react.useRef)(false);
   var error = (0, _react.useRef)(null);
-  var loading = (0, _react.useRef)(true);
+  var loading = (0, _react.useRef)(false);
   var data = (0, _react.useRef)(null);
-  var abortController = (0, _react.useRef)(null);
-  var abort = (0, _react.useCallback)(function () {
-    if (abortController.current) {
-      abortController.current.abort();
-    }
-  }, []);
   var promiseResolver = (0, _react.useMemo)(createPromiseResolver, [input, opts]);
-
-  var _opts$readBody = opts.readBody,
-      readBody = _opts$readBody === void 0 ? defaultReadBody : _opts$readBody,
-      _opts$noSuspense = opts.noSuspense,
-      noSuspense = _opts$noSuspense === void 0 ? false : _opts$noSuspense,
-      init = _objectWithoutProperties(opts, ["readBody", "noSuspense"]);
-
   (0, _react.useEffect)(function () {
+    var finished = false;
+    var abortController = new AbortController();
+
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee() {
-      var controller, response, body;
+      var _opts$readBody, readBody, init, response, body;
+
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              controller = new AbortController();
-              abortController.current = controller;
-              started.current = true;
+              if (input) {
+                _context.next = 2;
+                break;
+              }
+
+              return _context.abrupt("return");
+
+            case 2:
+              // start fetching
               error.current = null;
               loading.current = true;
               data.current = null;
               forceUpdate();
-              _context.prev = 7;
+              _context.prev = 6;
+              _opts$readBody = opts.readBody, readBody = _opts$readBody === void 0 ? defaultReadBody : _opts$readBody, init = _objectWithoutProperties(opts, ["readBody"]);
               _context.next = 10;
-              return fetch(input, _objectSpread({
-                signal: abortController.current.signal
-              }, init));
+              return fetch(input, _objectSpread({}, init, {
+                signal: abortController.signal
+              }));
 
             case 10:
               response = _context.sent;
@@ -119,18 +122,20 @@ var useFetch = function useFetch(input) {
             case 14:
               body = _context.sent;
 
-              if (abortController.current === controller) {
+              if (!finished) {
+                finished = true;
                 data.current = body;
-                abortController.current = null;
+                loading.current = false;
               }
 
               _context.next = 19;
               break;
 
             case 18:
-              if (abortController.current === controller) {
-                error.current = new Error(response.statusText);
-                abortController.current = null;
+              if (!finished) {
+                finished = true;
+                error.current = createFetchError(response);
+                loading.current = false;
               }
 
             case 19:
@@ -139,49 +144,45 @@ var useFetch = function useFetch(input) {
 
             case 21:
               _context.prev = 21;
-              _context.t0 = _context["catch"](7);
+              _context.t0 = _context["catch"](6);
 
-              if (abortController.current === controller) {
+              if (!finished) {
+                finished = true;
                 error.current = _context.t0;
-                abortController.current = null;
+                loading.current = false;
               }
 
             case 24:
-              started.current = false;
-              loading.current = false;
+              // finish fetching
               promiseResolver.resolve();
               forceUpdate();
 
-            case 28:
+            case 26:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[7, 21]]);
+      }, _callee, this, [[6, 21]]);
     }))();
 
     var cleanup = function cleanup() {
-      if (abortController.current) {
-        abortController.current.abort();
-        abortController.current = null;
+      if (!finished) {
+        finished = true;
+        abortController.abort();
       }
+
+      error.current = null;
+      loading.current = false;
+      data.current = null;
     };
 
     return cleanup;
   }, [input, opts]);
-
-  if (!noSuspense && started.current && loading.current) {
-    throw promiseResolver.promise;
-  }
-
-  return _objectSpread({
-    error: error.current
-  }, noSuspense ? {
-    loading: loading.current
-  } : {}, {
-    data: data.current,
-    abort: abort
-  });
+  if (loading.current) throw promiseResolver.promise;
+  return {
+    error: error.current,
+    data: data.current
+  };
 };
 
 exports.useFetch = useFetch;

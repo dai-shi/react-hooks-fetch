@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
+## [0.7.0] - 2019-02-03
+### Added
+- Suspense only API (breaking change)
+
 ## [0.6.0] - 2019-02-03
 ### Added
-- Experimental suspense support
+- Experimental suspense support (breaking change)
 
 ## [0.5.0] - 2018-12-09
 ### Changed
