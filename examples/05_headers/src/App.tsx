@@ -1,13 +1,19 @@
 import * as React from 'react';
 
+import { ErrorBoundary } from 'react-hooks-fetch';
+
 import DisplayRemoteData from './DisplayRemoteData';
 
+const { Suspense } = React;
+
+const Err: React.FC<{ error: Error }> = ({ error }) => <span>Error:{error.message}</span>;
+
 const App = () => (
-  <div>
-    <div>
+  <ErrorBoundary renderError={Err}>
+    <Suspense fallback={<span>Loading...</span>}>
       <DisplayRemoteData />
-    </div>
-  </div>
+    </Suspense>
+  </ErrorBoundary>
 );
 
 export default App;

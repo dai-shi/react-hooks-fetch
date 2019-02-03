@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import {
   render,
   flushEffects,
   cleanup,
 } from 'react-testing-library';
 
-import { useFetch } from '../src/index';
+import { ErrorBoundary, useFetch } from '../src/index';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -18,21 +18,21 @@ describe('basic spec', () => {
 
   it('should create a component', async () => {
     fetch.mockResponse(JSON.stringify('test data'));
-    const opts = { noSuspense: true };
     const DisplayRemoteData = () => {
-      const { error, loading, data } = useFetch('http://...', opts);
-      if (error) return <span>Error: {error.message}</span>;
-      if (loading) return <span>Loading...</span>;
-      return (
-        <span>RemoteData:{data}</span>
-      );
+      const data = useFetch('http://...');
+      if (!data) return null;
+      return <span>RemoteData:{data}</span>;
     };
     const App = () => (
-      <DisplayRemoteData />
+      <ErrorBoundary renderError={({ error }) => <span>Error: {error.message}</span>}>
+        <Suspense fallback={<span>Loading...</span>}>
+          <DisplayRemoteData />
+        </Suspense>
+      </ErrorBoundary>
     );
     const { container } = render(<App />);
-    expect(container).toMatchSnapshot();
     flushEffects();
+    expect(container).toMatchSnapshot();
     await sleep(10); // not ideal...
     expect(container).toMatchSnapshot();
   });

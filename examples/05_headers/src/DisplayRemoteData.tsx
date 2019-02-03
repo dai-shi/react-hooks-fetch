@@ -2,25 +2,17 @@ import * as React from 'react';
 
 import { useFetch } from 'react-hooks-fetch';
 
-const Err: React.SFC<{ error: Error }> = ({ error }) => (
-  <span>Error:{error.message}</span>
-);
-
-const Loading = () => <span>Loading...</span>;
-
 const opts = {
   headers: {
     'X-My-Header': 'hello',
     'X-Your-Header': 'world',
   },
-  noSuspense: true,
 };
 
 const DisplayRemoteData = () => {
-  const { error, loading, data } = useFetch('https://httpbin.org/get', opts);
-  if (error) return <Err error={error} />;
-  if (loading) return <Loading />;
-  return <span>RemoteData:{JSON.stringify(data)}</span>;
+  const data = useFetch('https://httpbin.org/get', opts);
+  if (!data) return null;
+  return <div>RemoteData:{JSON.stringify(data)}</div>;
 };
 
 export default DisplayRemoteData;

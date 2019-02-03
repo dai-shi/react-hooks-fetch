@@ -2,18 +2,9 @@ import * as React from 'react';
 
 import { useFetch } from 'react-hooks-fetch';
 
-const Err: React.SFC<{ error: Error }> = ({ error }) => (
-  <span>Error:{error.message}</span>
-);
-
-const Loading = () => <span>Loading...</span>;
-
-const opts = { noSuspense: true };
-
 const DisplayRemoteData: React.FC<{ id: string }> = ({ id }) => {
-  const { error, loading, data } = useFetch(`https://jsonplaceholder.typicode.com/posts/${id}`, opts);
-  if (error) return <Err error={error} />;
-  if (loading) return <Loading />;
+  const data = useFetch<{ title: string }>(`https://jsonplaceholder.typicode.com/posts/${id}`);
+  if (!data) return null;
   return <span>RemoteData:{data.title}</span>;
 };
 

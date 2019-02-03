@@ -1,5 +1,6 @@
 import {
-  useCallback,
+  createElement,
+  Component,
   useEffect,
   useMemo,
   useReducer,
@@ -8,6 +9,12 @@ import {
 
 const forcedReducer = state => !state;
 const useForceUpdate = () => useReducer(forcedReducer, false)[1];
+
+const createFetchError = (response) => {
+  const err = new Error(`${response.status} ${response.statusText}`);
+  err.name = 'FetchError';
+  return err;
+};
 
 const createPromiseResolver = () => {
   let resolve;
@@ -20,72 +27,85 @@ const defaultReadBody = body => body.json();
 
 export const useFetch = (input, opts = defaultOpts) => {
   const forceUpdate = useForceUpdate();
-  const started = useRef(false);
   const error = useRef(null);
-  const loading = useRef(true);
+  const loading = useRef(false);
   const data = useRef(null);
-  const abortController = useRef(null);
-  const abort = useCallback(() => {
-    if (abortController.current) {
-      abortController.current.abort();
-    }
-  }, []);
   const promiseResolver = useMemo(createPromiseResolver, [input, opts]);
-  const {
-    readBody = defaultReadBody,
-    noSuspense = false,
-    ...init
-  } = opts;
   useEffect(() => {
+    let finished = false;
+    const abortController = new AbortController();
     (async () => {
-      const controller = new AbortController();
-      abortController.current = controller;
-      started.current = true;
+      if (!input) return;
+      // start fetching
       error.current = null;
       loading.current = true;
       data.current = null;
       forceUpdate();
       try {
+        const {
+          readBody = defaultReadBody,
+          ...init
+        } = opts;
         const response = await fetch(input, {
-          signal: abortController.current.signal,
           ...init,
+          signal: abortController.signal,
         });
+        // check response
         if (response.ok) {
           const body = await readBody(response);
-          if (abortController.current === controller) {
+          if (!finished) {
+            finished = true;
             data.current = body;
-            abortController.current = null;
+            loading.current = false;
           }
-        } else if (abortController.current === controller) {
-          error.current = new Error(response.statusText);
-          abortController.current = null;
+        } else if (!finished) {
+          finished = true;
+          error.current = createFetchError(response);
+          loading.current = false;
         }
       } catch (e) {
-        if (abortController.current === controller) {
+        if (!finished) {
+          finished = true;
           error.current = e;
-          abortController.current = null;
+          loading.current = false;
         }
       }
-      started.current = false;
-      loading.current = false;
+      // finish fetching
       promiseResolver.resolve();
       forceUpdate();
     })();
     const cleanup = () => {
-      if (abortController.current) {
-        abortController.current.abort();
-        abortController.current = null;
+      if (!finished) {
+        finished = true;
+        abortController.abort();
       }
+      error.current = null;
+      loading.current = false;
+      data.current = null;
     };
     return cleanup;
   }, [input, opts]);
-  if (!noSuspense && started.current && loading.current) {
-    throw promiseResolver.promise;
-  }
-  return {
-    error: error.current,
-    ...(noSuspense ? { loading: loading.current } : {}),
-    data: data.current,
-    abort,
-  };
+  if (error.current) throw error.current;
+  if (loading.current) throw promiseResolver.promise;
+  return data.current;
 };
+
+export class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+
+  render() {
+    const { children, renderError } = this.props;
+    const { error } = this.state;
+    if (error) {
+      return createElement(renderError, { error });
+    }
+    return children;
+  }
+}
