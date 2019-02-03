@@ -1,6 +1,4 @@
 import {
-  createElement,
-  Component,
   useEffect,
   useMemo,
   useReducer,
@@ -85,27 +83,9 @@ export const useFetch = (input, opts = defaultOpts) => {
     };
     return cleanup;
   }, [input, opts]);
-  if (error.current) throw error.current;
   if (loading.current) throw promiseResolver.promise;
-  return data.current;
+  return {
+    error: error.current,
+    data: data.current,
+  };
 };
-
-export class ErrorBoundary extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { error };
-  }
-
-  render() {
-    const { children, renderError } = this.props;
-    const { error } = this.state;
-    if (error) {
-      return createElement(renderError, { error });
-    }
-    return children;
-  }
-}

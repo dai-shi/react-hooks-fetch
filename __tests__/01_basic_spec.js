@@ -5,7 +5,7 @@ import {
   cleanup,
 } from 'react-testing-library';
 
-import { ErrorBoundary, useFetch } from '../src/index';
+import { useFetch } from '../src/index';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -19,16 +19,15 @@ describe('basic spec', () => {
   it('should create a component', async () => {
     fetch.mockResponse(JSON.stringify('test data'));
     const DisplayRemoteData = () => {
-      const data = useFetch('http://...');
-      if (!data) return null;
+      const { error, data } = useFetch('http://...');
+      if (error) return <span>Error:{error.message}</span>;
+      if (!data) return null; // this is important
       return <span>RemoteData:{data}</span>;
     };
     const App = () => (
-      <ErrorBoundary renderError={({ error }) => <span>Error: {error.message}</span>}>
-        <Suspense fallback={<span>Loading...</span>}>
-          <DisplayRemoteData />
-        </Suspense>
-      </ErrorBoundary>
+      <Suspense fallback={<span>Loading...</span>}>
+        <DisplayRemoteData />
+      </Suspense>
     );
     const { container } = render(<App />);
     flushEffects();

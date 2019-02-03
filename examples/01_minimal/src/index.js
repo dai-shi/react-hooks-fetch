@@ -1,22 +1,21 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 
-import { ErrorBoundary, useFetch } from 'react-hooks-fetch';
+import { useFetch } from 'react-hooks-fetch';
 
 const Err = ({ error }) => <span>Error:{error.message}</span>;
 
 const DisplayRemoteData = () => {
-  const data = useFetch('https://jsonplaceholder.typicode.com/posts/1');
+  const { error, data } = useFetch('https://jsonplaceholder.typicode.com/posts/1');
+  if (error) return <Err error={error} />;
   if (!data) return null;
   return <span>RemoteData:{data.title}</span>;
 };
 
 const App = () => (
-  <ErrorBoundary renderError={Err}>
-    <Suspense fallback={<span>Loading...</span>}>
-      <DisplayRemoteData />
-    </Suspense>
-  </ErrorBoundary>
+  <Suspense fallback={<span>Loading...</span>}>
+    <DisplayRemoteData />
+  </Suspense>
 );
 
 ReactDOM.render(<App />, document.getElementById('app'));

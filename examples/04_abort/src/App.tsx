@@ -1,12 +1,8 @@
 import * as React from 'react';
 
-import { ErrorBoundary } from 'react-hooks-fetch';
-
 import DisplayRemoteData from './DisplayRemoteData';
 
-const { Suspense, useState } = React;
-
-const Err: React.FC<{ error: Error }> = ({ error }) => <span>Error:{error.message}</span>;
+const { Suspense, useReducer } = React;
 
 const Loading: React.FC<{ abort: () => void }> = ({
   abort,
@@ -17,43 +13,62 @@ const Loading: React.FC<{ abort: () => void }> = ({
   </span>
 );
 
+type State = { id: string; stop: boolean };
+type Action =
+  | { type: 'setId'; id: string }
+  | { type: 'incId' }
+  | { type: 'stop' }
+  | { type: 'retry' };
+
+const reducer = (state: State, action: Action) => {
+  switch (action.type) {
+    case 'setId': return { id: action.id, stop: false };
+    case 'incId': return { id: `${Number(state.id) + 1}`, stop: false };
+    case 'stop': return { ...state, stop: true };
+    case 'retry': return { ...state, stop: false };
+    default: return state;
+  }
+};
+
 const App = () => {
-  const [id1, setId1] = useState('1');
-  const [id2, setId2] = useState('2');
-  const [stop1, setStop1] = useState(false);
-  const [stop2, setStop2] = useState(false);
+  const [state1, dispatch1] = useReducer(reducer, { id: '1', stop: false });
+  const { id: id1, stop: stop1 } = state1;
+  const [state2, dispatch2] = useReducer(reducer, { id: '2', stop: false });
+  const { id: id2, stop: stop2 } = state2;
   return (
     <div>
       <div>
-        <input value={id1} onChange={e => setId1(e.target.value)} />
+        <input value={id1} onChange={e => dispatch1({ type: 'setId', id: e.target.value })} />
+        <button type="button" onClick={() => dispatch1({ type: 'incId' })}>+1</button>
       </div>
-      <ErrorBoundary renderError={Err} key={`first:${id1}`}>
-        <Suspense fallback={<Loading abort={() => setStop1(true)} />} key={`stop:${stop1}`}>
+      <div>
+        <Suspense fallback={<Loading abort={() => dispatch1({ type: 'stop' })} />} key={id1}>
           {!stop1 ? (
             <DisplayRemoteData id={id1} />
           ) : (
             <span>
               Aborted
-              <button type="button" onClick={() => setStop1(false)}>retry</button>
+              <button type="button" onClick={() => dispatch1({ type: 'retry' })}>retry</button>
             </span>
           )}
         </Suspense>
-      </ErrorBoundary>
-      <div>
-        <input value={id2} onChange={e => setId2(e.target.value)} />
       </div>
-      <ErrorBoundary renderError={Err} key={`second:${id2}`}>
-        <Suspense fallback={<Loading abort={() => setStop2(true)} />} key={`stop:${stop2}`}>
+      <div>
+        <input value={id2} onChange={e => dispatch2({ type: 'setId', id: e.target.value })} />
+        <button type="button" onClick={() => dispatch2({ type: 'incId' })}>+1</button>
+      </div>
+      <div>
+        <Suspense fallback={<Loading abort={() => dispatch2({ type: 'stop' })} />} key={id2}>
           {!stop2 ? (
             <DisplayRemoteData id={id2} />
           ) : (
             <span>
               Aborted
-              <button type="button" onClick={() => setStop2(false)}>retry</button>
+              <button type="button" onClick={() => dispatch2({ type: 'retry' })}>retry</button>
             </span>
           )}
         </Suspense>
-      </ErrorBoundary>
+      </div>
     </div>
   );
 };

@@ -16,6 +16,7 @@ Here's the list of various implementations.
 - [Initial version](https://github.com/dai-shi/react-hooks-fetch/tree/dab13e04b81b92ab41a06705c837f8ad87fb9608)
 - [AbortController support](https://github.com/dai-shi/react-hooks-fetch/tree/767cba39180c88be2960061028004e32aaea6e4b)
 - [Suspense trial](https://github.com/dai-shi/react-hooks-fetch/tree/e7027c0042df35bee029849c3fea84f9bdfb1b55)
+- [Suspense&ErrorBoundary trial](https://github.com/dai-shi/react-hooks-fetch/tree/7f525b518096d4a454228fdea176ecc8d2a66183)
 
 Install
 -------
@@ -29,20 +30,19 @@ Usage
 
 ```javascript
 import React, { Suspense } from 'react';
-import { ErrorBoundary, useFetch } from 'react-hooks-fetch';
+import { useFetch } from 'react-hooks-fetch';
 
 const DisplayRemoteData = () => {
-  const data = useFetch('http://...');
+  const { error, data } = useFetch('http://...');
+  if (error) return <span>Error:{error.message}</span>;
   if (!data) return null; // this is important
-  return <div>RemoteData:{data}</div>;
+  return <span>RemoteData:{data}</span>;
 };
 
 const App = () => (
-  <ErrorBoundary renderError={({ error }) => <span>Error: {error.message}</span>}>
-    <Suspense fallback={<span>Loading...</span>}>
-      <DisplayRemoteData />
-    </Suspense>
-  </ErrorBoundary>
+  <Suspense fallback={<span>Loading...</span>}>
+    <DisplayRemoteData />
+  </Suspense>
 );
 ```
 

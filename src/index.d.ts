@@ -1,4 +1,3 @@
-import * as React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Body, Request, RequestInit } from 'node-fetch';
 
@@ -10,12 +9,9 @@ type Falsy = false | 0 | '' | null | undefined;
 export type UseFetch = <Data>(
   input: string | Request | Falsy,
   opts?: Opts<Data> | Falsy,
-) => Data | null;
-
-export const useFetch: UseFetch;
-
-export type ErrorBoundaryProps = {
-  renderError: React.ComponentType<{ error: Error }>;
+) => {
+  error: Error | null;
+  data: Data | null;
 };
 
-export const ErrorBoundary: React.ComponentType<ErrorBoundaryProps>;
+export const useFetch: UseFetch;
