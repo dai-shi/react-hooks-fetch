@@ -11,23 +11,17 @@ require("core-js/modules/es6.array.filter");
 
 require("core-js/modules/es6.object.define-property");
 
-require("core-js/modules/es6.promise");
-
 require("core-js/modules/es6.array.index-of");
+
+require("core-js/modules/web.dom.iterable");
 
 require("core-js/modules/es6.array.iterator");
 
 require("core-js/modules/es6.object.keys");
 
-require("core-js/modules/es7.symbol.async-iterator");
-
-require("core-js/modules/es6.symbol");
-
-require("core-js/modules/web.dom.iterable");
-
-require("core-js/modules/es6.array.is-array");
-
 require("regenerator-runtime/runtime");
+
+require("core-js/modules/es6.promise");
 
 var _react = require("react");
 
@@ -43,46 +37,51 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+var forcedReducer = function forcedReducer(state) {
+  return !state;
+};
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+var useForceUpdate = function useForceUpdate() {
+  return (0, _react.useReducer)(forcedReducer, false)[1];
+};
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+var createPromiseResolver = function createPromiseResolver() {
+  var resolve;
+  var promise = new Promise(function (r) {
+    resolve = r;
+  });
+  return {
+    resolve: resolve,
+    promise: promise
+  };
+};
 
 var defaultOpts = {};
 
+var defaultReadBody = function defaultReadBody(body) {
+  return body.json();
+};
+
 var useFetch = function useFetch(input) {
   var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultOpts;
-
-  var _useState = (0, _react.useState)(null),
-      _useState2 = _slicedToArray(_useState, 2),
-      error = _useState2[0],
-      setError = _useState2[1];
-
-  var _useState3 = (0, _react.useState)(true),
-      _useState4 = _slicedToArray(_useState3, 2),
-      loading = _useState4[0],
-      setLoading = _useState4[1];
-
-  var _useState5 = (0, _react.useState)(null),
-      _useState6 = _slicedToArray(_useState5, 2),
-      data = _useState6[0],
-      setData = _useState6[1];
-
+  var forceUpdate = useForceUpdate();
+  var started = (0, _react.useRef)(false);
+  var error = (0, _react.useRef)(null);
+  var loading = (0, _react.useRef)(true);
+  var data = (0, _react.useRef)(null);
   var abortController = (0, _react.useRef)(null);
   var abort = (0, _react.useCallback)(function () {
     if (abortController.current) {
       abortController.current.abort();
     }
   }, []);
+  var promiseResolver = (0, _react.useMemo)(createPromiseResolver, [input, opts]);
 
   var _opts$readBody = opts.readBody,
-      readBody = _opts$readBody === void 0 ? function (body) {
-    return body.json();
-  } : _opts$readBody,
-      init = _objectWithoutProperties(opts, ["readBody"]);
+      readBody = _opts$readBody === void 0 ? defaultReadBody : _opts$readBody,
+      _opts$noSuspense = opts.noSuspense,
+      noSuspense = _opts$noSuspense === void 0 ? false : _opts$noSuspense,
+      init = _objectWithoutProperties(opts, ["readBody", "noSuspense"]);
 
   (0, _react.useEffect)(function () {
     _asyncToGenerator(
@@ -95,65 +94,70 @@ var useFetch = function useFetch(input) {
             case 0:
               controller = new AbortController();
               abortController.current = controller;
-              setError(null);
-              setLoading(true);
-              setData(null);
-              _context.prev = 5;
-              _context.next = 8;
+              started.current = true;
+              error.current = null;
+              loading.current = true;
+              data.current = null;
+              forceUpdate();
+              _context.prev = 7;
+              _context.next = 10;
               return fetch(input, _objectSpread({
                 signal: abortController.current.signal
               }, init));
 
-            case 8:
+            case 10:
               response = _context.sent;
 
               if (!response.ok) {
-                _context.next = 16;
+                _context.next = 18;
                 break;
               }
 
-              _context.next = 12;
+              _context.next = 14;
               return readBody(response);
 
-            case 12:
+            case 14:
               body = _context.sent;
 
               if (abortController.current === controller) {
-                setData(body);
-                setLoading(false);
+                data.current = body;
                 abortController.current = null;
               }
 
-              _context.next = 17;
+              _context.next = 19;
               break;
 
-            case 16:
+            case 18:
               if (abortController.current === controller) {
-                setError(new Error(response.statusText));
-                setLoading(false);
+                error.current = new Error(response.statusText);
                 abortController.current = null;
               }
-
-            case 17:
-              _context.next = 22;
-              break;
 
             case 19:
-              _context.prev = 19;
-              _context.t0 = _context["catch"](5);
+              _context.next = 24;
+              break;
+
+            case 21:
+              _context.prev = 21;
+              _context.t0 = _context["catch"](7);
 
               if (abortController.current === controller) {
-                setError(_context.t0);
-                setLoading(false);
+                error.current = _context.t0;
                 abortController.current = null;
               }
 
-            case 22:
+            case 24:
+              started.current = false;
+              loading.current = false;
+              promiseResolver.resolve();
+              forceUpdate();
+
+            case 28:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[5, 19]]);
+      }, _callee, this, [[7, 21]]);
     }))();
 
     var cleanup = function cleanup() {
@@ -165,12 +169,19 @@ var useFetch = function useFetch(input) {
 
     return cleanup;
   }, [input, opts]);
-  return {
-    error: error,
-    loading: loading,
-    data: data,
+
+  if (!noSuspense && started.current && loading.current) {
+    throw promiseResolver.promise;
+  }
+
+  return _objectSpread({
+    error: error.current
+  }, noSuspense ? {
+    loading: loading.current
+  } : {}, {
+    data: data.current,
     abort: abort
-  };
+  });
 };
 
 exports.useFetch = useFetch;

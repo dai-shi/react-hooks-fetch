@@ -1,7 +1,9 @@
 # Change Log
 
 ## [Unreleased]
-### Changed
+
+## [0.6.0] - 2019-02-03
+### Added
 - Experimental suspense support
 
 ## [0.5.0] - 2018-12-09
