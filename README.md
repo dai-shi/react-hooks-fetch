@@ -69,3 +69,4 @@ Blogs
 -----
 
 - [React Hooks Tutorial on Developing a Custom Hook for Data Fetching](https://medium.com/@dai_shi/react-hooks-tutorial-on-developing-a-custom-hook-for-data-fetching-8ad5840db7ae)
+- [useFetch: React custom hook for Fetch API with Suspense and Concurrent Mode in Mind](https://medium.com/@dai_shi/usefetch-react-custom-hook-for-fetch-api-with-suspense-and-concurrent-mode-in-mind-1d3ba9250e0)
