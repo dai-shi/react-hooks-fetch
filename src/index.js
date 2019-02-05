@@ -34,15 +34,18 @@ export const useFetch = (input, opts = defaultOpts) => {
     (async () => {
       if (!input) return;
       // start fetching
-      error.current = null;
       loading.current = true;
-      data.current = null;
       forceUpdate();
+      const onFinish = (e, d) => {
+        if (!finished) {
+          finished = true;
+          error.current = e;
+          data.current = d;
+          loading.current = false;
+        }
+      };
       try {
-        const {
-          readBody = defaultReadBody,
-          ...init
-        } = opts;
+        const { readBody = defaultReadBody, ...init } = opts;
         const response = await fetch(input, {
           ...init,
           signal: abortController.signal,
@@ -50,26 +53,15 @@ export const useFetch = (input, opts = defaultOpts) => {
         // check response
         if (response.ok) {
           const body = await readBody(response);
-          if (!finished) {
-            finished = true;
-            data.current = body;
-            loading.current = false;
-          }
-        } else if (!finished) {
-          finished = true;
-          error.current = createFetchError(response);
-          loading.current = false;
+          onFinish(null, body);
+        } else {
+          onFinish(createFetchError(response), null);
         }
       } catch (e) {
-        if (!finished) {
-          finished = true;
-          error.current = e;
-          loading.current = false;
-        }
+        onFinish(e, null);
       }
       // finish fetching
       promiseResolver.resolve();
-      forceUpdate();
     })();
     const cleanup = () => {
       if (!finished) {

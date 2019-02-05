@@ -37,12 +37,10 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var forcedReducer = function forcedReducer(state) {
-  return !state;
-};
-
 var useForceUpdate = function useForceUpdate() {
-  return (0, _react.useReducer)(forcedReducer, false)[1];
+  return (0, _react.useReducer)(function (state) {
+    return !state;
+  }, false)[1];
 };
 
 var createFetchError = function createFetchError(response) {
@@ -82,7 +80,7 @@ var useFetch = function useFetch(input) {
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee() {
-      var _opts$readBody, readBody, init, response, body;
+      var onFinish, _opts$readBody, readBody, init, response, body;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -97,72 +95,64 @@ var useFetch = function useFetch(input) {
 
             case 2:
               // start fetching
-              error.current = null;
               loading.current = true;
-              data.current = null;
               forceUpdate();
-              _context.prev = 6;
+
+              onFinish = function onFinish(e, d) {
+                if (!finished) {
+                  finished = true;
+                  error.current = e;
+                  data.current = d;
+                  loading.current = false;
+                }
+              };
+
+              _context.prev = 5;
               _opts$readBody = opts.readBody, readBody = _opts$readBody === void 0 ? defaultReadBody : _opts$readBody, init = _objectWithoutProperties(opts, ["readBody"]);
-              _context.next = 10;
+              _context.next = 9;
               return fetch(input, _objectSpread({}, init, {
                 signal: abortController.signal
               }));
 
-            case 10:
+            case 9:
               response = _context.sent;
 
               if (!response.ok) {
-                _context.next = 18;
+                _context.next = 17;
                 break;
               }
 
-              _context.next = 14;
+              _context.next = 13;
               return readBody(response);
 
-            case 14:
+            case 13:
               body = _context.sent;
-
-              if (!finished) {
-                finished = true;
-                data.current = body;
-                loading.current = false;
-              }
-
-              _context.next = 19;
+              onFinish(null, body);
+              _context.next = 18;
               break;
+
+            case 17:
+              onFinish(createFetchError(response), null);
 
             case 18:
-              if (!finished) {
-                finished = true;
-                error.current = createFetchError(response);
-                loading.current = false;
-              }
-
-            case 19:
-              _context.next = 24;
+              _context.next = 23;
               break;
 
-            case 21:
-              _context.prev = 21;
-              _context.t0 = _context["catch"](6);
+            case 20:
+              _context.prev = 20;
+              _context.t0 = _context["catch"](5);
+              onFinish(_context.t0, null);
 
-              if (!finished) {
-                finished = true;
-                error.current = _context.t0;
-                loading.current = false;
-              }
-
-            case 24:
+            case 23:
               // finish fetching
               promiseResolver.resolve();
-              forceUpdate();
 
-            case 26:
+            case 24:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[6, 21]]);
+      }, _callee, this, [[5, 20]]);
     }))();
 
     var cleanup = function cleanup() {
