@@ -5,8 +5,7 @@ import {
   useRef,
 } from 'react';
 
-const forcedReducer = state => !state;
-const useForceUpdate = () => useReducer(forcedReducer, false)[1];
+const useForceUpdate = () => useReducer(state => !state, false)[1];
 
 const createFetchError = (response) => {
   const err = new Error(`${response.status} ${response.statusText}`);
