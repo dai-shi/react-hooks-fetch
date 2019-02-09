@@ -1,8 +1,11 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Removed @types/node-fetch
 
 ## [0.8.0] - 2019-02-09
+### Changed
 - Updated dependencies (React 16.8)
 - A hack to useLayoutEffect for Concurrent Mode
 
