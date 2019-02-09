@@ -1,5 +1,5 @@
 import {
-  useEffect,
+  useLayoutEffect,
   useMemo,
   useReducer,
   useRef,
@@ -28,7 +28,9 @@ export const useFetch = (input, opts = defaultOpts) => {
   const loading = useRef(false);
   const data = useRef(null);
   const promiseResolver = useMemo(createPromiseResolver, [input, opts]);
-  useEffect(() => {
+  // This is not ideal, but unless we run the effect synchronously
+  // Suspense fallback isn't rendered in ConcurrentMode.
+  useLayoutEffect(() => {
     let finished = false;
     const abortController = new AbortController();
     (async () => {

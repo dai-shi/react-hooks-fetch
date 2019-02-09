@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 - Updated dependencies (React 16.8)
+- A hack to useLayoutEffect for Concurrent Mode
 
 ## [0.7.0] - 2019-02-03
 ### Added

@@ -72,8 +72,10 @@ var useFetch = function useFetch(input) {
   var error = (0, _react.useRef)(null);
   var loading = (0, _react.useRef)(false);
   var data = (0, _react.useRef)(null);
-  var promiseResolver = (0, _react.useMemo)(createPromiseResolver, [input, opts]);
-  (0, _react.useEffect)(function () {
+  var promiseResolver = (0, _react.useMemo)(createPromiseResolver, [input, opts]); // This is not ideal, but unless we run the effect synchronously
+  // Suspense fallback isn't rendered in ConcurrentMode.
+
+  (0, _react.useLayoutEffect)(function () {
     var finished = false;
     var abortController = new AbortController();
 
