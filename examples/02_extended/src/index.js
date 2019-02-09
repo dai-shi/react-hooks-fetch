@@ -1,4 +1,9 @@
-import React, { Suspense, useRef } from 'react';
+import React, {
+  StrictMode,
+  Suspense,
+  useRef,
+  unstable_ConcurrentMode as ConcurrentMode,
+} from 'react';
 import ReactDOM from 'react-dom';
 
 import { useFetch } from 'react-hooks-fetch';
@@ -36,9 +41,13 @@ const PostRemoteData = ({ userId, title, body }) => {
 };
 
 const App = () => (
-  <Suspense fallback={<span>Loading...</span>}>
-    <PostRemoteData userId={1} title="foo" body="bar" />
-  </Suspense>
+  <StrictMode>
+    <ConcurrentMode>
+      <Suspense fallback={<span>Loading...</span>}>
+        <PostRemoteData userId={1} title="foo" body="bar" />
+      </Suspense>
+    </ConcurrentMode>
+  </StrictMode>
 );
 
 ReactDOM.render(<App />, document.getElementById('app'));

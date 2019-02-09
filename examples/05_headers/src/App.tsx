@@ -2,12 +2,22 @@ import * as React from 'react';
 
 import DisplayRemoteData from './DisplayRemoteData';
 
-const { Suspense } = React;
+const {
+  StrictMode,
+  Suspense,
+  // @ts-ignore
+  unstable_ConcurrentMode: ConcurrentMode,
+} = React;
+
 
 const App = () => (
-  <Suspense fallback={<span>Loading...</span>}>
-    <DisplayRemoteData />
-  </Suspense>
+  <StrictMode>
+    <ConcurrentMode>
+      <Suspense fallback={<span>Loading...</span>}>
+        <DisplayRemoteData />
+      </Suspense>
+    </ConcurrentMode>
+  </StrictMode>
 );
 
 export default App;

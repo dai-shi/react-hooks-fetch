@@ -1,9 +1,5 @@
 import React, { Suspense } from 'react';
-import {
-  render,
-  flushEffects,
-  cleanup,
-} from 'react-testing-library';
+import { render, cleanup } from 'react-testing-library';
 
 import { useFetch } from '../src/index';
 
@@ -30,7 +26,6 @@ describe('basic spec', () => {
       </Suspense>
     );
     const { container } = render(<App />);
-    flushEffects();
     expect(container).toMatchSnapshot();
     await sleep(10); // not ideal...
     expect(container).toMatchSnapshot();
