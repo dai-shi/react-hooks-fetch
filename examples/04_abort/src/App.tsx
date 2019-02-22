@@ -3,7 +3,6 @@ import * as React from 'react';
 import DisplayRemoteData from './DisplayRemoteData';
 
 const {
-  StrictMode,
   Suspense,
   // @ts-ignore
   unstable_ConcurrentMode: ConcurrentMode,
@@ -42,44 +41,42 @@ const App = () => {
   const [state2, dispatch2] = useReducer(reducer, { id: '2', stop: false });
   const { id: id2, stop: stop2 } = state2;
   return (
-    <StrictMode>
-      <ConcurrentMode>
+    <ConcurrentMode>
+      <div>
         <div>
-          <div>
-            <input value={id1} onChange={e => dispatch1({ type: 'setId', id: e.target.value })} />
-            <button type="button" onClick={() => dispatch1({ type: 'incId' })}>+1</button>
-          </div>
-          <div>
-            <Suspense fallback={<Loading abort={() => dispatch1({ type: 'stop' })} />} key={id1}>
-              {!stop1 ? (
-                <DisplayRemoteData id={id1} />
-              ) : (
-                <span>
-                  Aborted
-                  <button type="button" onClick={() => dispatch1({ type: 'retry' })}>retry</button>
-                </span>
-              )}
-            </Suspense>
-          </div>
-          <div>
-            <input value={id2} onChange={e => dispatch2({ type: 'setId', id: e.target.value })} />
-            <button type="button" onClick={() => dispatch2({ type: 'incId' })}>+1</button>
-          </div>
-          <div>
-            <Suspense fallback={<Loading abort={() => dispatch2({ type: 'stop' })} />} key={id2}>
-              {!stop2 ? (
-                <DisplayRemoteData id={id2} />
-              ) : (
-                <span>
-                  Aborted
-                  <button type="button" onClick={() => dispatch2({ type: 'retry' })}>retry</button>
-                </span>
-              )}
-            </Suspense>
-          </div>
+          <input value={id1} onChange={e => dispatch1({ type: 'setId', id: e.target.value })} />
+          <button type="button" onClick={() => dispatch1({ type: 'incId' })}>+1</button>
         </div>
-      </ConcurrentMode>
-    </StrictMode>
+        <div>
+          <Suspense fallback={<Loading abort={() => dispatch1({ type: 'stop' })} />} key={id1}>
+            {!stop1 ? (
+              <DisplayRemoteData id={id1} />
+            ) : (
+              <span>
+                Aborted
+                <button type="button" onClick={() => dispatch1({ type: 'retry' })}>retry</button>
+              </span>
+            )}
+          </Suspense>
+        </div>
+        <div>
+          <input value={id2} onChange={e => dispatch2({ type: 'setId', id: e.target.value })} />
+          <button type="button" onClick={() => dispatch2({ type: 'incId' })}>+1</button>
+        </div>
+        <div>
+          <Suspense fallback={<Loading abort={() => dispatch2({ type: 'stop' })} />} key={id2}>
+            {!stop2 ? (
+              <DisplayRemoteData id={id2} />
+            ) : (
+              <span>
+                Aborted
+                <button type="button" onClick={() => dispatch2({ type: 'retry' })}>retry</button>
+              </span>
+            )}
+          </Suspense>
+        </div>
+      </div>
+    </ConcurrentMode>
   );
 };
 

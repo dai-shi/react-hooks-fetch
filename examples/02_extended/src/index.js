@@ -1,5 +1,4 @@
 import React, {
-  StrictMode,
   Suspense,
   useRef,
   unstable_ConcurrentMode as ConcurrentMode,
@@ -41,13 +40,11 @@ const PostRemoteData = ({ userId, title, body }) => {
 };
 
 const App = () => (
-  <StrictMode>
-    <ConcurrentMode>
-      <Suspense fallback={<span>Loading...</span>}>
-        <PostRemoteData userId={1} title="foo" body="bar" />
-      </Suspense>
-    </ConcurrentMode>
-  </StrictMode>
+  <ConcurrentMode>
+    <Suspense fallback={<span>Loading...</span>}>
+      <PostRemoteData userId={1} title="foo" body="bar" />
+    </Suspense>
+  </ConcurrentMode>
 );
 
 ReactDOM.render(<App />, document.getElementById('app'));
