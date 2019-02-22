@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { StrictMode, Suspense } from 'react';
 import { render, cleanup } from 'react-testing-library';
 
 import { useFetch } from '../src/index';
@@ -21,9 +21,11 @@ describe('basic spec', () => {
       return <span>RemoteData:{data}</span>;
     };
     const App = () => (
-      <Suspense fallback={<span>Loading...</span>}>
-        <DisplayRemoteData />
-      </Suspense>
+      <StrictMode>
+        <Suspense fallback={<span>Loading...</span>}>
+          <DisplayRemoteData />
+        </Suspense>
+      </StrictMode>
     );
     const { container } = render(<App />);
     expect(container).toMatchSnapshot();
