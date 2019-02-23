@@ -8,8 +8,8 @@ import ReactDOM from 'react-dom';
 import { useFetch } from 'react-hooks-fetch';
 
 // this can be too naive
-const useMemoSafe = (create, inputs) => {
-  const memoized = useRef();
+const useMemoPrev = (create, inputs) => {
+  const memoized = useRef(null);
   const prevInputs = useRef([]);
   if (prevInputs.current.length !== inputs.length
     || prevInputs.current.some((x, i) => x !== inputs[i])) {
@@ -24,7 +24,7 @@ const Err = ({ error }) => <span>Error:{error.message}</span>;
 const readBody = body => body.text();
 
 const PostRemoteData = ({ userId, title, body }) => {
-  const opts = useMemoSafe(() => ({
+  const opts = useMemoPrev(() => ({
     method: 'POST',
     body: JSON.stringify({
       userId,
