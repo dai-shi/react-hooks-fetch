@@ -8,12 +8,12 @@ import ReactDOM from 'react-dom';
 import { useFetch } from 'react-hooks-fetch';
 
 // this can be too naive
-const useMemoPrev = (create, inputs) => {
+const useMemoPrev = (create, deps) => {
   const memoized = useRef(null);
-  const prevInputs = useRef([]);
-  if (prevInputs.current.length !== inputs.length
-    || prevInputs.current.some((x, i) => x !== inputs[i])) {
-    prevInputs.current = inputs;
+  const prevDeps = useRef([]);
+  if (prevDeps.current.length !== deps.length
+    || prevDeps.current.some((x, i) => x !== deps[i])) {
+    prevDeps.current = deps;
     memoized.current = create();
   }
   return memoized.current;
