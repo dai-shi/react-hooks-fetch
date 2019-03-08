@@ -2,16 +2,31 @@ import {
   useLayoutEffect,
   useMemo,
   useReducer,
-  useRef,
 } from 'react';
-
-const forcedReducer = state => !state;
-const useForceUpdate = () => useReducer(forcedReducer, false)[1];
 
 const createFetchError = (response) => {
   const err = new Error(`${response.status} ${response.statusText}`);
   err.name = 'FetchError';
   return err;
+};
+
+const initialState = { loading: false, error: null, data: null };
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'init':
+      return initialState;
+    case 'start':
+      if (state.loading) return state; // to bail out, just in case
+      return { ...state, loading: true };
+    case 'data':
+      if (!state.loading) return state; // to bail out, just in case
+      return { ...state, loading: false, data: action.data };
+    case 'error':
+      if (!state.loading) return state; // to bail out, just in case
+      return { ...state, loading: false, error: action.error };
+    default:
+      throw new Error('no such action type');
+  }
 };
 
 const createPromiseResolver = () => {
@@ -24,29 +39,17 @@ const defaultOpts = {};
 const defaultReadBody = body => body.json();
 
 export const useFetch = (input, opts = defaultOpts) => {
-  const forceUpdate = useForceUpdate();
-  const error = useRef(null);
-  const loading = useRef(false);
-  const data = useRef(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const promiseResolver = useMemo(createPromiseResolver, [input, opts]);
   // Using layout effect may not be ideal, but unless we run the effect
   // synchronously, Suspense fallback isn't rendered in ConcurrentMode.
   useLayoutEffect(() => {
-    let finished = false;
+    let dispatchSafe = action => dispatch(action);
     const abortController = new AbortController();
     (async () => {
       if (!input) return;
       // start fetching
-      loading.current = true;
-      forceUpdate();
-      const onFinish = (e, d) => {
-        if (!finished) {
-          finished = true;
-          error.current = e;
-          data.current = d;
-          loading.current = false;
-        }
-      };
+      dispatchSafe({ type: 'start' });
       try {
         const { readBody = defaultReadBody, ...init } = opts;
         const response = await fetch(input, {
@@ -56,30 +59,23 @@ export const useFetch = (input, opts = defaultOpts) => {
         // check response
         if (response.ok) {
           const body = await readBody(response);
-          onFinish(null, body);
+          dispatchSafe({ type: 'data', data: body });
         } else {
-          onFinish(createFetchError(response), null);
+          dispatchSafe({ type: 'error', error: createFetchError(response) });
         }
       } catch (e) {
-        onFinish(e, null);
+        dispatchSafe({ type: 'error', error: e });
       }
       // finish fetching
       promiseResolver.resolve();
     })();
     const cleanup = () => {
-      if (!finished) {
-        finished = true;
-        abortController.abort();
-      }
-      error.current = null;
-      loading.current = false;
-      data.current = null;
+      dispatchSafe = () => null; // we should not dispatch after unmounted.
+      abortController.abort();
+      dispatch({ type: 'init' });
     };
     return cleanup;
   }, [input, opts]);
-  if (loading.current) throw promiseResolver.promise;
-  return {
-    error: error.current,
-    data: data.current,
-  };
+  if (state.loading) throw promiseResolver.promise;
+  return state;
 };
