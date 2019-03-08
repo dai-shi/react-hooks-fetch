@@ -5,13 +5,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.useFetch = void 0;
 
+require("core-js/modules/es6.array.index-of");
+
+require("core-js/modules/es7.symbol.async-iterator");
+
+require("core-js/modules/es6.symbol");
+
+require("core-js/modules/es6.array.is-array");
+
 require("core-js/modules/es6.array.for-each");
 
 require("core-js/modules/es6.array.filter");
-
-require("core-js/modules/es6.object.define-property");
-
-require("core-js/modules/es6.array.index-of");
 
 require("core-js/modules/web.dom.iterable");
 
@@ -19,15 +23,13 @@ require("core-js/modules/es6.array.iterator");
 
 require("core-js/modules/es6.object.keys");
 
+require("core-js/modules/es6.object.define-property");
+
 require("regenerator-runtime/runtime");
 
 require("core-js/modules/es6.promise");
 
 var _react = require("react");
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
@@ -37,18 +39,61 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var forcedReducer = function forcedReducer(state) {
-  return !state;
-};
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
-var useForceUpdate = function useForceUpdate() {
-  return (0, _react.useReducer)(forcedReducer, false)[1];
-};
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var createFetchError = function createFetchError(response) {
   var err = new Error("".concat(response.status, " ").concat(response.statusText));
   err.name = 'FetchError';
   return err;
+};
+
+var initialState = {
+  loading: false,
+  error: null,
+  data: null
+};
+
+var reducer = function reducer(state, action) {
+  switch (action.type) {
+    case 'init':
+      return initialState;
+
+    case 'start':
+      if (state.loading) return state; // to bail out, just in case
+
+      return _objectSpread({}, state, {
+        loading: true
+      });
+
+    case 'data':
+      if (!state.loading) return state; // to bail out, just in case
+
+      return _objectSpread({}, state, {
+        loading: false,
+        data: action.data
+      });
+
+    case 'error':
+      if (!state.loading) return state; // to bail out, just in case
+
+      return _objectSpread({}, state, {
+        loading: false,
+        error: action.error
+      });
+
+    default:
+      throw new Error('no such action type');
+  }
 };
 
 var createPromiseResolver = function createPromiseResolver() {
@@ -70,21 +115,26 @@ var defaultReadBody = function defaultReadBody(body) {
 
 var useFetch = function useFetch(input) {
   var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultOpts;
-  var forceUpdate = useForceUpdate();
-  var error = (0, _react.useRef)(null);
-  var loading = (0, _react.useRef)(false);
-  var data = (0, _react.useRef)(null);
+
+  var _useReducer = (0, _react.useReducer)(reducer, initialState),
+      _useReducer2 = _slicedToArray(_useReducer, 2),
+      state = _useReducer2[0],
+      dispatch = _useReducer2[1];
+
   var promiseResolver = (0, _react.useMemo)(createPromiseResolver, [input, opts]); // Using layout effect may not be ideal, but unless we run the effect
   // synchronously, Suspense fallback isn't rendered in ConcurrentMode.
 
   (0, _react.useLayoutEffect)(function () {
-    var finished = false;
+    var dispatchSafe = function dispatchSafe(action) {
+      return dispatch(action);
+    };
+
     var abortController = new AbortController();
 
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee() {
-      var onFinish, _opts$readBody, readBody, init, response, body;
+      var _opts$readBody, readBody, init, response, body;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -99,84 +149,82 @@ var useFetch = function useFetch(input) {
 
             case 2:
               // start fetching
-              loading.current = true;
-              forceUpdate();
-
-              onFinish = function onFinish(e, d) {
-                if (!finished) {
-                  finished = true;
-                  error.current = e;
-                  data.current = d;
-                  loading.current = false;
-                }
-              };
-
-              _context.prev = 5;
+              dispatchSafe({
+                type: 'start'
+              });
+              _context.prev = 3;
               _opts$readBody = opts.readBody, readBody = _opts$readBody === void 0 ? defaultReadBody : _opts$readBody, init = _objectWithoutProperties(opts, ["readBody"]);
-              _context.next = 9;
+              _context.next = 7;
               return fetch(input, _objectSpread({}, init, {
                 signal: abortController.signal
               }));
 
-            case 9:
+            case 7:
               response = _context.sent;
 
               if (!response.ok) {
-                _context.next = 17;
+                _context.next = 15;
                 break;
               }
 
-              _context.next = 13;
+              _context.next = 11;
               return readBody(response);
 
-            case 13:
+            case 11:
               body = _context.sent;
-              onFinish(null, body);
-              _context.next = 18;
+              dispatchSafe({
+                type: 'data',
+                data: body
+              });
+              _context.next = 16;
               break;
 
-            case 17:
-              onFinish(createFetchError(response), null);
+            case 15:
+              dispatchSafe({
+                type: 'error',
+                error: createFetchError(response)
+              });
+
+            case 16:
+              _context.next = 21;
+              break;
 
             case 18:
-              _context.next = 23;
-              break;
+              _context.prev = 18;
+              _context.t0 = _context["catch"](3);
+              dispatchSafe({
+                type: 'error',
+                error: _context.t0
+              });
 
-            case 20:
-              _context.prev = 20;
-              _context.t0 = _context["catch"](5);
-              onFinish(_context.t0, null);
-
-            case 23:
+            case 21:
               // finish fetching
               promiseResolver.resolve();
 
-            case 24:
+            case 22:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[5, 20]]);
+      }, _callee, this, [[3, 18]]);
     }))();
 
     var cleanup = function cleanup() {
-      if (!finished) {
-        finished = true;
-        abortController.abort();
-      }
+      dispatchSafe = function dispatchSafe() {
+        return null;
+      }; // we should not dispatch after unmounted.
 
-      error.current = null;
-      loading.current = false;
-      data.current = null;
+
+      abortController.abort();
+      dispatch({
+        type: 'init'
+      });
     };
 
     return cleanup;
   }, [input, opts]);
-  if (loading.current) throw promiseResolver.promise;
-  return {
-    error: error.current,
-    data: data.current
-  };
+  if (state.loading) throw promiseResolver.promise;
+  return state;
 };
 
 exports.useFetch = useFetch;
