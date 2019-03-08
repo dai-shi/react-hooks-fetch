@@ -1,8 +1,4 @@
-import {
-  useLayoutEffect,
-  useMemo,
-  useReducer,
-} from 'react';
+import { useLayoutEffect, useMemo, useReducer } from 'react';
 
 const createFetchError = (response) => {
   const err = new Error(`${response.status} ${response.statusText}`);
@@ -42,7 +38,7 @@ export const useFetch = (input, opts = defaultOpts) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const promiseResolver = useMemo(createPromiseResolver, [input, opts]);
   // Using layout effect may not be ideal, but unless we run the effect
-  // synchronously, Suspense fallback isn't rendered in ConcurrentMode.
+  // synchronously, Suspense fallback isn't rendered in Concurrent Mode.
   useLayoutEffect(() => {
     let dispatchSafe = action => dispatch(action);
     const abortController = new AbortController();

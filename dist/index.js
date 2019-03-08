@@ -122,7 +122,7 @@ var useFetch = function useFetch(input) {
       dispatch = _useReducer2[1];
 
   var promiseResolver = (0, _react.useMemo)(createPromiseResolver, [input, opts]); // Using layout effect may not be ideal, but unless we run the effect
-  // synchronously, Suspense fallback isn't rendered in ConcurrentMode.
+  // synchronously, Suspense fallback isn't rendered in Concurrent Mode.
 
   (0, _react.useLayoutEffect)(function () {
     var dispatchSafe = function dispatchSafe(action) {
