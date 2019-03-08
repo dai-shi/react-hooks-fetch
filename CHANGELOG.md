@@ -1,8 +1,11 @@
 # Change Log
 
 ## [Unreleased]
+
+## [0.9.0] - 2019-03-08
 ### Changed
 - Removed @types/node-fetch
+- Re-implemented without useRef
 
 ## [0.8.0] - 2019-02-09
 ### Changed
