@@ -71,7 +71,7 @@ export const useFetch = (input, opts = defaultOpts) => {
       dispatch({ type: 'init' });
     };
     return cleanup;
-  }, [input, opts]);
+  }, [input, opts, promiseResolver]);
   if (state.loading) throw promiseResolver.promise;
   return state;
 };
