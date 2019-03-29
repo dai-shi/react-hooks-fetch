@@ -69,4 +69,4 @@ You can also try them in codesandbox.io:
 ## Limitations
 
 - Suspense is only for lazy loading in React 16.8 and this library uses an undocumented behavior of Suspense.
-- This library does not offer any caching mechanism. There are some use cases where caching is not important but cancellation is important. Not that the browser cache is still effective.
+- This library does not offer any caching mechanism. There are some use cases where caching is not important but cancellation is important. Note that the browser cache is still effective.
