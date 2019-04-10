@@ -37,12 +37,12 @@ const defaultOpts = {};
 const defaultReadBody = body => body.json();
 
 export const useFetch = (input, opts = defaultOpts) => {
-  if (process.env.NODE_ENV !== 'production') checkInfiniteLoop(input);
   const [state, dispatch] = useReducer(reducer, initialState);
   const promiseResolver = useMemo(createPromiseResolver, [input, opts]);
   // Using layout effect may not be ideal, but unless we run the effect
   // synchronously, Suspense fallback isn't rendered in Concurrent Mode.
   useLayoutEffect(() => {
+    if (process.env.NODE_ENV !== 'production') checkInfiniteLoop(input);
     let dispatchSafe = action => dispatch(action);
     const abortController = new AbortController();
     (async () => {

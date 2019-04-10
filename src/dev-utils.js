@@ -3,20 +3,19 @@
 let lastInput = null;
 const calls = [];
 export const checkInfiniteLoop = (input) => {
+  const now = Date.now();
+  calls.push(now);
   if (lastInput === input) {
-    const now = Date.now();
-    if (calls.length > 10) {
+    if (calls.length > 1) {
       if (calls[0] > now - 100) {
         console.log('Too many invocations in a short period. You probably forgot to memoize opts.');
       }
       calls.splice(0);
-    } else {
-      calls.push(now);
     }
   } else {
-    lastInput = input;
-    if (calls.length) {
+    if (lastInput && calls.length) {
       calls.splice(0);
     }
+    lastInput = input;
   }
 };

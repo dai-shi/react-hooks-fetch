@@ -117,7 +117,6 @@ var defaultReadBody = function defaultReadBody(body) {
 
 var useFetch = function useFetch(input) {
   var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultOpts;
-  if (process.env.NODE_ENV !== 'production') (0, _devUtils.checkInfiniteLoop)(input);
 
   var _useReducer = (0, _react.useReducer)(reducer, initialState),
       _useReducer2 = _slicedToArray(_useReducer, 2),
@@ -128,6 +127,8 @@ var useFetch = function useFetch(input) {
   // synchronously, Suspense fallback isn't rendered in Concurrent Mode.
 
   (0, _react.useLayoutEffect)(function () {
+    if (process.env.NODE_ENV !== 'production') (0, _devUtils.checkInfiniteLoop)(input);
+
     var dispatchSafe = function dispatchSafe(action) {
       return dispatch(action);
     };

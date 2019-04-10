@@ -14,24 +14,23 @@ var lastInput = null;
 var calls = [];
 
 var checkInfiniteLoop = function checkInfiniteLoop(input) {
-  if (lastInput === input) {
-    var now = Date.now();
+  var now = Date.now();
+  calls.push(now);
 
-    if (calls.length > 10) {
+  if (lastInput === input) {
+    if (calls.length > 1) {
       if (calls[0] > now - 100) {
         console.log('Too many invocations in a short period. You probably forgot to memoize opts.');
       }
 
       calls.splice(0);
-    } else {
-      calls.push(now);
     }
   } else {
-    lastInput = input;
-
-    if (calls.length) {
+    if (lastInput && calls.length) {
       calls.splice(0);
     }
+
+    lastInput = input;
   }
 };
 
