@@ -31,6 +31,8 @@ require("core-js/modules/es6.promise");
 
 var _react = require("react");
 
+var _devUtils = require("./dev-utils");
+
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
@@ -115,6 +117,7 @@ var defaultReadBody = function defaultReadBody(body) {
 
 var useFetch = function useFetch(input) {
   var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultOpts;
+  if (process.env.NODE_ENV !== 'production') (0, _devUtils.checkInfiniteLoop)(input);
 
   var _useReducer = (0, _react.useReducer)(reducer, initialState),
       _useReducer2 = _slicedToArray(_useReducer, 2),
@@ -222,7 +225,7 @@ var useFetch = function useFetch(input) {
     };
 
     return cleanup;
-  }, [input, opts]);
+  }, [input, opts, promiseResolver]);
   if (state.loading) throw promiseResolver.promise;
   return state;
 };

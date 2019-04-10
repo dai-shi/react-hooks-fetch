@@ -1,5 +1,7 @@
 import { useLayoutEffect, useMemo, useReducer } from 'react';
 
+import { checkInfiniteLoop } from './dev-utils';
+
 const createFetchError = (response) => {
   const err = new Error(`${response.status} ${response.statusText}`);
   err.name = 'FetchError';
@@ -35,6 +37,7 @@ const defaultOpts = {};
 const defaultReadBody = body => body.json();
 
 export const useFetch = (input, opts = defaultOpts) => {
+  if (process.env.NODE_ENV !== 'production') checkInfiniteLoop(input);
   const [state, dispatch] = useReducer(reducer, initialState);
   const promiseResolver = useMemo(createPromiseResolver, [input, opts]);
   // Using layout effect may not be ideal, but unless we run the effect
