@@ -6,6 +6,15 @@
 
 A React custom hook for Fetch API
 
+## Important notes
+
+If you are just looking for React hooks for Fecth API,
+please visit <https://github.com/dai-shi/react-hooks-async>,
+which is a more stable library that includes `useFetch`.
+
+This is an experimental library trying to combine Fetch and Suspense,
+and it is not meant for production.
+
 ## History
 
 This library has been changed over time.

@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Added
+- Experimetal loop detection in DEV mode
 
 ## [0.9.0] - 2019-03-08
 ### Changed
