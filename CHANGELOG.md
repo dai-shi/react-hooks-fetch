@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+## [0.10.0] - 2019-04-17
 ### Added
 - Experimetal loop detection in DEV mode
 - Update dependencies (incl. core-js@3)
