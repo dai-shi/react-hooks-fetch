@@ -1,30 +1,18 @@
 import React, {
   Suspense,
-  useRef,
   unstable_ConcurrentMode as ConcurrentMode,
 } from 'react';
 import ReactDOM from 'react-dom';
+import { useMemoOne as useMemo } from 'use-memo-one';
 
 import { useFetch } from 'react-hooks-fetch';
-
-// this can be too naive
-const useMemoPrev = (create, deps) => {
-  const memoized = useRef(null);
-  const prevDeps = useRef([]);
-  if (prevDeps.current.length !== deps.length
-    || prevDeps.current.some((x, i) => x !== deps[i])) {
-    prevDeps.current = deps;
-    memoized.current = create();
-  }
-  return memoized.current;
-};
 
 const Err = ({ error }) => <span>Error:{error.message}</span>;
 
 const readBody = body => body.text();
 
 const PostRemoteData = ({ userId, title, body }) => {
-  const opts = useMemoPrev(() => ({
+  const opts = useMemo(() => ({
     method: 'POST',
     body: JSON.stringify({
       userId,
