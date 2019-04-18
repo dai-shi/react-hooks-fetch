@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "core-js": "^2.5.7",
+    "core-js": "^3.0.1",
     "react": "latest",
     "react-dom": "latest",
     "react-hooks-fetch": "latest",
