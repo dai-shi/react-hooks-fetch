@@ -69,7 +69,7 @@ export const useFetch = (input, opts = defaultOpts) => {
       promiseResolver.resolve();
     })();
     const cleanup = () => {
-      dispatchSafe = () => null; // we should not dispatch after unmounted.
+      dispatchSafe = () => null; // we should not dispatch after cleanup.
       abortController.abort();
       dispatch({ type: 'init' });
     };

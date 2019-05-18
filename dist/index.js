@@ -230,7 +230,7 @@ var useFetch = function useFetch(input) {
     var cleanup = function cleanup() {
       dispatchSafe = function dispatchSafe() {
         return null;
-      }; // we should not dispatch after unmounted.
+      }; // we should not dispatch after cleanup.
 
 
       abortController.abort();
