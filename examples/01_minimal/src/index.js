@@ -1,4 +1,4 @@
-import React, { Suspense, unstable_ConcurrentMode as ConcurrentMode } from 'react';
+import React, { StrictMode, Suspense } from 'react';
 import ReactDOM from 'react-dom';
 
 import { useFetch } from 'react-hooks-fetch';
@@ -13,11 +13,11 @@ const DisplayRemoteData = () => {
 };
 
 const App = () => (
-  <ConcurrentMode>
+  <StrictMode>
     <Suspense fallback={<span>Loading...</span>}>
       <DisplayRemoteData />
     </Suspense>
-  </ConcurrentMode>
+  </StrictMode>
 );
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.unstable_createRoot(document.getElementById('app')).render(<App />);

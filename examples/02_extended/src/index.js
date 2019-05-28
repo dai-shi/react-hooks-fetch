@@ -1,7 +1,4 @@
-import React, {
-  Suspense,
-  unstable_ConcurrentMode as ConcurrentMode,
-} from 'react';
+import React, { StrictMode, Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { useMemoOne as useMemo } from 'use-memo-one';
 
@@ -28,11 +25,11 @@ const PostRemoteData = ({ userId, title, body }) => {
 };
 
 const App = () => (
-  <ConcurrentMode>
+  <StrictMode>
     <Suspense fallback={<span>Loading...</span>}>
       <PostRemoteData userId={1} title="foo" body="bar" />
     </Suspense>
-  </ConcurrentMode>
+  </StrictMode>
 );
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.unstable_createRoot(document.getElementById('app')).render(<App />);

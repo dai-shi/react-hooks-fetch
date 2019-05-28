@@ -33,7 +33,8 @@
         "react-hooks-fetch",
         "node-fetch"
       ]
-    }]
+    }],
+    "import/no-duplicates": "off"
   },
   "overrides": [{
     "files": ["__tests__/**/*"],

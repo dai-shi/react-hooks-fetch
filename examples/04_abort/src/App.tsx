@@ -1,13 +1,7 @@
 import * as React from 'react';
+import { Suspense, useReducer } from 'react';
 
 import DisplayRemoteData from './DisplayRemoteData';
-
-const {
-  Suspense,
-  // @ts-ignore
-  unstable_ConcurrentMode: ConcurrentMode,
-  useReducer,
-} = React;
 
 const Loading: React.FC<{ abort: () => void }> = ({
   abort,
@@ -41,7 +35,7 @@ const App = () => {
   const [state2, dispatch2] = useReducer(reducer, { id: '2', stop: false });
   const { id: id2, stop: stop2 } = state2;
   return (
-    <ConcurrentMode>
+    <div>
       <div>
         <div>
           <input value={id1} onChange={e => dispatch1({ type: 'setId', id: e.target.value })} />
@@ -76,7 +70,7 @@ const App = () => {
           </Suspense>
         </div>
       </div>
-    </ConcurrentMode>
+    </div>
   );
 };
 
