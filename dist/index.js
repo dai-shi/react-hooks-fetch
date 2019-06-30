@@ -47,6 +47,10 @@ var _react = require("react");
 
 var _devUtils = require("./dev-utils");
 
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
@@ -63,53 +67,10 @@ function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = 
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var createFetchError = function createFetchError(response) {
   var err = new Error("".concat(response.status, " ").concat(response.statusText));
   err.name = 'FetchError';
   return err;
-};
-
-var initialState = {
-  loading: false,
-  error: null,
-  data: null
-};
-
-var reducer = function reducer(state, action) {
-  switch (action.type) {
-    case 'init':
-      return initialState;
-
-    case 'start':
-      if (state.loading) return state; // to bail out, just in case
-
-      return _objectSpread({}, state, {
-        loading: true
-      });
-
-    case 'data':
-      if (!state.loading) return state; // to bail out, just in case
-
-      return _objectSpread({}, state, {
-        loading: false,
-        data: action.data
-      });
-
-    case 'error':
-      if (!state.loading) return state; // to bail out, just in case
-
-      return _objectSpread({}, state, {
-        loading: false,
-        error: action.error
-      });
-
-    default:
-      throw new Error('no such action type');
-  }
 };
 
 var createPromiseResolver = function createPromiseResolver() {
@@ -123,6 +84,7 @@ var createPromiseResolver = function createPromiseResolver() {
   };
 };
 
+var initialState = {};
 var defaultOpts = {};
 
 var defaultReadBody = function defaultReadBody(body) {
@@ -132,10 +94,10 @@ var defaultReadBody = function defaultReadBody(body) {
 var useFetch = function useFetch(input) {
   var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultOpts;
 
-  var _useReducer = (0, _react.useReducer)(reducer, initialState),
-      _useReducer2 = _slicedToArray(_useReducer, 2),
-      state = _useReducer2[0],
-      dispatch = _useReducer2[1];
+  var _useState = (0, _react.useState)(initialState),
+      _useState2 = _slicedToArray(_useState, 2),
+      state = _useState2[0],
+      setState = _useState2[1];
 
   var promiseResolver = (0, _react.useMemo)(createPromiseResolver, [input, opts]); // Using layout effect may not be ideal, but unless we run the effect
   // synchronously, Suspense fallback isn't rendered in Concurrent Mode.
@@ -143,8 +105,8 @@ var useFetch = function useFetch(input) {
   (0, _react.useLayoutEffect)(function () {
     if (process.env.NODE_ENV !== 'production') (0, _devUtils.checkInfiniteLoop)(input);
 
-    var dispatchSafe = function dispatchSafe(action) {
-      return dispatch(action);
+    var setStateSafe = function setStateSafe(s) {
+      return setState(s);
     };
 
     var abortController = new AbortController();
@@ -167,8 +129,8 @@ var useFetch = function useFetch(input) {
 
             case 2:
               // start fetching
-              dispatchSafe({
-                type: 'start'
+              setStateSafe({
+                loading: true
               });
               _context.prev = 3;
               _opts$readBody = opts.readBody, readBody = _opts$readBody === void 0 ? defaultReadBody : _opts$readBody, init = _objectWithoutProperties(opts, ["readBody"]);
@@ -190,16 +152,14 @@ var useFetch = function useFetch(input) {
 
             case 11:
               body = _context.sent;
-              dispatchSafe({
-                type: 'data',
+              setStateSafe({
                 data: body
               });
               _context.next = 16;
               break;
 
             case 15:
-              dispatchSafe({
-                type: 'error',
+              setStateSafe({
                 error: createFetchError(response)
               });
 
@@ -210,8 +170,7 @@ var useFetch = function useFetch(input) {
             case 18:
               _context.prev = 18;
               _context.t0 = _context["catch"](3);
-              dispatchSafe({
-                type: 'error',
+              setStateSafe({
                 error: _context.t0
               });
 
@@ -228,15 +187,13 @@ var useFetch = function useFetch(input) {
     }))();
 
     var cleanup = function cleanup() {
-      dispatchSafe = function dispatchSafe() {
+      setStateSafe = function setStateSafe() {
         return null;
-      }; // we should not dispatch after cleanup.
+      }; // we should not setState after cleanup.
 
 
       abortController.abort();
-      dispatch({
-        type: 'init'
-      });
+      setState(initialState);
     };
 
     return cleanup;
