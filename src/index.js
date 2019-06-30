@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useReducer } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 
 import { checkInfiniteLoop } from './dev-utils';
 
@@ -8,47 +8,30 @@ const createFetchError = (response) => {
   return err;
 };
 
-const initialState = { loading: false, error: null, data: null };
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'init':
-      return initialState;
-    case 'start':
-      if (state.loading) return state; // to bail out, just in case
-      return { ...state, loading: true };
-    case 'data':
-      if (!state.loading) return state; // to bail out, just in case
-      return { ...state, loading: false, data: action.data };
-    case 'error':
-      if (!state.loading) return state; // to bail out, just in case
-      return { ...state, loading: false, error: action.error };
-    default:
-      throw new Error('no such action type');
-  }
-};
-
 const createPromiseResolver = () => {
   let resolve;
   const promise = new Promise((r) => { resolve = r; });
   return { resolve, promise };
 };
 
+const initialState = {};
+
 const defaultOpts = {};
 const defaultReadBody = body => body.json();
 
 export const useFetch = (input, opts = defaultOpts) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, setState] = useState(initialState);
   const promiseResolver = useMemo(createPromiseResolver, [input, opts]);
   // Using layout effect may not be ideal, but unless we run the effect
   // synchronously, Suspense fallback isn't rendered in Concurrent Mode.
   useLayoutEffect(() => {
     if (process.env.NODE_ENV !== 'production') checkInfiniteLoop(input);
-    let dispatchSafe = action => dispatch(action);
+    let setStateSafe = s => setState(s);
     const abortController = new AbortController();
     (async () => {
       if (!input) return;
       // start fetching
-      dispatchSafe({ type: 'start' });
+      setStateSafe({ loading: true });
       try {
         const { readBody = defaultReadBody, ...init } = opts;
         const response = await fetch(input, {
@@ -58,20 +41,20 @@ export const useFetch = (input, opts = defaultOpts) => {
         // check response
         if (response.ok) {
           const body = await readBody(response);
-          dispatchSafe({ type: 'data', data: body });
+          setStateSafe({ data: body });
         } else {
-          dispatchSafe({ type: 'error', error: createFetchError(response) });
+          setStateSafe({ error: createFetchError(response) });
         }
       } catch (e) {
-        dispatchSafe({ type: 'error', error: e });
+        setStateSafe({ error: e });
       }
       // finish fetching
       promiseResolver.resolve();
     })();
     const cleanup = () => {
-      dispatchSafe = () => null; // we should not dispatch after cleanup.
+      setStateSafe = () => null; // we should not setState after cleanup.
       abortController.abort();
-      dispatch({ type: 'init' });
+      setState(initialState);
     };
     return cleanup;
   }, [input, opts, promiseResolver]);

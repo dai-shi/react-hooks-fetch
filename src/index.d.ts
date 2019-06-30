@@ -7,8 +7,8 @@ export type UseFetch = <Data>(
   input: string | Request | Falsy,
   opts?: Opts<Data> | Falsy,
 ) => {
-  error: Error | null;
-  data: Data | null;
+  error?: Error;
+  data?: Data;
 };
 
 export const useFetch: UseFetch;
