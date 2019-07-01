@@ -1,0 +1,284 @@
+import {
+  CodeSurferLayout,
+  CodeSurferColumnLayout,
+} from "code-surfer";
+export { githubFull as theme } from "code-surfer";
+
+# How to develop React useFetch hook
+
+---
+
+<CodeSurferLayout>
+
+```js title="Step1: minimal" showNumbers="ture"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      setResult({ data });
+    };
+    fetchData();
+  }, [url]);
+  return result;
+};
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+```js subtitle="Create a hook"
+const useFetch = url => {
+
+};
+```
+
+```js subtitle="Create a state"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+
+  return result;
+};
+```
+
+```js subtitle="Add an effect"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Define an async func"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+
+    };
+    fetchData();
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Implement the async func"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      setResult({ data });
+    };
+    fetchData();
+  }, [url]);
+  return result;
+};
+```
+
+```js 5:6 subtitle="Fetch data"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      setResult({ data });
+    };
+    fetchData();
+  }, [url]);
+  return result;
+};
+```
+
+```js 7 subtitle="Set state"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      setResult({ data });
+    };
+    fetchData();
+  }, [url]);
+  return result;
+};
+```
+
+```js 10 subtitle="Follow exhaustive-deps rule"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      setResult({ data });
+    };
+    fetchData();
+  }, [url]);
+  return result;
+};
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+
+```js title="Step2: cleaned-up flag"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (!didCleanup) {
+        setResult({ data });
+      }
+    };
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+
+```js subtitle="From step1"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      setResult({ data });
+    };
+    fetchData();
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Introduce a didCleanup flag"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      setResult({ data });
+    };
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+```js 4 subtitle="Define a didCleanup flag"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      setResult({ data });
+    };
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+```js 11:13 subtitle="Define a cleanup func"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      setResult({ data });
+    };
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+```js 14 subtitle="Return the cleanup func"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      setResult({ data });
+    };
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Only set state if not didCleanup"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (!didCleanup) {
+        setResult({ data });
+      }
+    };
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+</CodeSurferLayout>

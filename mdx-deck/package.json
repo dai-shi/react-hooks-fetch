@@ -1,0 +1,14 @@
+{
+  "name": "mdx-deck",
+  "private": true,
+  "scripts": {
+    "start": "mdx-deck deck.mdx",
+    "build": "mdx-deck build deck.mdx",
+    "deploy": "gh-pages -d dist"
+  },
+  "devDependencies": {
+    "code-surfer": "2.0.0-alpha.8",
+    "gh-pages": "^2.0.1",
+    "mdx-deck": "2.4.0"
+  }
+}
