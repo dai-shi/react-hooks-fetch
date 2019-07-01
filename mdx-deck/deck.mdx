@@ -12,16 +12,16 @@ export { githubFull as theme } from "code-surfer";
 
 ```js title="Step1: minimal"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
-      setResult({ data });
+      setState({ data });
     };
     fetchData();
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
@@ -39,104 +39,104 @@ const useFetch = url => {
 
 ```js subtitle="Create a state"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
 
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Add an effect"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
 
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Define an async func"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     const fetchData = async () => {
 
     };
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Invoke the async func"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     const fetchData = async () => {
 
     };
     fetchData();
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Implement the async func"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
-      setResult({ data });
+      setState({ data });
     };
     fetchData();
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js 5:6 subtitle="Fetch data"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
-      setResult({ data });
+      setState({ data });
     };
     fetchData();
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js 7 subtitle="Set state"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
-      setResult({ data });
+      setState({ data });
     };
     fetchData();
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js 10 subtitle="Follow exhaustive-deps rule"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
-      setResult({ data });
+      setState({ data });
     };
     fetchData();
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
@@ -149,14 +149,14 @@ const useFetch = url => {
 
 ```js title="Step2: didCleanup flag"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
       if (!didCleanup) {
-        setResult({ data });
+        setState({ data });
       }
     };
     fetchData();
@@ -165,7 +165,7 @@ const useFetch = url => {
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
@@ -178,139 +178,139 @@ const useFetch = url => {
 
 ```js subtitle="From step1"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
-      setResult({ data });
+      setState({ data });
     };
     fetchData();
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Define a didCleanup flag"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
-      setResult({ data });
+      setState({ data });
     };
     fetchData();
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Define a cleanup func"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
-      setResult({ data });
+      setState({ data });
     };
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js 12 subtitle="Set the didCleanup flag"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
-      setResult({ data });
+      setState({ data });
     };
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js 13 subtitle="Clear state"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
-      setResult({ data });
+      setState({ data });
     };
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js 15 subtitle="Return the cleanup func"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
-      setResult({ data });
+      setState({ data });
     };
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Only set state if not didCleanup"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
       if (!didCleanup) {
-        setResult({ data });
+        setState({ data });
       }
     };
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
@@ -323,25 +323,25 @@ const useFetch = url => {
 
 ```js title="Step3: loading flag"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
       if (!didCleanup) {
-        setResult({ data });
+        setState({ data });
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
@@ -353,48 +353,48 @@ const useFetch = url => {
 
 ```js subtitle="From step2"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
       if (!didCleanup) {
-        setResult({ data });
+        setState({ data });
       }
     };
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Set loading flag before fetching"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
       if (!didCleanup) {
-        setResult({ data });
+        setState({ data });
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
@@ -407,7 +407,7 @@ const useFetch = url => {
 
 ```js title="Step4: error handling"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
@@ -418,23 +418,23 @@ const useFetch = url => {
         }
         const data = await response.json();
         if (!didCleanup) {
-          setResult({ data });
+          setState({ data });
         }
       } catch (error) {
         if (!didCleanup) {
-          setResult({ error });
+          setState({ error });
         }
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
@@ -446,31 +446,31 @@ const useFetch = url => {
 
 ```js subtitle="From step3"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
       const response = await fetch(url);
       const data = await response.json();
       if (!didCleanup) {
-        setResult({ data });
+        setState({ data });
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Add try-catch"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
@@ -478,27 +478,27 @@ const useFetch = url => {
         const response = await fetch(url);
         const data = await response.json();
         if (!didCleanup) {
-          setResult({ data });
+          setState({ data });
         }
       } catch (error) {
 
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Set error in catch"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
@@ -506,29 +506,29 @@ const useFetch = url => {
         const response = await fetch(url);
         const data = await response.json();
         if (!didCleanup) {
-          setResult({ data });
+          setState({ data });
         }
       } catch (error) {
         if (!didCleanup) {
-          setResult({ error });
+          setState({ error });
         }
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Throw error if response is not ok"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
@@ -539,23 +539,23 @@ const useFetch = url => {
         }
         const data = await response.json();
         if (!didCleanup) {
-          setResult({ data });
+          setState({ data });
         }
       } catch (error) {
         if (!didCleanup) {
-          setResult({ error });
+          setState({ error });
         }
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
@@ -568,7 +568,7 @@ const useFetch = url => {
 
 ```js title="Step5: cancel handling"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const abortController = new AbortController();
@@ -582,24 +582,24 @@ const useFetch = url => {
         }
         const data = await response.json();
         if (!didCleanup) {
-          setResult({ data });
+          setState({ data });
         }
       } catch (error) {
         if (!didCleanup) {
-          setResult({ error });
+          setState({ error });
         }
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
       abortController.abort();
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
@@ -611,7 +611,7 @@ const useFetch = url => {
 
 ```js subtitle="From step4"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const fetchData = async () => {
@@ -622,29 +622,29 @@ const useFetch = url => {
         }
         const data = await response.json();
         if (!didCleanup) {
-          setResult({ data });
+          setState({ data });
         }
       } catch (error) {
         if (!didCleanup) {
-          setResult({ error });
+          setState({ error });
         }
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Create an AbortController"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const abortController = new AbortController();
@@ -656,29 +656,29 @@ const useFetch = url => {
         }
         const data = await response.json();
         if (!didCleanup) {
-          setResult({ data });
+          setState({ data });
         }
       } catch (error) {
         if (!didCleanup) {
-          setResult({ error });
+          setState({ error });
         }
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Set signal in fetch"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const abortController = new AbortController();
@@ -692,29 +692,29 @@ const useFetch = url => {
         }
         const data = await response.json();
         if (!didCleanup) {
-          setResult({ data });
+          setState({ data });
         }
       } catch (error) {
         if (!didCleanup) {
-          setResult({ error });
+          setState({ error });
         }
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
 ```js subtitle="Call abort on cleanup"
 const useFetch = url => {
-  const [result, setResult] = useState({});
+  const [state, setState] = useState({});
   useEffect(() => {
     let didCleanup = false;
     const abortController = new AbortController();
@@ -728,24 +728,24 @@ const useFetch = url => {
         }
         const data = await response.json();
         if (!didCleanup) {
-          setResult({ data });
+          setState({ data });
         }
       } catch (error) {
         if (!didCleanup) {
-          setResult({ error });
+          setState({ error });
         }
       }
     };
-    setResult({ loading: true });
+    setState({ loading: true });
     fetchData();
     const cleanup = () => {
       didCleanup = true;
       abortController.abort();
-      setResult({});
+      setState({});
     };
     return cleanup;
   }, [url]);
-  return result;
+  return state;
 };
 ```
 
