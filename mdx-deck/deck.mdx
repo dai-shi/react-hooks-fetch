@@ -10,7 +10,7 @@ export { githubFull as theme } from "code-surfer";
 
 <CodeSurferLayout>
 
-```js title="Step1: minimal" showNumbers="ture"
+```js title="Step1: minimal"
 const useFetch = url => {
   const [result, setResult] = useState({});
   useEffect(() => {
@@ -56,6 +56,18 @@ const useFetch = url => {
 ```
 
 ```js subtitle="Define an async func"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+
+    };
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Invoke the async func"
 const useFetch = url => {
   const [result, setResult] = useState({});
   useEffect(() => {
@@ -179,7 +191,23 @@ const useFetch = url => {
 };
 ```
 
-```js subtitle="Introduce a didCleanup flag"
+```js subtitle="Define a didCleanup flag"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      setResult({ data });
+    };
+    fetchData();
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Define a cleanup func"
 const useFetch = url => {
   const [result, setResult] = useState({});
   useEffect(() => {
@@ -192,6 +220,7 @@ const useFetch = url => {
     fetchData();
     const cleanup = () => {
       didCleanup = true;
+      setResult({});
     };
     return cleanup;
   }, [url]);
@@ -199,7 +228,7 @@ const useFetch = url => {
 };
 ```
 
-```js 4 subtitle="Define a didCleanup flag"
+```js 12 subtitle="Set the didCleanup flag"
 const useFetch = url => {
   const [result, setResult] = useState({});
   useEffect(() => {
@@ -212,6 +241,7 @@ const useFetch = url => {
     fetchData();
     const cleanup = () => {
       didCleanup = true;
+      setResult({});
     };
     return cleanup;
   }, [url]);
@@ -219,7 +249,7 @@ const useFetch = url => {
 };
 ```
 
-```js 11:13 subtitle="Define a cleanup func"
+```js 13 subtitle="Clear state"
 const useFetch = url => {
   const [result, setResult] = useState({});
   useEffect(() => {
@@ -232,6 +262,7 @@ const useFetch = url => {
     fetchData();
     const cleanup = () => {
       didCleanup = true;
+      setResult({});
     };
     return cleanup;
   }, [url]);
@@ -239,7 +270,7 @@ const useFetch = url => {
 };
 ```
 
-```js 14 subtitle="Return the cleanup func"
+```js 15 subtitle="Return the cleanup func"
 const useFetch = url => {
   const [result, setResult] = useState({});
   useEffect(() => {
@@ -252,6 +283,7 @@ const useFetch = url => {
     fetchData();
     const cleanup = () => {
       didCleanup = true;
+      setResult({});
     };
     return cleanup;
   }, [url]);
@@ -274,6 +306,442 @@ const useFetch = url => {
     fetchData();
     const cleanup = () => {
       didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+
+```js title="Step3: loading flag"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (!didCleanup) {
+        setResult({ data });
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+```js subtitle="From step2"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (!didCleanup) {
+        setResult({ data });
+      }
+    };
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Set loading flag before fetching"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (!didCleanup) {
+        setResult({ data });
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+
+```js title="Step4: error handling"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await response.json();
+        if (!didCleanup) {
+          setResult({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setResult({ error });
+        }
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+```js subtitle="From step3"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (!didCleanup) {
+        setResult({ data });
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Add try-catch"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (!didCleanup) {
+          setResult({ data });
+        }
+      } catch (error) {
+
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Set error in catch"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (!didCleanup) {
+          setResult({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setResult({ error });
+        }
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Throw error if response is not ok"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await response.json();
+        if (!didCleanup) {
+          setResult({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setResult({ error });
+        }
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+
+```js title="Step5: cancel handling"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url, {
+          signal: abortController.signal
+        });
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await response.json();
+        if (!didCleanup) {
+          setResult({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setResult({ error });
+        }
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      abortController.abort();
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+```js subtitle="From step4"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await response.json();
+        if (!didCleanup) {
+          setResult({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setResult({ error });
+        }
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Create an AbortController"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await response.json();
+        if (!didCleanup) {
+          setResult({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setResult({ error });
+        }
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Set signal in fetch"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url, {
+          signal: abortController.signal
+        });
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await response.json();
+        if (!didCleanup) {
+          setResult({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setResult({ error });
+        }
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      setResult({});
+    };
+    return cleanup;
+  }, [url]);
+  return result;
+};
+```
+
+```js subtitle="Call abort on cleanup"
+const useFetch = url => {
+  const [result, setResult] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url, {
+          signal: abortController.signal
+        });
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await response.json();
+        if (!didCleanup) {
+          setResult({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setResult({ error });
+        }
+      }
+    };
+    setResult({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      abortController.abort();
+      setResult({});
     };
     return cleanup;
   }, [url]);

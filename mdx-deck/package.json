@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "mdx-deck deck.mdx",
-    "build": "mdx-deck build deck.mdx",
+    "build": "mdx-deck build deck.mdx --basepath=/react-hooks-fetch",
     "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
