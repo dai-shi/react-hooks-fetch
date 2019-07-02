@@ -1,6 +1,6 @@
 import {
   CodeSurferLayout,
-  CodeSurferColumnLayout,
+  Code,
 } from "code-surfer";
 export { githubFull as theme } from "code-surfer";
 
@@ -753,7 +753,284 @@ const useFetch = url => {
 
 ---
 
-## TODO: fetch options
+<CodeSurferLayout>
+
+```js title="Step6: fetch options"
+const defaultOpts = {};
+const defaultReadBody = body => body.json();
+const useFetch = (
+  url,
+  opts = defaultOpts,
+  readBody = defaultReadBody,
+) => {
+  const [state, setState] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url, {
+          ...opts,
+          signal: abortController.signal
+        });
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await readBody(response);
+        if (!didCleanup) {
+          setState({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setState({ error });
+        }
+      }
+    };
+    setState({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      abortController.abort();
+      setState({});
+    };
+    return cleanup;
+  }, [url]);
+  return state;
+};
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+```js subtitle="From step5"
+const useFetch = url => {
+  const [state, setState] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url, {
+          signal: abortController.signal
+        });
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await response.json();
+        if (!didCleanup) {
+          setState({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setState({ error });
+        }
+      }
+    };
+    setState({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      abortController.abort();
+      setState({});
+    };
+    return cleanup;
+  }, [url]);
+  return state;
+};
+```
+
+```js subtitle="Define defaults outside of the hook"
+const defaultOpts = {};
+const defaultReadBody = body => body.json();
+const useFetch = url => {
+  const [state, setState] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url, {
+          signal: abortController.signal
+        });
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await response.json();
+        if (!didCleanup) {
+          setState({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setState({ error });
+        }
+      }
+    };
+    setState({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      abortController.abort();
+      setState({});
+    };
+    return cleanup;
+  }, [url]);
+  return state;
+};
+```
+
+```js subtitle="Make the hook received three args with defaults"
+const defaultOpts = {};
+const defaultReadBody = body => body.json();
+const useFetch = (
+  url,
+  opts = defaultOpts,
+  readBody = defaultReadBody,
+) => {
+  const [state, setState] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url, {
+          signal: abortController.signal
+        });
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await response.json();
+        if (!didCleanup) {
+          setState({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setState({ error });
+        }
+      }
+    };
+    setState({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      abortController.abort();
+      setState({});
+    };
+    return cleanup;
+  }, [url]);
+  return state;
+};
+```
+
+```js subtitle="Put opts to the second arg of fetch"
+const defaultOpts = {};
+const defaultReadBody = body => body.json();
+const useFetch = (
+  url,
+  opts = defaultOpts,
+  readBody = defaultReadBody,
+) => {
+  const [state, setState] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url, {
+          ...opts,
+          signal: abortController.signal
+        });
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await response.json();
+        if (!didCleanup) {
+          setState({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setState({ error });
+        }
+      }
+    };
+    setState({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      abortController.abort();
+      setState({});
+    };
+    return cleanup;
+  }, [url]);
+  return state;
+};
+```
+
+```js subtitle="Use readBody to parse response body"
+const defaultOpts = {};
+const defaultReadBody = body => body.json();
+const useFetch = (
+  url,
+  opts = defaultOpts,
+  readBody = defaultReadBody,
+) => {
+  const [state, setState] = useState({});
+  useEffect(() => {
+    let didCleanup = false;
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url, {
+          ...opts,
+          signal: abortController.signal
+        });
+        if (!response.ok) {
+          throw new Error('status: ' + response.status);
+        }
+        const data = await readBody(response);
+        if (!didCleanup) {
+          setState({ data });
+        }
+      } catch (error) {
+        if (!didCleanup) {
+          setState({ error });
+        }
+      }
+    };
+    setState({ loading: true });
+    fetchData();
+    const cleanup = () => {
+      didCleanup = true;
+      abortController.abort();
+      setState({});
+    };
+    return cleanup;
+  }, [url]);
+  return state;
+};
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+  <Code
+    lang="js"
+    code={require("!!raw-loader!./final-code.js").default}
+    title="Final code"
+  />
+  {[...Array(41).keys()].map(i => (
+    <Code
+      focus={`${i+1}:${i+1}`}
+      lang="js"
+      code={require("!!raw-loader!./final-code.js").default}
+      title="Final code"
+    />
+  ))}
+</CodeSurferLayout>
 
 ---
 

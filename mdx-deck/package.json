@@ -9,6 +9,7 @@
   "devDependencies": {
     "code-surfer": "2.0.0-alpha.8",
     "gh-pages": "^2.0.1",
-    "mdx-deck": "2.4.0"
+    "mdx-deck": "2.4.0",
+    "raw-loader": "^3.0.0"
   }
 }
