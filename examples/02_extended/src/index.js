@@ -4,7 +4,7 @@ import { useMemoOne as useMemo } from 'use-memo-one';
 
 import { useFetch } from 'react-hooks-fetch';
 
-const Err = ({ error }) => <span>Error:{error.message}</span>;
+const Err = ({ error }) => <span>Error: {error.message}</span>;
 
 const readBody = body => body.text();
 
@@ -21,7 +21,7 @@ const PostRemoteData = ({ userId, title, body }) => {
   const { error, data } = useFetch('https://jsonplaceholder.typicode.com/posts', opts);
   if (error) return <Err error={error} />;
   if (!data) return null;
-  return <span>Result:{data}</span>;
+  return <span>Result: {data}</span>;
 };
 
 const App = () => (
