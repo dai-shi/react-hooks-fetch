@@ -54,7 +54,7 @@ export const useFetch = (input, opts = defaultOpts) => {
     const cleanup = () => {
       setStateSafe = () => null; // we should not setState after cleanup.
       abortController.abort();
-      abortController = null; 
+      abortController = null;
       setState(initialState);
     };
     return cleanup;
