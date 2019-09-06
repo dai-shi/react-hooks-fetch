@@ -27,7 +27,7 @@ export const useFetch = (input, opts = defaultOpts) => {
   useLayoutEffect(() => {
     if (process.env.NODE_ENV !== 'production') checkInfiniteLoop(input);
     let setStateSafe = s => setState(s);
-    const abortController = new AbortController();
+    let abortController = new AbortController();
     (async () => {
       if (!input) return;
       // start fetching
@@ -54,6 +54,7 @@ export const useFetch = (input, opts = defaultOpts) => {
     const cleanup = () => {
       setStateSafe = () => null; // we should not setState after cleanup.
       abortController.abort();
+      abortController = null; 
       setState(initialState);
     };
     return cleanup;
