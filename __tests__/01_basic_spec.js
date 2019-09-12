@@ -1,5 +1,5 @@
 import React, { StrictMode, Suspense } from 'react';
-import { render, cleanup } from 'react-testing-library';
+import { render, cleanup } from '@testing-library/react';
 
 import { useFetch } from '../src/index';
 
