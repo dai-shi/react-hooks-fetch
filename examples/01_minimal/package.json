@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "core-js": "^3.0.1",
-    "react": "latest",
-    "react-dom": "latest",
+    "react": "experimental",
+    "react-dom": "experimental",
     "react-hooks-fetch": "latest",
     "react-scripts": "^2.1.1"
   },

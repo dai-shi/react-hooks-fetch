@@ -20,4 +20,4 @@ const App = () => (
   </StrictMode>
 );
 
-ReactDOM.unstable_createRoot(document.getElementById('app')).render(<App />);
+ReactDOM.createRoot(document.getElementById('app')).render(<App />);
