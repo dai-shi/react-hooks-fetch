@@ -26,6 +26,7 @@ Here's the list of various implementations.
 - [Suspense&ErrorBoundary trial](https://github.com/dai-shi/react-hooks-fetch/tree/7f525b518096d4a454228fdea176ecc8d2a66183)
 - [Suspense support with useRef](https://github.com/dai-shi/react-hooks-fetch/tree/af0c67e752a8cf7c2e45d3bc547ea5be0b4e71e4)
 - [useReducer version](https://github.com/dai-shi/react-hooks-fetch/tree/56dd2c2566ff7c481e1b0603fa1c43fa98da565a)
+- [useState version](https://github.com/dai-shi/react-hooks-fetch/commit/893e988b96a31054f23f3d5370f30db7450e547f)
 
 ## Install
 
