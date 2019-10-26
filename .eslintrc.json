@@ -30,6 +30,7 @@
     "import/no-duplicates": "off",
     "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }],
     "camelcase": "off",
+    "@typescript-eslint/camelcase": "off",
     "react/state-in-constructor": "off"
   },
   "overrides": [{

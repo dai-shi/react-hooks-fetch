@@ -30,15 +30,17 @@ export const createResource = (input) => {
   };
 };
 
+export const createEmptyData = emptyData => ({
+  get data() {
+    return emptyData;
+  },
+});
+
 export const useResource = (initialResource) => {
   const [resource, setResource] = useState(initialResource);
-  const refetch = useCallback((nextInput) => {
+  resource.refetch = useCallback((nextInput) => {
     const nextResource = createResource(nextInput);
     setResource(nextResource);
   }, []);
-  if (!resource) {
-    return { refetch };
-  }
-  resource.refetch = refetch;
   return resource;
 };

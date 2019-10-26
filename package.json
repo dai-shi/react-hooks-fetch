@@ -22,7 +22,8 @@
     "jest": "jest",
     "tsc-test": "tsc --project . --noEmit",
     "examples:minimal": "DIR=01_minimal EXT=js webpack-dev-server",
-    "examples:typescript": "DIR=02_typescript webpack-dev-server"
+    "examples:typescript": "DIR=02_typescript webpack-dev-server",
+    "examples:noinit": "DIR=03_noinit webpack-dev-server"
   },
   "keywords": [
     "react",
