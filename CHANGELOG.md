@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+## [0.11.0-experimental.2] - 2019-10-26
 ### Changed
 - Use object getters instead of proxies
 
