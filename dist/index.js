@@ -27,7 +27,7 @@ require("core-js/modules/web.dom-collections.iterator");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useFetch = exports.createResource = void 0;
+exports.useResource = exports.createResource = void 0;
 
 require("regenerator-runtime/runtime");
 
@@ -125,14 +125,23 @@ var createResource = function createResource(input) {
         return state.data;
       }
 
-      return target[key]; // this throws error
+      return target[key];
+    },
+    set: function set(target, key, val) {
+      if (key === 'data') {
+        return false; // read-only
+      } // eslint-disable-next-line no-param-reassign
+
+
+      target[key] = val;
+      return true;
     }
   });
 };
 
 exports.createResource = createResource;
 
-var useFetch = function useFetch(initialResource) {
+var useResource = function useResource(initialResource) {
   var _useState = (0, _react.useState)(initialResource),
       _useState2 = _slicedToArray(_useState, 2),
       resource = _useState2[0],
@@ -142,10 +151,15 @@ var useFetch = function useFetch(initialResource) {
     var nextResource = createResource(nextInput);
     setResource(nextResource);
   }, []);
-  return {
-    data: resource.data,
-    refetch: refetch
-  };
+
+  if (!resource) {
+    return {
+      refetch: refetch
+    };
+  }
+
+  resource.refetch = refetch;
+  return resource;
 };
 
-exports.useFetch = useFetch;
+exports.useResource = useResource;
