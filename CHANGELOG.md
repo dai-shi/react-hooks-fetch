@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+## [0.11.0-experimental.3] - 2019-10-26
 ### Changed
 - Rename to createAsync/useAsync
 - New API to initilize result without async: createStatic
