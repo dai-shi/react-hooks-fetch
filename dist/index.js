@@ -117,26 +117,14 @@ var createResource = function createResource(input) {
       }
     }, _callee2, null, [[0, 6, 9, 12]]);
   }))();
-  return new Proxy({}, {
-    get: function get(target, key) {
-      if (key === 'data') {
-        if (state.pending) throw state.promise;
-        if (state.error) throw state.error;
-        return state.data;
-      }
-
-      return target[key];
-    },
-    set: function set(target, key, val) {
-      if (key === 'data') {
-        return false; // read-only
-      } // eslint-disable-next-line no-param-reassign
-
-
-      target[key] = val;
-      return true;
+  return {
+    get data() {
+      if (state.pending) throw state.promise;
+      if (state.error) throw state.error;
+      return state.data;
     }
-  });
+
+  };
 };
 
 exports.createResource = createResource;

@@ -21,24 +21,13 @@ export const createResource = (input) => {
       state.pending = false;
     }
   })();
-  return new Proxy({}, {
-    get(target, key) {
-      if (key === 'data') {
-        if (state.pending) throw state.promise;
-        if (state.error) throw state.error;
-        return state.data;
-      }
-      return target[key];
+  return {
+    get data() {
+      if (state.pending) throw state.promise;
+      if (state.error) throw state.error;
+      return state.data;
     },
-    set(target, key, val) {
-      if (key === 'data') {
-        return false; // read-only
-      }
-      // eslint-disable-next-line no-param-reassign
-      target[key] = val;
-      return true;
-    },
-  });
+  };
 };
 
 export const useResource = (initialResource) => {

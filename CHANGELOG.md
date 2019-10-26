@@ -1,10 +1,14 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Use object getters instead of proxies
 
 ## [0.11.0-experimental.1] - 2019-10-26
 ### Changed
 - Totally redesign with Suspense for data fetching
+
+----
 
 ## [0.10.0] - 2019-04-17
 ### Added

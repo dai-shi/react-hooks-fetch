@@ -26,7 +26,7 @@ Here's some decisions currently made:
 
 1. No global cache
 2. Simple and primitive API
-3. Making use of Proxy
+3. Making use of object getters
 
 This is an ongoing project and everything can be changed from day to day.
 
