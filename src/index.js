@@ -9,7 +9,7 @@ const createFetchFunc = (input) => {
   };
 };
 
-export const createResource = (input) => {
+export const createAsync = (input) => {
   const fetchFunc = createFetchFunc(input);
   const state = { pending: true };
   state.promise = (async () => {
@@ -30,17 +30,17 @@ export const createResource = (input) => {
   };
 };
 
-export const createEmptyData = emptyData => ({
+export const createStatic = data => ({
   get data() {
-    return emptyData;
+    return data;
   },
 });
 
-export const useResource = (initialResource) => {
-  const [resource, setResource] = useState(initialResource);
-  resource.refetch = useCallback((nextInput) => {
-    const nextResource = createResource(nextInput);
-    setResource(nextResource);
+export const useAsync = (initialResult) => {
+  const [result, setResult] = useState(initialResult);
+  result.refetch = useCallback((nextInput) => {
+    const nextResult = createAsync(nextInput);
+    setResult(nextResult);
   }, []);
-  return resource;
+  return result;
 };

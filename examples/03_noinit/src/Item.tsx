@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 
-import { createEmptyData, useResource } from 'react-hooks-fetch';
+import { createStatic, useAsync } from 'react-hooks-fetch';
 
 import DisplayData from './DisplayData';
 
-const initialResource = createEmptyData({ data: { first_name: '' } });
+const initialResult = createStatic({ data: { first_name: '' } });
 
 const Item: React.FC = () => {
   const [id, setId] = useState('');
-  const resource = useResource(initialResource);
+  const result = useAsync(initialResult);
   return (
     <div>
       User ID: <input value={id} onChange={e => setId(e.target.value)} />
-      <DisplayData id={id} resource={resource} />
+      <DisplayData id={id} result={result} />
     </div>
   );
 };

@@ -27,7 +27,7 @@ require("core-js/modules/web.dom-collections.iterator");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useResource = exports.createResource = void 0;
+exports.useAsync = exports.createStatic = exports.createAsync = void 0;
 
 require("regenerator-runtime/runtime");
 
@@ -79,7 +79,7 @@ var createFetchFunc = function createFetchFunc(input) {
   );
 };
 
-var createResource = function createResource(input) {
+var createAsync = function createAsync(input) {
   var fetchFunc = createFetchFunc(input);
   var state = {
     pending: true
@@ -127,27 +127,30 @@ var createResource = function createResource(input) {
   };
 };
 
-exports.createResource = createResource;
+exports.createAsync = createAsync;
 
-var useResource = function useResource(initialResource) {
-  var _useState = (0, _react.useState)(initialResource),
-      _useState2 = _slicedToArray(_useState, 2),
-      resource = _useState2[0],
-      setResource = _useState2[1];
+var createStatic = function createStatic(data) {
+  return {
+    get data() {
+      return data;
+    }
 
-  var refetch = (0, _react.useCallback)(function (nextInput) {
-    var nextResource = createResource(nextInput);
-    setResource(nextResource);
-  }, []);
-
-  if (!resource) {
-    return {
-      refetch: refetch
-    };
-  }
-
-  resource.refetch = refetch;
-  return resource;
+  };
 };
 
-exports.useResource = useResource;
+exports.createStatic = createStatic;
+
+var useAsync = function useAsync(initialResult) {
+  var _useState = (0, _react.useState)(initialResult),
+      _useState2 = _slicedToArray(_useState, 2),
+      result = _useState2[0],
+      setResult = _useState2[1];
+
+  result.refetch = (0, _react.useCallback)(function (nextInput) {
+    var nextResult = createAsync(nextInput);
+    setResult(nextResult);
+  }, []);
+  return result;
+};
+
+exports.useAsync = useAsync;

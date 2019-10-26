@@ -1,7 +1,7 @@
 import React, { Suspense, useTransition } from 'react';
 import ReactDOM from 'react-dom';
 
-import { createResource, useResource } from 'react-hooks-fetch';
+import { createAsync, useAsync } from 'react-hooks-fetch';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -28,29 +28,29 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-const DisplayData = ({ resource }) => {
+const DisplayData = ({ result }) => {
   const [startTransition, isPending] = useTransition({
     timeoutMs: 1000,
   });
   const refetch = () => {
     startTransition(() => {
-      resource.refetch('https://reqres.in/api/users/2?delay=3');
+      result.refetch('https://reqres.in/api/users/2?delay=3');
     });
   };
   return (
     <div>
-      <div>First Name: {resource.data.data.first_name}</div>
+      <div>First Name: {result.data.data.first_name}</div>
       <button type="button" onClick={refetch}>Refetch user 2</button>
       {isPending && 'Pending...'}
     </div>
   );
 };
 
-const initialResource = createResource('https://reqres.in/api/users/1?delay=3');
+const initialResult = createAsync('https://reqres.in/api/users/1?delay=3');
 
 const Main = () => {
-  const resource = useResource(initialResource);
-  return <DisplayData resource={resource} />;
+  const result = useAsync(initialResult);
+  return <DisplayData result={result} />;
 };
 
 const App = () => (

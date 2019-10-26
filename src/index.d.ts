@@ -1,20 +1,20 @@
 type Input<Data> = string | Request | (() => Promise<Data>);
 
-export type CreateResource = <Data>(input: Input<Data>) => {
+export type CreateAsync = <Data>(input: Input<Data>) => {
   data: Data;
 };
 
-export type CreateEmptyData = <Data>(emptyData: Data) => {
+export type CreateStatic = <Data>(emptyData: Data) => {
   data: Data;
 };
 
-export type UseResource = <Data>(
-  initialResource: { data: Data }
+export type UseAsync = <Data>(
+  initialResult: { data: Data }
 ) => {
   data: Data;
   refetch: (input: Input<Data>) => void;
 };
 
-export const createResource: CreateResource;
-export const createEmptyData: CreateEmptyData;
-export const useResource: UseResource;
+export const createAsync: CreateAsync;
+export const createStatic: CreateStatic;
+export const useAsync: UseAsync;

@@ -4,7 +4,7 @@ import React, { useTransition } from 'react';
 
 type Props = {
   id: string;
-  resource: {
+  result: {
     data: {
       data: {
         first_name: string;
@@ -14,18 +14,18 @@ type Props = {
   };
 };
 
-const DisplayData: React.FC<Props> = ({ id, resource }) => {
+const DisplayData: React.FC<Props> = ({ id, result }) => {
   const [startTransition, isPending] = useTransition({
     timeoutMs: 1000,
   });
   const refetch = () => {
     startTransition(() => {
-      resource.refetch(`https://reqres.in/api/users/${id}?delay=3`);
+      result.refetch(`https://reqres.in/api/users/${id}?delay=3`);
     });
   };
   return (
     <div>
-      <div>First Name: {resource.data.data.first_name}</div>
+      <div>First Name: {result.data.data.first_name}</div>
       <button type="button" onClick={refetch}>Refetch</button>
       {isPending && 'Pending...'}
     </div>

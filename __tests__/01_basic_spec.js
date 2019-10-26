@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { render, cleanup } from '@testing-library/react';
 
-import { createResource, useResource } from '../src/index';
+import { createAsync, useAsync } from '../src/index';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -9,20 +9,20 @@ describe('basic spec', () => {
   afterEach(cleanup);
 
   it('should have a function', () => {
-    expect(createResource).toBeDefined();
-    expect(useResource).toBeDefined();
+    expect(createAsync).toBeDefined();
+    expect(useAsync).toBeDefined();
   });
 
   it('should create a component', async () => {
     fetch.mockResponse(JSON.stringify('test data'));
-    const resource = createResource('http://...');
-    const DisplayRemoteData = () => {
-      const { data } = useResource(resource);
-      return <span>RemoteData: {data}</span>;
+    const result = createAsync('http://...');
+    const DisplayData = () => {
+      const { data } = useAsync(result);
+      return <span>Data: {data}</span>;
     };
     const App = () => (
       <Suspense fallback={<span>Loading...</span>}>
-        <DisplayRemoteData />
+        <DisplayData />
       </Suspense>
     );
     const { container } = render(<App />);
