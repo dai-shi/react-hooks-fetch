@@ -1,14 +1,15 @@
-type Opts<Data> = RequestInit & {
-  bodyReader?: (b: Body) => Promise<Data>;
+type Input<Data> = string | Request | (() => Promise<Data>);
+
+export type CreateResource = <Data>(input: Input<Data>) => {
+  data: Data;
 };
 
-type Falsy = false | 0 | '' | null | undefined;
-export type UseFetch = <Data>(
-  input: string | Request | Falsy,
-  opts?: Opts<Data> | Falsy,
+export type UseResource = <Data>(
+  initialResource: { data: Data }
 ) => {
-  error?: Error;
-  data?: Data;
-};
+  data: Data;
+  refetch: (input: Input<Data>) => void;
+}
 
-export const useFetch: UseFetch;
+export const createResource: CreateResource;
+export const useResource: UseResource;

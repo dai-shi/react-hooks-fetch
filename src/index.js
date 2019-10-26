@@ -1,64 +1,55 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 
-import { checkInfiniteLoop } from './dev-utils';
-
-const createFetchError = (response) => {
-  const err = new Error(`${response.status} ${response.statusText}`);
-  err.name = 'FetchError';
-  return err;
+const createFetchFunc = (input) => {
+  if (typeof input === 'function') return input;
+  return async () => {
+    const response = await fetch(input);
+    const data = await response.json();
+    return data;
+  };
 };
 
-const createPromiseResolver = () => {
-  let resolve;
-  const promise = new Promise((r) => { resolve = r; });
-  return { resolve, promise };
-};
-
-const initialState = {};
-
-const defaultOpts = {};
-const defaultReadBody = body => body.json();
-
-export const useFetch = (input, opts = defaultOpts) => {
-  const [state, setState] = useState(initialState);
-  const promiseResolver = useMemo(createPromiseResolver, [input, opts]);
-  // Using layout effect may not be ideal, but unless we run the effect
-  // synchronously, Suspense fallback isn't rendered in Concurrent Mode.
-  useLayoutEffect(() => {
-    if (process.env.NODE_ENV !== 'production') checkInfiniteLoop(input);
-    let setStateSafe = s => setState(s);
-    let abortController = new AbortController();
-    (async () => {
-      if (!input) return;
-      // start fetching
-      setStateSafe({ loading: true });
-      try {
-        const { readBody = defaultReadBody, ...init } = opts;
-        const response = await fetch(input, {
-          ...init,
-          signal: abortController.signal,
-        });
-        // check response
-        if (response.ok) {
-          const body = await readBody(response);
-          setStateSafe({ data: body });
-        } else {
-          setStateSafe({ error: createFetchError(response) });
-        }
-      } catch (e) {
-        setStateSafe({ error: e });
+export const createResource = (input) => {
+  const fetchFunc = createFetchFunc(input);
+  const state = { pending: true };
+  state.promise = (async () => {
+    try {
+      state.data = await fetchFunc();
+    } catch (e) {
+      state.error = e;
+    } finally {
+      state.pending = false;
+    }
+  })();
+  return new Proxy({}, {
+    get(target, key) {
+      if (key === 'data') {
+        if (state.pending) throw state.promise;
+        if (state.error) throw state.error;
+        return state.data;
       }
-      // finish fetching
-      promiseResolver.resolve();
-    })();
-    const cleanup = () => {
-      setStateSafe = () => null; // we should not setState after cleanup.
-      abortController.abort();
-      abortController = null;
-      setState(initialState);
-    };
-    return cleanup;
-  }, [input, opts, promiseResolver]);
-  if (state.loading) throw promiseResolver.promise;
-  return state;
+      return target[key];
+    },
+    set(target, key, val) {
+      if (key === 'data') {
+        return false; // read-only
+      }
+      // eslint-disable-next-line no-param-reassign
+      target[key] = val;
+      return true;
+    },
+  });
+};
+
+export const useResource = (initialResource) => {
+  const [resource, setResource] = useState(initialResource);
+  const refetch = useCallback((nextInput) => {
+    const nextResource = createResource(nextInput);
+    setResource(nextResource);
+  }, []);
+  if (!resource) {
+    return { refetch };
+  }
+  resource.refetch = refetch;
+  return resource;
 };

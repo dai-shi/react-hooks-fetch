@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Totally redesign with Suspense for data fetching
 
 ## [0.10.0] - 2019-04-17
 ### Added

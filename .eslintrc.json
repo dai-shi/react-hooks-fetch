@@ -28,7 +28,9 @@
     "import/prefer-default-export": "off",
     "import/no-unresolved": ["error", { "ignore": ["react-hooks-fetch", "node-fetch"] }],
     "import/no-duplicates": "off",
-    "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }]
+    "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }],
+    "camelcase": "off",
+    "react/state-in-constructor": "off"
   },
   "overrides": [{
     "files": ["__tests__/**/*"],
