@@ -22,47 +22,53 @@ export class ErrorBoundary extends Component {
   }
 }
 
-const createFetchFunc = (input) => {
-  if (typeof input === 'function') return input;
-  return async () => {
-    const response = await fetch(input);
-    const data = await response.json();
-    return data;
+export const createFetch = (fetchFunc, initialInput, initialData) => {
+  const refetch = (input) => {
+    const state = { pending: true };
+    state.promise = (async () => {
+      try {
+        state.data = await fetchFunc(input);
+      } catch (e) {
+        state.error = e;
+      } finally {
+        state.pending = false;
+      }
+    })();
+    return {
+      get data() {
+        if (state.pending) throw state.promise;
+        if (state.error) throw state.error;
+        return state.data;
+      },
+      get refetch() {
+        return refetch;
+      },
+    };
   };
-};
-
-export const prefetch = (input) => {
-  const fetchFunc = createFetchFunc(input);
-  const state = { pending: true };
-  state.promise = (async () => {
-    try {
-      state.data = await fetchFunc();
-    } catch (e) {
-      state.error = e;
-    } finally {
-      state.pending = false;
-    }
-  })();
+  if (initialInput) {
+    return refetch(initialInput);
+  }
   return {
     get data() {
-      if (state.pending) throw state.promise;
-      if (state.error) throw state.error;
-      return state.data;
+      return initialData;
+    },
+    get refetch() {
+      return refetch;
     },
   };
 };
 
-export const initialize = data => ({
-  get data() {
-    return data;
-  },
-});
-
 export const useFetch = (initialResult) => {
   const [result, setResult] = useState(initialResult);
-  result.refetch = useCallback((nextInput) => {
-    const nextResult = prefetch(nextInput);
-    setResult(nextResult);
-  }, []);
-  return result;
+  const origRefetch = result.refetch;
+  return {
+    get data() {
+      return result.data;
+    },
+    refetch: useCallback((nextInput) => {
+      const nextResult = origRefetch(nextInput);
+      setResult(nextResult);
+      return nextResult;
+    }, [origRefetch]),
+  };
 };

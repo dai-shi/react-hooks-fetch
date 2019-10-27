@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Rename to createFetch and fetchFunc is always required
 
 ## [0.11.0-experimental.4] - 2019-10-27
 ### Changed

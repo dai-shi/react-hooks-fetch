@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
-import { initialize, useFetch } from 'react-hooks-fetch';
+import { createFetch, useFetch } from 'react-hooks-fetch';
 
 import DisplayData from './DisplayData';
 
-const initialResult = initialize({ data: { first_name: '' } });
+const fetchFunc = async (userId: string) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
+const initialResult = createFetch(fetchFunc, null, { data: { first_name: '' } });
 
 const Item: React.FC = () => {
   const [id, setId] = useState('');

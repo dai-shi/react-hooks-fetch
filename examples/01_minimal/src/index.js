@@ -1,7 +1,7 @@
 import React, { Suspense, useTransition } from 'react';
 import ReactDOM from 'react-dom';
 
-import { ErrorBoundary, prefetch, useFetch } from 'react-hooks-fetch';
+import { ErrorBoundary, createFetch, useFetch } from 'react-hooks-fetch';
 
 const DisplayData = ({ result }) => {
   const [startTransition, isPending] = useTransition({
@@ -9,7 +9,7 @@ const DisplayData = ({ result }) => {
   });
   const refetch = () => {
     startTransition(() => {
-      result.refetch('https://reqres.in/api/users/2?delay=3');
+      result.refetch('2');
     });
   };
   return (
@@ -21,7 +21,8 @@ const DisplayData = ({ result }) => {
   );
 };
 
-const initialResult = prefetch('https://reqres.in/api/users/1?delay=3');
+const fetchFunc = async userId => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
+const initialResult = createFetch(fetchFunc, 1);
 
 const Main = () => {
   const result = useFetch(initialResult);
@@ -29,7 +30,7 @@ const Main = () => {
 };
 
 const App = () => (
-  <ErrorBoundary fallback={error => <h1>{error}</h1>}>
+  <ErrorBoundary fallback={error => <h1>{error.message}</h1>}>
     <Suspense fallback={<span>Loading...</span>}>
       <Main />
     </Suspense>

@@ -20,7 +20,7 @@ const DisplayData: React.FC<Props> = ({ id, result }) => {
   });
   const refetch = () => {
     startTransition(() => {
-      result.refetch(`https://reqres.in/api/users/${id}?delay=3`);
+      result.refetch(id);
     });
   };
   return (
