@@ -35,7 +35,7 @@ require("core-js/modules/web.dom-collections.iterator");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useFetch = exports.initialize = exports.prefetch = exports.ErrorBoundary = void 0;
+exports.useFetch = exports.createFetch = exports.ErrorBoundary = void 0;
 
 require("regenerator-runtime/runtime");
 
@@ -136,100 +136,75 @@ function (_Component) {
 
 exports.ErrorBoundary = ErrorBoundary;
 
-var createFetchFunc = function createFetchFunc(input) {
-  if (typeof input === 'function') return input;
-  return (
-    /*#__PURE__*/
-    _asyncToGenerator(
+var createFetch = function createFetch(fetchFunc, initialInput, initialData) {
+  var refetch = function refetch(input) {
+    var state = {
+      pending: true
+    };
+    state.promise = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee() {
-      var response, data;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.next = 2;
-              return fetch(input);
+              _context.prev = 0;
+              _context.next = 3;
+              return fetchFunc(input);
 
-            case 2:
-              response = _context.sent;
-              _context.next = 5;
-              return response.json();
+            case 3:
+              state.data = _context.sent;
+              _context.next = 9;
+              break;
 
-            case 5:
-              data = _context.sent;
-              return _context.abrupt("return", data);
+            case 6:
+              _context.prev = 6;
+              _context.t0 = _context["catch"](0);
+              state.error = _context.t0;
 
-            case 7:
+            case 9:
+              _context.prev = 9;
+              state.pending = false;
+              return _context.finish(9);
+
+            case 12:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee);
-    }))
-  );
-};
+      }, _callee, null, [[0, 6, 9, 12]]);
+    }))();
+    return {
+      get data() {
+        if (state.pending) throw state.promise;
+        if (state.error) throw state.error;
+        return state.data;
+      },
 
-var prefetch = function prefetch(input) {
-  var fetchFunc = createFetchFunc(input);
-  var state = {
-    pending: true
-  };
-  state.promise = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee2() {
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
-            return fetchFunc();
-
-          case 3:
-            state.data = _context2.sent;
-            _context2.next = 9;
-            break;
-
-          case 6:
-            _context2.prev = 6;
-            _context2.t0 = _context2["catch"](0);
-            state.error = _context2.t0;
-
-          case 9:
-            _context2.prev = 9;
-            state.pending = false;
-            return _context2.finish(9);
-
-          case 12:
-          case "end":
-            return _context2.stop();
-        }
+      get refetch() {
+        return refetch;
       }
-    }, _callee2, null, [[0, 6, 9, 12]]);
-  }))();
+
+    };
+  };
+
+  if (initialInput) {
+    return refetch(initialInput);
+  }
+
   return {
     get data() {
-      if (state.pending) throw state.promise;
-      if (state.error) throw state.error;
-      return state.data;
+      return initialData;
+    },
+
+    get refetch() {
+      return refetch;
     }
 
   };
 };
 
-exports.prefetch = prefetch;
-
-var initialize = function initialize(data) {
-  return {
-    get data() {
-      return data;
-    }
-
-  };
-};
-
-exports.initialize = initialize;
+exports.createFetch = createFetch;
 
 var useFetch = function useFetch(initialResult) {
   var _useState = (0, _react.useState)(initialResult),
@@ -237,11 +212,18 @@ var useFetch = function useFetch(initialResult) {
       result = _useState2[0],
       setResult = _useState2[1];
 
-  result.refetch = (0, _react.useCallback)(function (nextInput) {
-    var nextResult = prefetch(nextInput);
-    setResult(nextResult);
-  }, []);
-  return result;
+  var origRefetch = result.refetch;
+  return {
+    get data() {
+      return result.data;
+    },
+
+    refetch: (0, _react.useCallback)(function (nextInput) {
+      var nextResult = origRefetch(nextInput);
+      setResult(nextResult);
+      return nextResult;
+    }, [origRefetch])
+  };
 };
 
 exports.useFetch = useFetch;
