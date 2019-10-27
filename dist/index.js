@@ -35,7 +35,7 @@ require("core-js/modules/web.dom-collections.iterator");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useFetch = exports.createFetch = exports.ErrorBoundary = void 0;
+exports.useSuspendableFetch = exports.lazyFetch = exports.prefetch = exports.ErrorBoundary = void 0;
 
 require("regenerator-runtime/runtime");
 
@@ -136,7 +136,7 @@ function (_Component) {
 
 exports.ErrorBoundary = ErrorBoundary;
 
-var createFetch = function createFetch(fetchFunc, initialInput, initialData) {
+var createRefetch = function createRefetch(fetchFunc) {
   var refetch = function refetch(input) {
     var state = {
       pending: true
@@ -188,10 +188,18 @@ var createFetch = function createFetch(fetchFunc, initialInput, initialData) {
     };
   };
 
-  if (initialInput) {
-    return refetch(initialInput);
-  }
+  return refetch;
+};
 
+var prefetch = function prefetch(fetchFunc, initialInput) {
+  var refetch = createRefetch(fetchFunc);
+  return refetch(initialInput);
+};
+
+exports.prefetch = prefetch;
+
+var lazyFetch = function lazyFetch(fetchFunc, initialData) {
+  var refetch = createRefetch(fetchFunc);
   return {
     get data() {
       return initialData;
@@ -204,9 +212,9 @@ var createFetch = function createFetch(fetchFunc, initialInput, initialData) {
   };
 };
 
-exports.createFetch = createFetch;
+exports.lazyFetch = lazyFetch;
 
-var useFetch = function useFetch(initialResult) {
+var useSuspendableFetch = function useSuspendableFetch(initialResult) {
   var _useState = (0, _react.useState)(initialResult),
       _useState2 = _slicedToArray(_useState, 2),
       result = _useState2[0],
@@ -226,4 +234,4 @@ var useFetch = function useFetch(initialResult) {
   };
 };
 
-exports.useFetch = useFetch;
+exports.useSuspendableFetch = useSuspendableFetch;
