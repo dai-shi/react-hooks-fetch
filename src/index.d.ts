@@ -4,25 +4,21 @@ type Fallback = ReactNode | ((error?: Error, retry?: () => void) => ReactNode);
 
 export class ErrorBoundary extends Component<{ fallback: Fallback }> {}
 
-type Result<Data, Input> = {
+type Suspendable<Data, Input> = {
   data: Data;
-  refetch: (input: Input) => Result<Data, Input>;
+  refetch: (input: Input) => Suspendable<Data, Input>;
 };
 
-type CreateFetch = {
-  <Data, Input>(
-    fetchFunc: (input: Input) => Promise<Data>,
-    initialInput: Input
-  ): Result<Data, Input>;
-  <Data, Input>(
-    fetchFunc: (input: Input) => Promise<Data>,
-    initialInput: null,
-    initialData: Data
-  ): Result<Data, Input>;
-};
+export const prefetch: <Data, Input>(
+  fetchFunc: (input: Input) => Promise<Data>,
+  initialInput: Input
+) => Suspendable<Data, Input>;
 
-export const createFetch: CreateFetch;
+export const lazyFetch: <Data, Input>(
+  fetchFunc: (input: Input) => Promise<Data>,
+  initialData: Data
+) => Suspendable<Data, Input>;
 
-export const useFetch: <Data, Input>(
-  initialResult: Result<Data, Input>
-) => Result<Data, Input>;
+export const useSuspendableFetch: <Data, Input>(
+  initialFetch: Suspendable<Data, Input>
+) => Suspendable<Data, Input>;

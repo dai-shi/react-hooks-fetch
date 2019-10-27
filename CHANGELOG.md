@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Rename to prefetch / lazyFetch / useSuspendableFetch
 
 ## [0.11.0-experimental.5] - 2019-10-27
 ### Changed

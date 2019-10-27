@@ -22,7 +22,7 @@ export class ErrorBoundary extends Component {
   }
 }
 
-export const createFetch = (fetchFunc, initialInput, initialData) => {
+const createRefetch = (fetchFunc) => {
   const refetch = (input) => {
     const state = { pending: true };
     state.promise = (async () => {
@@ -45,9 +45,16 @@ export const createFetch = (fetchFunc, initialInput, initialData) => {
       },
     };
   };
-  if (initialInput) {
-    return refetch(initialInput);
-  }
+  return refetch;
+};
+
+export const prefetch = (fetchFunc, initialInput) => {
+  const refetch = createRefetch(fetchFunc);
+  return refetch(initialInput);
+};
+
+export const lazyFetch = (fetchFunc, initialData) => {
+  const refetch = createRefetch(fetchFunc);
   return {
     get data() {
       return initialData;
@@ -58,7 +65,7 @@ export const createFetch = (fetchFunc, initialInput, initialData) => {
   };
 };
 
-export const useFetch = (initialResult) => {
+export const useSuspendableFetch = (initialResult) => {
   const [result, setResult] = useState(initialResult);
   const origRefetch = result.refetch;
   return {

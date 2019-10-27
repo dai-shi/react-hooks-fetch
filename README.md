@@ -40,7 +40,7 @@ npm install react-hooks-fetch
 
 ```javascript
 import React, { Suspense } from 'react';
-import { createFetch, useFetch } from 'react-hooks-fetch';
+import { ErrorBoundary, prefetch, useSuspendableFetch } from 'react-hooks-fetch';
 
 const DisplayData = ({ result }) => {
   const [startTransition, isPending] = useTransition({
@@ -61,15 +61,15 @@ const DisplayData = ({ result }) => {
 };
 
 const fetchFunc = async userId => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const initialResult = createFetch(fetchFunc, 1);
+const initialResult = prefetch(fetchFunc, 1);
 
 const Main = () => {
-  const result = useFetch(initialResult);
+  const result = useSuspendableFetch(initialResult);
   return <DisplayData result={result} />;
 };
 
 const App = () => (
-  <ErrorBoundary>
+  <ErrorBoundary fallback={err => <h1>{err.message}</h1>}>
     <Suspense fallback={<span>Loading...</span>}>
       <Main />
     </Suspense>
