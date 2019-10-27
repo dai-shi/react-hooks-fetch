@@ -40,7 +40,7 @@ npm install react-hooks-fetch
 
 ```javascript
 import React, { Suspense } from 'react';
-import { createAsync, useAsync } from 'react-hooks-fetch';
+import { prefetch, useFetch } from 'react-hooks-fetch';
 
 const DisplayData = ({ result }) => {
   const [startTransition, isPending] = useTransition({
@@ -60,10 +60,10 @@ const DisplayData = ({ result }) => {
   );
 };
 
-const initialResult = createAsync('https://reqres.in/api/users/1?delay=3');
+const initialResult = prefetch('https://reqres.in/api/users/1?delay=3');
 
 const Main = () => {
-  const result = useAsync(initialResult);
+  const result = useFetch(initialResult);
   return <DisplayData result={result} />;
 };
 
