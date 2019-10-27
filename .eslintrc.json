@@ -31,7 +31,8 @@
     "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }],
     "camelcase": "off",
     "@typescript-eslint/camelcase": "off",
-    "react/state-in-constructor": "off"
+    "react/state-in-constructor": "off",
+    "react/prefer-stateless-function": "off"
   },
   "overrides": [{
     "files": ["__tests__/**/*"],

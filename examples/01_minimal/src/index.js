@@ -1,32 +1,7 @@
 import React, { Suspense, useTransition } from 'react';
 import ReactDOM from 'react-dom';
 
-import { createAsync, useAsync } from 'react-hooks-fetch';
-
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { error };
-  }
-
-  render() {
-    const { error } = this.state;
-    if (error) {
-      return (
-        <div>
-          <h1>Something went wrong.</h1>
-          Error: {(error && error.message) || error}
-        </div>
-      );
-    }
-    const { children } = this.props;
-    return children;
-  }
-}
+import { ErrorBoundary, prefetch, useFetch } from 'react-hooks-fetch';
 
 const DisplayData = ({ result }) => {
   const [startTransition, isPending] = useTransition({
@@ -46,15 +21,15 @@ const DisplayData = ({ result }) => {
   );
 };
 
-const initialResult = createAsync('https://reqres.in/api/users/1?delay=3');
+const initialResult = prefetch('https://reqres.in/api/users/1?delay=3');
 
 const Main = () => {
-  const result = useAsync(initialResult);
+  const result = useFetch(initialResult);
   return <DisplayData result={result} />;
 };
 
 const App = () => (
-  <ErrorBoundary>
+  <ErrorBoundary fallback={error => <h1>{error}</h1>}>
     <Suspense fallback={<span>Loading...</span>}>
       <Main />
     </Suspense>

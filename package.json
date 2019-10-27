@@ -23,7 +23,7 @@
     "tsc-test": "tsc --project . --noEmit",
     "examples:minimal": "DIR=01_minimal EXT=js webpack-dev-server",
     "examples:typescript": "DIR=02_typescript webpack-dev-server",
-    "examples:noinit": "DIR=03_noinit webpack-dev-server"
+    "examples:noprefetch": "DIR=03_noprefetch webpack-dev-server"
   },
   "keywords": [
     "react",
@@ -36,6 +36,7 @@
   "devDependencies": {
     "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-react": "^7.6.3",
     "@testing-library/react": "^9.3.0",
@@ -79,6 +80,9 @@
         }
       ],
       "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
     ]
   },
   "jest": {

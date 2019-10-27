@@ -1,4 +1,26 @@
-import { useCallback, useState } from 'react';
+import { Component, useCallback, useState } from 'react';
+
+export class ErrorBoundary extends Component {
+  state = { error: null };
+
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+
+  retry = () => { this.setState({ error: null }); };
+
+  render() {
+    const { error } = this.state;
+    const { children, fallback } = this.props;
+    if (error) {
+      if (typeof fallback === 'function') {
+        return fallback(error, this.retry);
+      }
+      return fallback;
+    }
+    return children;
+  }
+}
 
 const createFetchFunc = (input) => {
   if (typeof input === 'function') return input;
@@ -9,7 +31,7 @@ const createFetchFunc = (input) => {
   };
 };
 
-export const createAsync = (input) => {
+export const prefetch = (input) => {
   const fetchFunc = createFetchFunc(input);
   const state = { pending: true };
   state.promise = (async () => {
@@ -30,16 +52,16 @@ export const createAsync = (input) => {
   };
 };
 
-export const createStatic = data => ({
+export const initialize = data => ({
   get data() {
     return data;
   },
 });
 
-export const useAsync = (initialResult) => {
+export const useFetch = (initialResult) => {
   const [result, setResult] = useState(initialResult);
   result.refetch = useCallback((nextInput) => {
-    const nextResult = createAsync(nextInput);
+    const nextResult = prefetch(nextInput);
     setResult(nextResult);
   }, []);
   return result;

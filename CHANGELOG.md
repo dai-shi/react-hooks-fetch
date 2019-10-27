@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Rename to prefetch/useFetch
 
 ## [0.11.0-experimental.3] - 2019-10-26
 ### Changed
