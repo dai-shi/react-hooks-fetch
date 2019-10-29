@@ -22,7 +22,7 @@ export class ErrorBoundary extends Component {
   }
 }
 
-const createRefetch = (fetchFunc) => {
+export const createFetcher = (fetchFunc) => {
   const refetch = (input) => {
     const state = { pending: true };
     state.promise = (async () => {
@@ -45,37 +45,43 @@ const createRefetch = (fetchFunc) => {
       },
     };
   };
-  return refetch;
-};
-
-export const prefetch = (fetchFunc, initialInput) => {
-  const refetch = createRefetch(fetchFunc);
-  return refetch(initialInput);
-};
-
-export const lazyFetch = (fetchFunc, initialData) => {
-  const refetch = createRefetch(fetchFunc);
   return {
-    get data() {
-      return initialData;
-    },
-    get refetch() {
-      return refetch;
-    },
+    prefetch: input => refetch(input),
+    fallback: data => ({ data, refetch }),
   };
 };
 
-export const useSuspendableFetch = (initialResult) => {
-  const [result, setResult] = useState(initialResult);
-  const origRefetch = result.refetch;
+export const useSuspendable = (suspendable) => {
+  const [result, setResult] = useState(suspendable);
+  const origFetch = suspendable.refetch;
   return {
     get data() {
       return result.data;
     },
     refetch: useCallback((nextInput) => {
-      const nextResult = origRefetch(nextInput);
+      const nextResult = origFetch(nextInput);
       setResult(nextResult);
-      return nextResult;
-    }, [origRefetch]),
+    }, [origFetch]),
+  };
+};
+
+export const useSuspendableList = (fetcher, initialList = []) => {
+  const [list, setList] = useState(initialList);
+  const origFetch = fetcher.prefetch;
+  return {
+    get data() {
+      return list.map(item => item.data);
+    },
+    append: useCallback((nextInput) => {
+      const nextResult = origFetch(nextInput);
+      setList(prev => [...prev, nextResult]);
+    }, [origFetch]),
+    insert: useCallback((nextInput, index) => {
+      const nextResult = origFetch(nextInput);
+      setList(prev => [...prev.slice(0, index), nextResult, prev.slice(index)]);
+    }, [origFetch]),
+    remove: useCallback((index) => {
+      setList(prev => [...prev.slice(0, index), prev.slice(index + 1)]);
+    }, []),
   };
 };

@@ -9,16 +9,28 @@ type Suspendable<Data, Input> = {
   refetch: (input: Input) => Suspendable<Data, Input>;
 };
 
-export const prefetch: <Data, Input>(
-  fetchFunc: (input: Input) => Promise<Data>,
-  initialInput: Input
-) => Suspendable<Data, Input>;
+type Fetcher<Data, Input> = {
+  prefetch: (input: Input) => Suspendable<Data, Input>;
+  fallback: (initialData: Data) => Suspendable<Data, Input>;
+};
 
-export const lazyFetch: <Data, Input>(
+export const createFetcher: <Data, Input>(
   fetchFunc: (input: Input) => Promise<Data>,
-  initialData: Data
-) => Suspendable<Data, Input>;
+) => Fetcher<Data, Input>;
 
-export const useSuspendableFetch: <Data, Input>(
-  initialFetch: Suspendable<Data, Input>
-) => Suspendable<Data, Input>;
+export const useSuspendable: <Data, Input>(
+  suspendable: Suspendable<Data, Input>
+) => {
+  data: Data;
+  refetch: (input: Input) => void;
+};
+
+export const useSuspendableList: <Data, Input>(
+  fetcher: Fetcher<Data, Input>,
+  initialList?: Suspendable<Data, Input>[]
+) => {
+  list: Suspendable<Data, Input>[];
+  append: (input: Input) => void;
+  insert: (input: Input, index: number) => void;
+  remove: (index: number) => void;
+};

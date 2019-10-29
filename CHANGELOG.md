@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- New API named createFetcher / useSuspendable / useSuspendableList
 
 ## [0.11.0-experimental.6] - 2019-10-27
 ### Changed

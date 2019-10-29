@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { render, cleanup } from '@testing-library/react';
 
-import { prefetch, lazyFetch, useSuspendableFetch } from '../src/index';
+import { createFetcher, useSuspendable } from '../src/index';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -9,17 +9,16 @@ describe('basic spec', () => {
   afterEach(cleanup);
 
   it('should have a function', () => {
-    expect(prefetch).toBeDefined();
-    expect(lazyFetch).toBeDefined();
-    expect(useSuspendableFetch).toBeDefined();
+    expect(createFetcher).toBeDefined();
+    expect(useSuspendable).toBeDefined();
   });
 
   it('should create a component', async () => {
     fetch.mockResponse(JSON.stringify('test data'));
     const fetchUrl = async url => (await fetch(url)).json();
-    const result = prefetch(fetchUrl, 'http://...');
+    const result = createFetcher(fetchUrl).prefetch('http://...');
     const DisplayData = () => {
-      const { data } = useSuspendableFetch(result);
+      const { data } = useSuspendable(result);
       return <span>Data: {data}</span>;
     };
     const App = () => (

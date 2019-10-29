@@ -1,7 +1,7 @@
 import React, { Suspense, useTransition } from 'react';
 import ReactDOM from 'react-dom';
 
-import { ErrorBoundary, prefetch, useSuspendableFetch } from 'react-hooks-fetch';
+import { ErrorBoundary, createFetcher, useSuspendable } from 'react-hooks-fetch';
 
 const DisplayData = ({ result }) => {
   const [startTransition, isPending] = useTransition({
@@ -22,10 +22,10 @@ const DisplayData = ({ result }) => {
 };
 
 const fetchFunc = async userId => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const initialResult = prefetch(fetchFunc, 1);
+const suspendable = createFetcher(fetchFunc).prefetch(1);
 
 const Main = () => {
-  const result = useSuspendableFetch(initialResult);
+  const result = useSuspendable(suspendable);
   return <DisplayData result={result} />;
 };
 
