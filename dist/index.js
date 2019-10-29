@@ -8,9 +8,15 @@ require("core-js/modules/es.symbol.iterator");
 
 require("core-js/modules/es.array.concat");
 
+require("core-js/modules/es.array.from");
+
 require("core-js/modules/es.array.is-array");
 
 require("core-js/modules/es.array.iterator");
+
+require("core-js/modules/es.array.map");
+
+require("core-js/modules/es.array.slice");
 
 require("core-js/modules/es.date.to-string");
 
@@ -35,13 +41,21 @@ require("core-js/modules/web.dom-collections.iterator");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useSuspendableFetch = exports.lazyFetch = exports.prefetch = exports.ErrorBoundary = void 0;
+exports.useSuspendableList = exports.useSuspendable = exports.createFetcher = exports.ErrorBoundary = void 0;
 
 require("regenerator-runtime/runtime");
 
 var _react = require("react");
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -136,7 +150,7 @@ function (_Component) {
 
 exports.ErrorBoundary = ErrorBoundary;
 
-var createRefetch = function createRefetch(fetchFunc) {
+var createFetcher = function createFetcher(fetchFunc) {
   var refetch = function refetch(input) {
     var state = {
       pending: true
@@ -188,50 +202,76 @@ var createRefetch = function createRefetch(fetchFunc) {
     };
   };
 
-  return refetch;
-};
-
-var prefetch = function prefetch(fetchFunc, initialInput) {
-  var refetch = createRefetch(fetchFunc);
-  return refetch(initialInput);
-};
-
-exports.prefetch = prefetch;
-
-var lazyFetch = function lazyFetch(fetchFunc, initialData) {
-  var refetch = createRefetch(fetchFunc);
   return {
-    get data() {
-      return initialData;
+    prefetch: function prefetch(input) {
+      return refetch(input);
     },
-
-    get refetch() {
-      return refetch;
+    fallback: function fallback(data) {
+      return {
+        data: data,
+        refetch: refetch
+      };
     }
-
   };
 };
 
-exports.lazyFetch = lazyFetch;
+exports.createFetcher = createFetcher;
 
-var useSuspendableFetch = function useSuspendableFetch(initialResult) {
-  var _useState = (0, _react.useState)(initialResult),
+var useSuspendable = function useSuspendable(suspendable) {
+  var _useState = (0, _react.useState)(suspendable),
       _useState2 = _slicedToArray(_useState, 2),
       result = _useState2[0],
       setResult = _useState2[1];
 
-  var origRefetch = result.refetch;
+  var origFetch = suspendable.refetch;
   return {
     get data() {
       return result.data;
     },
 
     refetch: (0, _react.useCallback)(function (nextInput) {
-      var nextResult = origRefetch(nextInput);
+      var nextResult = origFetch(nextInput);
       setResult(nextResult);
-      return nextResult;
-    }, [origRefetch])
+    }, [origFetch])
   };
 };
 
-exports.useSuspendableFetch = useSuspendableFetch;
+exports.useSuspendable = useSuspendable;
+
+var useSuspendableList = function useSuspendableList(fetcher) {
+  var initialList = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+  var _useState3 = (0, _react.useState)(initialList),
+      _useState4 = _slicedToArray(_useState3, 2),
+      list = _useState4[0],
+      setList = _useState4[1];
+
+  var origFetch = fetcher.prefetch;
+  return {
+    get data() {
+      return list.map(function (item) {
+        return item.data;
+      });
+    },
+
+    append: (0, _react.useCallback)(function (nextInput) {
+      var nextResult = origFetch(nextInput);
+      setList(function (prev) {
+        return [].concat(_toConsumableArray(prev), [nextResult]);
+      });
+    }, [origFetch]),
+    insert: (0, _react.useCallback)(function (nextInput, index) {
+      var nextResult = origFetch(nextInput);
+      setList(function (prev) {
+        return [].concat(_toConsumableArray(prev.slice(0, index)), [nextResult, prev.slice(index)]);
+      });
+    }, [origFetch]),
+    remove: (0, _react.useCallback)(function (index) {
+      setList(function (prev) {
+        return [].concat(_toConsumableArray(prev.slice(0, index)), [prev.slice(index + 1)]);
+      });
+    }, [])
+  };
+};
+
+exports.useSuspendableList = useSuspendableList;
