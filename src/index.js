@@ -47,7 +47,26 @@ export const createFetcher = (fetchFunc) => {
   };
   return {
     prefetch: input => refetch(input),
-    fallback: data => ({ data, refetch }),
+    lazyFetch: (fallbackData) => {
+      let suspendable = null;
+      const fetchOnce = (input) => {
+        if (!suspendable) {
+          suspendable = refetch(input);
+        }
+        return suspendable;
+      };
+      return {
+        get data() {
+          return suspendable ? suspendable.data : fallbackData;
+        },
+        get refetch() {
+          return suspendable ? suspendable.refetch : fetchOnce;
+        },
+        get lazy() {
+          return !suspendable;
+        },
+      };
+    },
   };
 };
 
@@ -62,6 +81,7 @@ export const useSuspendable = (suspendable) => {
       const nextResult = origFetch(nextInput);
       setResult(nextResult);
     }, [origFetch]),
+    lazy: result.lazy,
   };
 };
 

@@ -7,11 +7,12 @@ export class ErrorBoundary extends Component<{ fallback: Fallback }> {}
 type Suspendable<Data, Input> = {
   data: Data;
   refetch: (input: Input) => Suspendable<Data, Input>;
+  lazy?: boolean;
 };
 
 type Fetcher<Data, Input> = {
   prefetch: (input: Input) => Suspendable<Data, Input>;
-  fallback: (initialData: Data) => Suspendable<Data, Input>;
+  lazyFetch: (fallbackData: Data) => Suspendable<Data, Input>;
 };
 
 export const createFetcher: <Data, Input>(
@@ -23,6 +24,7 @@ export const useSuspendable: <Data, Input>(
 ) => {
   data: Data;
   refetch: (input: Input) => void;
+  lazy?: boolean;
 };
 
 export const useSuspendableList: <Data, Input>(

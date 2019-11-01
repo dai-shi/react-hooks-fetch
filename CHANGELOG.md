@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Improve lazyFetch with example
 
 ## [0.11.0-experimental.7] - 2019-10-30
 ### Changed

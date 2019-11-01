@@ -206,10 +206,30 @@ var createFetcher = function createFetcher(fetchFunc) {
     prefetch: function prefetch(input) {
       return refetch(input);
     },
-    fallback: function fallback(data) {
+    lazyFetch: function lazyFetch(fallbackData) {
+      var suspendable = null;
+
+      var fetchOnce = function fetchOnce(input) {
+        if (!suspendable) {
+          suspendable = refetch(input);
+        }
+
+        return suspendable;
+      };
+
       return {
-        data: data,
-        refetch: refetch
+        get data() {
+          return suspendable ? suspendable.data : fallbackData;
+        },
+
+        get refetch() {
+          return suspendable ? suspendable.refetch : fetchOnce;
+        },
+
+        get lazy() {
+          return !suspendable;
+        }
+
       };
     }
   };
@@ -232,7 +252,8 @@ var useSuspendable = function useSuspendable(suspendable) {
     refetch: (0, _react.useCallback)(function (nextInput) {
       var nextResult = origFetch(nextInput);
       setResult(nextResult);
-    }, [origFetch])
+    }, [origFetch]),
+    lazy: result.lazy
   };
 };
 

@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 
-import { createFetcher, useSuspendable } from 'react-hooks-fetch';
+import { Suspendable, useSuspendable } from 'react-hooks-fetch';
 
 import DisplayData from './DisplayData';
 
-const fetchFunc = async (userId: string) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const suspendable = createFetcher<
-  { data: { first_name: string } },
-  string
->(fetchFunc).fallback({ data: { first_name: '' } });
+type Props = {
+  initialId?: string;
+  suspendable: Suspendable<{ data: { first_name: string } }, string>;
+};
 
-const Item: React.FC = () => {
-  const [id, setId] = useState('');
+const Item: React.FC<Props> = ({ initialId = '', suspendable }) => {
+  const [id, setId] = useState(initialId);
   const result = useSuspendable(suspendable);
+  if (initialId && result.lazy) {
+    result.refetch(initialId);
+  }
   return (
     <div>
       User ID: <input value={id} onChange={e => setId(e.target.value)} />
