@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 
-import { createFetcher, useSuspendable } from 'react-hooks-fetch';
+import { Suspendable, useSuspendable } from 'react-hooks-fetch';
 
 import DisplayData from './DisplayData';
 
-const fetchFunc = async (userId: string) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const initialId = '1';
-const suspendable = createFetcher<
-  { data: { first_name: string } },
-  string
->(fetchFunc).prefetch(initialId);
+type Props = {
+  initialId: string;
+  suspendable: Suspendable<{ data: { first_name: string } }, string>;
+};
 
-const Item: React.FC = () => {
+const Item: React.FC<Props> = ({ initialId, suspendable }) => {
   const [id, setId] = useState(initialId);
   const result = useSuspendable(suspendable);
   return (
