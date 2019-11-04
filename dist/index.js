@@ -8,15 +8,9 @@ require("core-js/modules/es.symbol.iterator");
 
 require("core-js/modules/es.array.concat");
 
-require("core-js/modules/es.array.from");
-
 require("core-js/modules/es.array.is-array");
 
 require("core-js/modules/es.array.iterator");
-
-require("core-js/modules/es.array.map");
-
-require("core-js/modules/es.array.slice");
 
 require("core-js/modules/es.date.to-string");
 
@@ -41,21 +35,13 @@ require("core-js/modules/web.dom-collections.iterator");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useSuspendableList = exports.useSuspendable = exports.createFetcher = exports.ErrorBoundary = void 0;
+exports.useSuspendable = exports.createFetcher = exports.ErrorBoundary = void 0;
 
 require("regenerator-runtime/runtime");
 
 var _react = require("react");
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -258,41 +244,3 @@ var useSuspendable = function useSuspendable(suspendable) {
 };
 
 exports.useSuspendable = useSuspendable;
-
-var useSuspendableList = function useSuspendableList(fetcher) {
-  var initialList = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-
-  var _useState3 = (0, _react.useState)(initialList),
-      _useState4 = _slicedToArray(_useState3, 2),
-      list = _useState4[0],
-      setList = _useState4[1];
-
-  var origFetch = fetcher.prefetch;
-  return {
-    get data() {
-      return list.map(function (item) {
-        return item.data;
-      });
-    },
-
-    append: (0, _react.useCallback)(function (nextInput) {
-      var nextResult = origFetch(nextInput);
-      setList(function (prev) {
-        return [].concat(_toConsumableArray(prev), [nextResult]);
-      });
-    }, [origFetch]),
-    insert: (0, _react.useCallback)(function (nextInput, index) {
-      var nextResult = origFetch(nextInput);
-      setList(function (prev) {
-        return [].concat(_toConsumableArray(prev.slice(0, index)), [nextResult, prev.slice(index)]);
-      });
-    }, [origFetch]),
-    remove: (0, _react.useCallback)(function (index) {
-      setList(function (prev) {
-        return [].concat(_toConsumableArray(prev.slice(0, index)), [prev.slice(index + 1)]);
-      });
-    }, [])
-  };
-};
-
-exports.useSuspendableList = useSuspendableList;

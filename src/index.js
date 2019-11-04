@@ -84,24 +84,3 @@ export const useSuspendable = (suspendable) => {
     lazy: result.lazy,
   };
 };
-
-export const useSuspendableList = (fetcher, initialList = []) => {
-  const [list, setList] = useState(initialList);
-  const origFetch = fetcher.prefetch;
-  return {
-    get data() {
-      return list.map(item => item.data);
-    },
-    append: useCallback((nextInput) => {
-      const nextResult = origFetch(nextInput);
-      setList(prev => [...prev, nextResult]);
-    }, [origFetch]),
-    insert: useCallback((nextInput, index) => {
-      const nextResult = origFetch(nextInput);
-      setList(prev => [...prev.slice(0, index), nextResult, prev.slice(index)]);
-    }, [origFetch]),
-    remove: useCallback((index) => {
-      setList(prev => [...prev.slice(0, index), prev.slice(index + 1)]);
-    }, []),
-  };
-};

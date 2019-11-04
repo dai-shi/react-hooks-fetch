@@ -26,13 +26,3 @@ export const useSuspendable: <Data, Input>(
   refetch: (input: Input) => void;
   lazy?: boolean;
 };
-
-export const useSuspendableList: <Data, Input>(
-  fetcher: Fetcher<Data, Input>,
-  initialList?: Suspendable<Data, Input>[]
-) => {
-  list: Suspendable<Data, Input>[];
-  append: (input: Input) => void;
-  insert: (input: Input, index: number) => void;
-  remove: (index: number) => void;
-};

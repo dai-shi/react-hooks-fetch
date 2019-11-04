@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Removed
+- useSuspendableList API
 
 ## [0.11.0-experimental.8] - 2019-11-01
 ### Changed

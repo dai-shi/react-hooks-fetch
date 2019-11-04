@@ -32,7 +32,8 @@
     "camelcase": "off",
     "@typescript-eslint/camelcase": "off",
     "react/state-in-constructor": "off",
-    "react/prefer-stateless-function": "off"
+    "react/prefer-stateless-function": "off",
+    "no-plusplus": "off"
   },
   "overrides": [{
     "files": ["__tests__/**/*"],
