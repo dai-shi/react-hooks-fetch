@@ -1,8 +1,6 @@
 import React, { Suspense } from 'react';
 
-import { ErrorBoundary } from 'react-hooks-fetch';
-
-import { createFetcher } from 'react-hooks-fetch';
+import { ErrorBoundary, createFetcher } from 'react-hooks-fetch';
 
 import Item from './Item';
 
