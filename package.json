@@ -24,7 +24,8 @@
     "examples:minimal": "DIR=01_minimal EXT=js webpack-dev-server",
     "examples:typescript": "DIR=02_typescript webpack-dev-server",
     "examples:noprefetch": "DIR=03_noprefetch webpack-dev-server",
-    "examples:reducer": "DIR=04_reducer webpack-dev-server"
+    "examples:reducer": "DIR=04_reducer webpack-dev-server",
+    "examples:reactlazy": "DIR=05_reactlazy webpack-dev-server"
   },
   "keywords": [
     "react",
