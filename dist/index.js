@@ -136,44 +136,82 @@ function (_Component) {
 
 exports.ErrorBoundary = ErrorBoundary;
 
-var createFetcher = function createFetcher(fetchFunc) {
-  var refetch = function refetch(input) {
+var isPromise = function isPromise(x) {
+  return typeof x.then === 'function';
+};
+
+var createRunFetch = function createRunFetch(fetchFunc) {
+  var runFetch = function runFetch(input) {
     var state = {
       pending: true
     };
-    state.promise = _asyncToGenerator(
+
+    var start =
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee() {
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.prev = 0;
-              _context.next = 3;
-              return fetchFunc(input);
+    function () {
+      var _ref = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee() {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return fetchFunc(input);
 
-            case 3:
-              state.data = _context.sent;
-              _context.next = 9;
-              break;
+              case 3:
+                state.data = _context.sent;
+                _context.next = 19;
+                break;
 
-            case 6:
-              _context.prev = 6;
-              _context.t0 = _context["catch"](0);
-              state.error = _context.t0;
+              case 6:
+                _context.prev = 6;
+                _context.t0 = _context["catch"](0);
 
-            case 9:
-              _context.prev = 9;
-              state.pending = false;
-              return _context.finish(9);
+                if (!isPromise(_context.t0)) {
+                  _context.next = 18;
+                  break;
+                }
 
-            case 12:
-            case "end":
-              return _context.stop();
+                _context.prev = 9;
+                _context.next = 12;
+                return _context.t0;
+
+              case 12:
+                _context.prev = 12;
+                _context.next = 15;
+                return start();
+
+              case 15:
+                return _context.finish(12);
+
+              case 16:
+                _context.next = 19;
+                break;
+
+              case 18:
+                state.error = _context.t0;
+
+              case 19:
+                _context.prev = 19;
+                state.pending = false;
+                return _context.finish(19);
+
+              case 22:
+              case "end":
+                return _context.stop();
+            }
           }
-        }
-      }, _callee, null, [[0, 6, 9, 12]]);
-    }))();
+        }, _callee, null, [[0, 6, 19, 22], [9,, 12, 16]]);
+      }));
+
+      return function start() {
+        return _ref.apply(this, arguments);
+      };
+    }();
+
+    state.promise = start();
     return {
       get data() {
         if (state.pending) throw state.promise;
@@ -182,22 +220,27 @@ var createFetcher = function createFetcher(fetchFunc) {
       },
 
       get refetch() {
-        return refetch;
+        return runFetch;
       }
 
     };
   };
 
+  return runFetch;
+};
+
+var createFetcher = function createFetcher(fetchFunc) {
+  var runFetch = createRunFetch(fetchFunc);
   return {
     prefetch: function prefetch(input) {
-      return refetch(input);
+      return runFetch(input);
     },
     lazyFetch: function lazyFetch(fallbackData) {
       var suspendable = null;
 
       var fetchOnce = function fetchOnce(input) {
         if (!suspendable) {
-          suspendable = refetch(input);
+          suspendable = runFetch(input);
         }
 
         return suspendable;
@@ -229,16 +272,16 @@ var useSuspendable = function useSuspendable(suspendable) {
       result = _useState2[0],
       setResult = _useState2[1];
 
-  var origFetch = suspendable.refetch;
+  var origRefetch = suspendable.refetch;
   return {
     get data() {
       return result.data;
     },
 
     refetch: (0, _react.useCallback)(function (nextInput) {
-      var nextResult = origFetch(nextInput);
+      var nextResult = origRefetch(nextInput);
       setResult(nextResult);
-    }, [origFetch]),
+    }, [origRefetch]),
     lazy: result.lazy
   };
 };
