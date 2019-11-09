@@ -25,7 +25,8 @@
     "examples:typescript": "DIR=02_typescript webpack-dev-server",
     "examples:noprefetch": "DIR=03_noprefetch webpack-dev-server",
     "examples:reducer": "DIR=04_reducer webpack-dev-server",
-    "examples:reactlazy": "DIR=05_reactlazy webpack-dev-server"
+    "examples:reactlazy": "DIR=05_reactlazy webpack-dev-server",
+    "examples:incremental": "DIR=06_incremental webpack-dev-server"
   },
   "keywords": [
     "react",

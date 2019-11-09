@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Added
+- Support combining fetcher for incremental loading
 ### Removed
 - useSuspendableList API
 

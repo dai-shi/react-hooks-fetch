@@ -94,6 +94,7 @@ You can also try them in codesandbox.io:
 [03](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/03_noprefetch)
 [04](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/04_reducer)
 [05](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/05_reactlazy)
+[06](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/06_incremental)
 
 ## History
 

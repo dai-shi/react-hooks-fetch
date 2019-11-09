@@ -4,7 +4,7 @@ type Fallback = ReactNode | ((error?: Error, retry?: () => void) => ReactNode);
 
 export class ErrorBoundary extends Component<{ fallback: Fallback }> {}
 
-type Suspendable<Data, Input> = {
+type Suspendable<Data, Input = never> = {
   data: Data;
   refetch: (input: Input) => Suspendable<Data, Input>;
   lazy?: boolean;
