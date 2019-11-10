@@ -1,7 +1,7 @@
 {
   "name": "react-hooks-fetch",
   "description": "A React custom hook for data fetching with Suspense",
-  "version": "0.11.0-experimental.9",
+  "version": "0.11.0-experimental.10",
   "author": "Daishi Kato",
   "repository": {
     "type": "git",

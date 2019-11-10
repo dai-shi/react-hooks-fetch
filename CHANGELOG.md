@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+## [0.11.0-experimental.10] - 2019-11-10
 ### Changed
 - New API with Proxies
 
