@@ -22,7 +22,7 @@ const DisplayData = ({ result }) => {
 };
 
 const fetchFunc = async userId => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const fetcher = createFetcher(fetchFunc, null, 1);
+const fetcher = createFetcher(fetchFunc, null, '1');
 
 const Main = () => {
   const result = useFetcher(fetcher);
