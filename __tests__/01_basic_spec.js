@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { render, cleanup } from '@testing-library/react';
 
-import { createFetcher, useSuspendable } from '../src/index';
+import { createFetcher, useFetcher } from '../src/index';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -10,16 +10,16 @@ describe('basic spec', () => {
 
   it('should have a function', () => {
     expect(createFetcher).toBeDefined();
-    expect(useSuspendable).toBeDefined();
+    expect(useFetcher).toBeDefined();
   });
 
   it('should create a component', async () => {
-    fetch.mockResponse(JSON.stringify('test data'));
+    fetch.mockResponse(JSON.stringify({ str: 'test data' }));
     const fetchUrl = async url => (await fetch(url)).json();
-    const result = createFetcher(fetchUrl).prefetch('http://...');
+    const fetcher = createFetcher(fetchUrl, null, 'http://...');
     const DisplayData = () => {
-      const { data } = useSuspendable(result);
-      return <span>Data: {data}</span>;
+      const { data } = useFetcher(fetcher);
+      return <span>Data: {data.str}</span>;
     };
     const App = () => (
       <Suspense fallback={<span>Loading...</span>}>

@@ -45,58 +45,42 @@ const createRunFetch = (fetchFunc) => {
       }
     };
     state.promise = start();
-    return {
-      get data() {
+    return new Proxy({}, {
+      get(target, key) {
         if (state.pending) throw state.promise;
         if (state.error) throw state.error;
-        return state.data;
+        if (typeof state.data[key] === 'function') {
+          // For something like Array.prototype.map
+          // Is there a better way?
+          return state.data[key].bind(state.data);
+        }
+        return state.data[key];
       },
-      get refetch() {
-        return runFetch;
+      set() {
+        return false; // read-only
       },
-    };
+    });
   };
   return runFetch;
 };
 
-export const createFetcher = (fetchFunc) => {
+export const createFetcher = (fetchFunc, fallbackData, initialInput) => {
   const runFetch = createRunFetch(fetchFunc);
   return {
     prefetch: input => runFetch(input),
-    lazyFetch: (fallbackData) => {
-      let suspendable = null;
-      const fetchOnce = (input) => {
-        if (!suspendable) {
-          suspendable = runFetch(input);
-        }
-        return suspendable;
-      };
-      return {
-        get data() {
-          return suspendable ? suspendable.data : fallbackData;
-        },
-        get refetch() {
-          return suspendable ? suspendable.refetch : fetchOnce;
-        },
-        get lazy() {
-          return !suspendable;
-        },
-      };
-    },
+    initialSuspendable: fallbackData || runFetch(initialInput),
   };
 };
 
-export const useSuspendable = (suspendable) => {
-  const [result, setResult] = useState(suspendable);
-  const origRefetch = suspendable.refetch;
+export const useFetcher = (fetcher, initialSuspendable) => {
+  const [suspendable, setSuspendable] = useState(
+    initialSuspendable || fetcher.initialSuspendable,
+  );
   return {
-    get data() {
-      return result.data;
-    },
+    data: suspendable,
     refetch: useCallback((nextInput) => {
-      const nextResult = origRefetch(nextInput);
-      setResult(nextResult);
-    }, [origRefetch]),
-    lazy: result.lazy,
+      const nextSuspendable = fetcher.prefetch(nextInput);
+      setSuspendable(nextSuspendable);
+    }, [fetcher]),
   };
 };

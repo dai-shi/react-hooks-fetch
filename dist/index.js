@@ -14,6 +14,8 @@ require("core-js/modules/es.array.iterator");
 
 require("core-js/modules/es.date.to-string");
 
+require("core-js/modules/es.function.bind");
+
 require("core-js/modules/es.object.create");
 
 require("core-js/modules/es.object.define-property");
@@ -35,7 +37,7 @@ require("core-js/modules/web.dom-collections.iterator");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useSuspendable = exports.createFetcher = exports.ErrorBoundary = void 0;
+exports.useFetcher = exports.createFetcher = exports.ErrorBoundary = void 0;
 
 require("regenerator-runtime/runtime");
 
@@ -212,78 +214,53 @@ var createRunFetch = function createRunFetch(fetchFunc) {
     }();
 
     state.promise = start();
-    return {
-      get data() {
+    return new Proxy({}, {
+      get: function get(target, key) {
         if (state.pending) throw state.promise;
         if (state.error) throw state.error;
-        return state.data;
+
+        if (typeof state.data[key] === 'function') {
+          // For something like Array.prototype.map
+          // Is there a better way?
+          return state.data[key].bind(state.data);
+        }
+
+        return state.data[key];
       },
-
-      get refetch() {
-        return runFetch;
+      set: function set() {
+        return false; // read-only
       }
-
-    };
+    });
   };
 
   return runFetch;
 };
 
-var createFetcher = function createFetcher(fetchFunc) {
+var createFetcher = function createFetcher(fetchFunc, fallbackData, initialInput) {
   var runFetch = createRunFetch(fetchFunc);
   return {
     prefetch: function prefetch(input) {
       return runFetch(input);
     },
-    lazyFetch: function lazyFetch(fallbackData) {
-      var suspendable = null;
-
-      var fetchOnce = function fetchOnce(input) {
-        if (!suspendable) {
-          suspendable = runFetch(input);
-        }
-
-        return suspendable;
-      };
-
-      return {
-        get data() {
-          return suspendable ? suspendable.data : fallbackData;
-        },
-
-        get refetch() {
-          return suspendable ? suspendable.refetch : fetchOnce;
-        },
-
-        get lazy() {
-          return !suspendable;
-        }
-
-      };
-    }
+    initialSuspendable: fallbackData || runFetch(initialInput)
   };
 };
 
 exports.createFetcher = createFetcher;
 
-var useSuspendable = function useSuspendable(suspendable) {
-  var _useState = (0, _react.useState)(suspendable),
+var useFetcher = function useFetcher(fetcher, initialSuspendable) {
+  var _useState = (0, _react.useState)(initialSuspendable || fetcher.initialSuspendable),
       _useState2 = _slicedToArray(_useState, 2),
-      result = _useState2[0],
-      setResult = _useState2[1];
+      suspendable = _useState2[0],
+      setSuspendable = _useState2[1];
 
-  var origRefetch = suspendable.refetch;
   return {
-    get data() {
-      return result.data;
-    },
-
+    data: suspendable,
     refetch: (0, _react.useCallback)(function (nextInput) {
-      var nextResult = origRefetch(nextInput);
-      setResult(nextResult);
-    }, [origRefetch]),
-    lazy: result.lazy
+      var nextSuspendable = fetcher.prefetch(nextInput);
+      setSuspendable(nextSuspendable);
+    }, [fetcher])
   };
 };
 
-exports.useSuspendable = useSuspendable;
+exports.useFetcher = useFetcher;

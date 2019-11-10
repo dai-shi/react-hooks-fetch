@@ -19,17 +19,17 @@ type Data = {
 };
 
 const fetchFunc = async (userId: string) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const fetcher = createFetcher<Data, string>(fetchFunc);
+const fetcher = createFetcher<Data, string>(fetchFunc, { data: { first_name: '' } });
 
 type State = {
   id: string;
-  result: Suspendable<Data, string>;
+  result: Suspendable<Data>;
 }[];
 
 const initialState: State = [];
 
 export type Action =
-  | { type: 'ADD'; suspendable: Suspendable<Data, string> }
+  | { type: 'ADD'; suspendable: Suspendable<Data> }
   | { type: 'DEL'; id: string };
 
 let nextId = 0;

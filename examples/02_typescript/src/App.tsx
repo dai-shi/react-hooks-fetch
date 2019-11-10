@@ -12,23 +12,23 @@ const renderError = (error: Error) => (
 );
 
 const fetchFunc = async (userId: string) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const fetcher = createFetcher<
+export const fetcher = createFetcher<
   { data: { first_name: string } },
   string
->(fetchFunc);
+>(fetchFunc, { data: { first_name: '' } });
 
 const items = [
-  { id: '1', suspendable: fetcher.prefetch('1') },
-  { id: '2', suspendable: fetcher.prefetch('2') },
-  { id: '3', suspendable: fetcher.prefetch('3') },
+  { id: '1', initialSuspendable: fetcher.prefetch('1') },
+  { id: '2', initialSuspendable: fetcher.prefetch('2') },
+  { id: '3', initialSuspendable: fetcher.prefetch('3') },
 ];
 
 const App: React.FC = () => (
   <ErrorBoundary fallback={renderError}>
     <Suspense fallback={<span>Loading...</span>}>
-      {items.map(({ id, suspendable }) => (
+      {items.map(({ id, initialSuspendable }) => (
         <div key={id}>
-          <Item initialId={id} suspendable={suspendable} />
+          <Item initialId={id} initialSuspendable={initialSuspendable} />
           <hr />
         </div>
       ))}

@@ -12,23 +12,19 @@ const renderError = (error: Error) => (
 );
 
 const fetchFunc = async (userId: string) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const fetcher = createFetcher<
+export const fetcher = createFetcher<
   { data: { first_name: string } },
   string
->(fetchFunc);
-const fallbackData = { data: { first_name: '' } };
-const lazy1 = fetcher.lazyFetch(fallbackData);
-const lazy2 = fetcher.lazyFetch(fallbackData);
-const lazy3 = fetcher.lazyFetch(fallbackData);
+>(fetchFunc, { data: { first_name: '' } });
 
 const App: React.FC = () => (
   <ErrorBoundary fallback={renderError}>
     <Suspense fallback={<span>Loading...</span>}>
-      <Item suspendable={lazy1} />
+      <Item />
       <hr />
-      <Item suspendable={lazy2} />
+      <Item />
       <hr />
-      <Item initialId="9" suspendable={lazy3} />
+      <Item initialId="9" />
     </Suspense>
   </ErrorBoundary>
 );

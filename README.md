@@ -26,7 +26,7 @@ Here's some decisions currently made:
 
 1. No global cache
 2. Simple and primitive API
-3. Making use of object getters
+3. Making use of Proxies
 
 This is an ongoing project and everything can be changed from day to day.
 
@@ -40,7 +40,7 @@ npm install react-hooks-fetch
 
 ```javascript
 import React, { Suspense } from 'react';
-import { ErrorBoundary, createFetcher, useSuspendable } from 'react-hooks-fetch';
+import { ErrorBoundary, createFetcher, useFetcher } from 'react-hooks-fetch';
 
 const DisplayData = ({ result }) => {
   const [startTransition, isPending] = useTransition({
@@ -53,7 +53,7 @@ const DisplayData = ({ result }) => {
   };
   return (
     <div>
-      <div>First Name: {result.data.data.first_name}</div>
+      <div>First Name: {result.data.first_name}</div>
       <button type="button" onClick={refetch}>Refetch user 2</button>
       {isPending && 'Pending...'}
     </div>
@@ -61,10 +61,10 @@ const DisplayData = ({ result }) => {
 };
 
 const fetchFunc = async userId => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const suspendable = createFetcher(fetchFunc).prefetch(1);
+const fetcher = createFetcher(fetchFunc, null, 1);
 
 const Main = () => {
-  const result = useSuspendable(suspendable);
+  const result = useFetcher(fetcher);
   return <DisplayData result={result} />;
 };
 

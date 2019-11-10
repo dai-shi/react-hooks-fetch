@@ -1,20 +1,25 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 
-import { Suspendable, useSuspendable } from 'react-hooks-fetch';
+import { useFetcher } from 'react-hooks-fetch';
 
+import { fetcher } from './App';
 import DisplayData from './DisplayData';
 
 type Props = {
   initialId?: string;
-  suspendable: Suspendable<{ data: { first_name: string } }, string>;
 };
 
-const Item: React.FC<Props> = ({ initialId = '', suspendable }) => {
-  const [id, setId] = useState(initialId);
-  const result = useSuspendable(suspendable);
-  if (initialId && result.lazy) {
-    result.refetch(initialId);
-  }
+const Item: React.FC<Props> = ({ initialId = '' }) => {
+  const [id, setId] = useState('');
+  const result = useFetcher(fetcher);
+  const initialized = useRef(false);
+  useLayoutEffect(() => {
+    if (!initialized.current && initialId !== id) {
+      initialized.current = true;
+      setId(initialId);
+      result.refetch(initialId);
+    }
+  }, [initialId, id, result]);
   return (
     <div>
       User ID: <input value={id} onChange={e => setId(e.target.value)} />
