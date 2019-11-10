@@ -53,7 +53,7 @@ const DisplayData = ({ result }) => {
   };
   return (
     <div>
-      <div>First Name: {result.data.first_name}</div>
+      <div>First Name: {result.data.data.first_name}</div>
       <button type="button" onClick={refetch}>Refetch user 2</button>
       {isPending && 'Pending...'}
     </div>
