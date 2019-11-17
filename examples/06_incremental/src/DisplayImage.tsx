@@ -28,7 +28,7 @@ const DisplayImage: React.FC<Props> = ({ item }) => (
   <span>
     <img
       alt="breedImage"
-      src={item.message}
+      src={item.url}
       style={imageStyle}
     />
   </span>

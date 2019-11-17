@@ -8,12 +8,19 @@ import DisplayImage, { LoadingImage } from './DisplayImage';
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
+const preloadImage = (url: string) => new Promise((resolve, reject) => {
+  const image = new Image();
+  image.onload = resolve;
+  image.onerror = reject;
+  image.src = url;
+});
+
 type SubBreedListData = {
   message: string[];
 };
 
 export type BreedImageData = {
-  message: string;
+  url: string;
 };
 
 const subBreedListFetcher = createFetcher<
@@ -32,8 +39,11 @@ const breedImageFetcher = createFetcher<
   }
 >(async ({ breed, subBreed }) => {
   await sleep(3000 * Math.random());
-  return (await fetch(`https://dog.ceo/api/breed/${breed}/${subBreed}/images/random`)).json();
-}, { message: '' });
+  const response = await fetch(`https://dog.ceo/api/breed/${breed}/${subBreed}/images/random`);
+  const url = (await response.json()).message;
+  await preloadImage(url);
+  return { url };
+}, { url: '' });
 
 const breedImagesFetcher = createFetcher<
   Suspendable<BreedImageData>[],
