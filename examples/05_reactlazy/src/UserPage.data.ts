@@ -8,6 +8,6 @@ export type UserData = {
 };
 
 const fetchFunc = async (userId: string) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const fetcher = createFetcher<UserData, string>(fetchFunc, { data: { id: 0, first_name: '' } });
+const fetcher = createFetcher<UserData, string>(fetchFunc);
 
-export const fetchUserData = (userId: string) => fetcher.prefetch(userId);
+export const fetchUserData = (userId: string) => fetcher.run(userId);

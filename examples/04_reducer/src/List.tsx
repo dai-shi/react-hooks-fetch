@@ -19,7 +19,7 @@ type Data = {
 };
 
 const fetchFunc = async (userId: string) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const fetcher = createFetcher<Data, string>(fetchFunc, { data: { first_name: '' } });
+const fetcher = createFetcher<Data, string>(fetchFunc);
 
 type State = {
   id: string;
@@ -56,7 +56,7 @@ const List: React.FC = () => {
   const [userId, setUserId] = useState('');
   const add = () => {
     startTransition(() => {
-      dispatch({ type: 'ADD', suspendable: fetcher.prefetch(userId) });
+      dispatch({ type: 'ADD', suspendable: fetcher.run(userId) });
     });
     setUserId('');
   };

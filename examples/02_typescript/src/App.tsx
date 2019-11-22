@@ -15,12 +15,12 @@ const fetchFunc = async (userId: string) => (await fetch(`https://reqres.in/api/
 export const fetcher = createFetcher<
   { data: { first_name: string } },
   string
->(fetchFunc, { data: { first_name: '' } });
+>(fetchFunc);
 
 const items = [
-  { id: '1', initialSuspendable: fetcher.prefetch('1') },
-  { id: '2', initialSuspendable: fetcher.prefetch('2') },
-  { id: '3', initialSuspendable: fetcher.prefetch('3') },
+  { id: '1', initialSuspendable: fetcher.run('1') },
+  { id: '2', initialSuspendable: fetcher.run('2') },
+  { id: '3', initialSuspendable: fetcher.run('3') },
 ];
 
 const App: React.FC = () => (

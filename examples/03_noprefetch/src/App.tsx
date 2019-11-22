@@ -15,7 +15,8 @@ const fetchFunc = async (userId: string) => (await fetch(`https://reqres.in/api/
 export const fetcher = createFetcher<
   { data: { first_name: string } },
   string
->(fetchFunc, { data: { first_name: '' } });
+>(fetchFunc);
+export const initialSuspendable = { data: { first_name: '' } };
 
 const App: React.FC = () => (
   <ErrorBoundary fallback={renderError}>

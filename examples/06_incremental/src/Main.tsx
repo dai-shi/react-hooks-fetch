@@ -29,7 +29,7 @@ const subBreedListFetcher = createFetcher<
 >(async (breed) => {
   await sleep(500);
   return (await fetch(`https://dog.ceo/api/breed/${breed}/list`)).json();
-}, { message: [] });
+});
 
 const breedImageFetcher = createFetcher<
   BreedImageData,
@@ -43,17 +43,21 @@ const breedImageFetcher = createFetcher<
   const url = (await response.json()).message;
   await preloadImage(url);
   return { url };
-}, { url: '' });
+});
 
 const breedImagesFetcher = createFetcher<
   Suspendable<BreedImageData>[],
   {
     breed: string;
     subBreeds: Suspendable<SubBreedListData>;
+  },
+  {
+    breed: string;
+    subBreeds: string[];
   }
->(async ({ breed, subBreeds }) => subBreeds.message.map(
-  subBreed => breedImageFetcher.prefetch({ breed, subBreed }),
-), []);
+>(async ({ breed, subBreeds }) => subBreeds.map(
+  subBreed => breedImageFetcher.run({ breed, subBreed }),
+), ({ breed, subBreeds }) => ({ breed, subBreeds: subBreeds.message }));
 
 const combinedFetcher = createFetcher<
   {
@@ -64,16 +68,16 @@ const combinedFetcher = createFetcher<
     breed: string;
   }
 >(async ({ breed }) => {
-  const subBreeds = subBreedListFetcher.prefetch(breed);
-  const breedImages = breedImagesFetcher.prefetch({ breed, subBreeds });
+  const subBreeds = subBreedListFetcher.run(breed);
+  const breedImages = breedImagesFetcher.run({ breed, subBreeds });
   return {
     subBreeds,
     breedImages,
   };
-}, { subBreeds: { message: [] }, breedImages: [] });
+});
 
 const initialBreed = 'hound';
-const initialSuspendable = combinedFetcher.prefetch({ breed: initialBreed });
+const initialSuspendable = combinedFetcher.run({ breed: initialBreed });
 
 const Main: React.FC = () => {
   const [breed, setBreed] = useState(initialBreed);

@@ -16,9 +16,10 @@ describe('basic spec', () => {
   it('should create a component', async () => {
     fetch.mockResponse(JSON.stringify({ str: 'test data' }));
     const fetchUrl = async url => (await fetch(url)).json();
-    const fetcher = createFetcher(fetchUrl, null, 'http://...');
+    const fetcher = createFetcher(fetchUrl);
+    const initialSuspendable = fetcher.run('http://...');
     const DisplayData = () => {
-      const { data } = useFetcher(fetcher);
+      const { data } = useFetcher(fetcher, initialSuspendable);
       return <span>Data: {data.str}</span>;
     };
     const App = () => (

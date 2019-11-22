@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Simplified API without fallback
 
 ## [0.11.0-experimental.10] - 2019-11-10
 ### Changed

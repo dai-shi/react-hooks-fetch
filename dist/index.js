@@ -142,8 +142,65 @@ var isPromise = function isPromise(x) {
   return typeof x.then === 'function';
 };
 
-var createRunFetch = function createRunFetch(fetchFunc) {
-  var runFetch = function runFetch(input) {
+var transformInput =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee(transformFunc, input) {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            if (!transformFunc) {
+              _context.next = 15;
+              break;
+            }
+
+            _context.prev = 1;
+            return _context.abrupt("return", transformFunc(input));
+
+          case 5:
+            _context.prev = 5;
+            _context.t0 = _context["catch"](1);
+
+            if (!isPromise(_context.t0)) {
+              _context.next = 12;
+              break;
+            }
+
+            _context.next = 10;
+            return _context.t0;
+
+          case 10:
+            _context.next = 13;
+            break;
+
+          case 12:
+            throw _context.t0;
+
+          case 13:
+            _context.next = 0;
+            break;
+
+          case 15:
+            return _context.abrupt("return", input);
+
+          case 16:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[1, 5]]);
+  }));
+
+  return function transformInput(_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+var createFetcher = function createFetcher(fetchFunc, transformFunc) {
+  var run = function run(input) {
     var state = {
       pending: true
     };
@@ -151,65 +208,48 @@ var createRunFetch = function createRunFetch(fetchFunc) {
     var start =
     /*#__PURE__*/
     function () {
-      var _ref = _asyncToGenerator(
+      var _ref2 = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee() {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+      regeneratorRuntime.mark(function _callee2() {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context.prev = 0;
-                _context.next = 3;
-                return fetchFunc(input);
+                _context2.prev = 0;
+                _context2.t0 = fetchFunc;
+                _context2.next = 4;
+                return transformInput(transformFunc, input);
 
-              case 3:
-                state.data = _context.sent;
-                _context.next = 19;
+              case 4:
+                _context2.t1 = _context2.sent;
+                _context2.next = 7;
+                return (0, _context2.t0)(_context2.t1);
+
+              case 7:
+                state.data = _context2.sent;
+                _context2.next = 13;
                 break;
 
-              case 6:
-                _context.prev = 6;
-                _context.t0 = _context["catch"](0);
+              case 10:
+                _context2.prev = 10;
+                _context2.t2 = _context2["catch"](0);
+                state.error = _context2.t2;
 
-                if (!isPromise(_context.t0)) {
-                  _context.next = 18;
-                  break;
-                }
-
-                _context.prev = 9;
-                _context.next = 12;
-                return _context.t0;
-
-              case 12:
-                _context.prev = 12;
-                _context.next = 15;
-                return start();
-
-              case 15:
-                return _context.finish(12);
+              case 13:
+                _context2.prev = 13;
+                state.pending = false;
+                return _context2.finish(13);
 
               case 16:
-                _context.next = 19;
-                break;
-
-              case 18:
-                state.error = _context.t0;
-
-              case 19:
-                _context.prev = 19;
-                state.pending = false;
-                return _context.finish(19);
-
-              case 22:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, null, [[0, 6, 19, 22], [9,, 12, 16]]);
+        }, _callee2, null, [[0, 10, 13, 16]]);
       }));
 
       return function start() {
-        return _ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
       };
     }();
 
@@ -226,30 +266,19 @@ var createRunFetch = function createRunFetch(fetchFunc) {
         }
 
         return state.data[key];
-      },
-      set: function set() {
-        return false; // read-only
       }
     });
   };
 
-  return runFetch;
-};
-
-var createFetcher = function createFetcher(fetchFunc, fallbackData, initialInput) {
-  var runFetch = createRunFetch(fetchFunc);
   return {
-    prefetch: function prefetch(input) {
-      return runFetch(input);
-    },
-    initialSuspendable: fallbackData || runFetch(initialInput)
+    run: run
   };
 };
 
 exports.createFetcher = createFetcher;
 
 var useFetcher = function useFetcher(fetcher, initialSuspendable) {
-  var _useState = (0, _react.useState)(initialSuspendable || fetcher.initialSuspendable),
+  var _useState = (0, _react.useState)(initialSuspendable),
       _useState2 = _slicedToArray(_useState, 2),
       suspendable = _useState2[0],
       setSuspendable = _useState2[1];
@@ -257,7 +286,7 @@ var useFetcher = function useFetcher(fetcher, initialSuspendable) {
   return {
     data: suspendable,
     refetch: (0, _react.useCallback)(function (nextInput) {
-      var nextSuspendable = fetcher.prefetch(nextInput);
+      var nextSuspendable = fetcher.run(nextInput);
       setSuspendable(nextSuspendable);
     }, [fetcher])
   };

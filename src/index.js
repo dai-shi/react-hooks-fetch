@@ -24,22 +24,29 @@ export class ErrorBoundary extends Component {
 
 const isPromise = x => typeof x.then === 'function';
 
-const createRunFetch = (fetchFunc) => {
-  const runFetch = (input) => {
+const transformInput = async (transformFunc, input) => {
+  while (transformFunc) {
+    try {
+      return transformFunc(input);
+    } catch (e) {
+      if (isPromise(e)) {
+        await e;
+      } else {
+        throw e;
+      }
+    }
+  }
+  return input;
+};
+
+export const createFetcher = (fetchFunc, transformFunc) => {
+  const run = (input) => {
     const state = { pending: true };
     const start = async () => {
       try {
-        state.data = await fetchFunc(input);
+        state.data = await fetchFunc(await transformInput(transformFunc, input));
       } catch (e) {
-        if (isPromise(e)) {
-          try {
-            await e;
-          } finally {
-            await start();
-          }
-        } else {
-          state.error = e;
-        }
+        state.error = e;
       } finally {
         state.pending = false;
       }
@@ -56,30 +63,17 @@ const createRunFetch = (fetchFunc) => {
         }
         return state.data[key];
       },
-      set() {
-        return false; // read-only
-      },
     });
   };
-  return runFetch;
-};
-
-export const createFetcher = (fetchFunc, fallbackData, initialInput) => {
-  const runFetch = createRunFetch(fetchFunc);
-  return {
-    prefetch: input => runFetch(input),
-    initialSuspendable: fallbackData || runFetch(initialInput),
-  };
+  return { run };
 };
 
 export const useFetcher = (fetcher, initialSuspendable) => {
-  const [suspendable, setSuspendable] = useState(
-    initialSuspendable || fetcher.initialSuspendable,
-  );
+  const [suspendable, setSuspendable] = useState(initialSuspendable);
   return {
     data: suspendable,
     refetch: useCallback((nextInput) => {
-      const nextSuspendable = fetcher.prefetch(nextInput);
+      const nextSuspendable = fetcher.run(nextInput);
       setSuspendable(nextSuspendable);
     }, [fetcher]),
   };

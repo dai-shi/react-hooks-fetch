@@ -7,19 +7,16 @@ export class ErrorBoundary extends Component<{ fallback: Fallback }> {}
 type Suspendable<Data extends object> = Data;
 
 type Fetcher<Data extends object, Input> = {
-  prefetch: (input: Input) => Suspendable<Data>;
-  initialSuspendable: Suspendable<Data>;
+  run: (input: Input) => Suspendable<Data>;
 };
 
 type CreateFetcher = {
   <Data extends object, Input>(
     fetchFunc: (input: Input) => Promise<Data>,
-    fallbackData: null,
-    initialInput: Input,
   ): Fetcher<Data, Input>;
-  <Data extends object, Input>(
-    fetchFunc: (input: Input) => Promise<Data>,
-    fallbackData: Data,
+  <Data extends object, Input, TransformedInput>(
+    fetchFunc: (input: TransformedInput) => Promise<Data>,
+    transformFunc: (input: Input) => TransformedInput,
   ): Fetcher<Data, Input>;
 };
 
