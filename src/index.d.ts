@@ -24,7 +24,7 @@ export const createFetcher: CreateFetcher;
 
 export const useFetcher: <Data extends object, Input>(
   fetcher: Fetcher<Data, Input>,
-  initialSuspendable?: Suspendable<Data>,
+  initialSuspendable: Suspendable<Data>,
 ) => {
   data: Data;
   refetch: (input: Input) => void;
