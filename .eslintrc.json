@@ -25,6 +25,7 @@
     "react/jsx-filename-extension": ["error", { "extensions": [".js", ".tsx"] }],
     "react/prop-types": "off",
     "react/jsx-one-expression-per-line": "off",
+    "import/extensions": ["error", "never"],
     "import/prefer-default-export": "off",
     "import/no-unresolved": ["error", { "ignore": ["react-hooks-fetch", "node-fetch"] }],
     "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }],
@@ -36,9 +37,12 @@
     "no-await-in-loop": "off"
   },
   "overrides": [{
-    "files": ["__tests__/**/*"],
+    "files": ["__tests__/**/*", "./setupJest.ts"],
     "env": {
       "jest": true
+    },
+    "globals": {
+      "fetchMock": false
     },
     "rules": {
       "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]

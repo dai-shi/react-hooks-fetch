@@ -6,27 +6,25 @@ type Props = {
   id: string;
   result: {
     data: {
-      data: {
-        first_name: string;
-      };
+      first_name: string;
     };
-    refetch: (input: string) => void;
   };
+  refetch: (input: string) => void;
 };
 
-const DisplayData: React.FC<Props> = ({ id, result }) => {
+const DisplayData: React.FC<Props> = ({ id, result, refetch }) => {
   const [startTransition, isPending] = useTransition({
     timeoutMs: 1000,
   });
-  const refetch = () => {
+  const onClick = () => {
     startTransition(() => {
-      result.refetch(id);
+      refetch(id);
     });
   };
   return (
     <div>
-      <div>First Name: {result.data.data.first_name}</div>
-      <button type="button" onClick={refetch}>Refetch</button>
+      <div>First Name: {result.data.first_name}</div>
+      <button type="button" onClick={onClick}>Refetch</button>
       {isPending && 'Pending...'}
     </div>
   );

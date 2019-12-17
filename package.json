@@ -1,32 +1,32 @@
 {
   "name": "react-hooks-fetch",
-  "description": "A React custom hook for data fetching with Suspense",
-  "version": "0.11.0-experimental.11",
+  "description": "React custom hooks for data fetching with Suspense",
+  "version": "0.12.0-experimental.1",
   "author": "Daishi Kato",
   "repository": {
     "type": "git",
     "url": "https://github.com/dai-shi/react-hooks-fetch.git"
   },
+  "source": "./src/index.ts",
   "main": "./dist/index.js",
-  "module": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "module": "./dist/index.esm.js",
+  "browser": "./dist/index.umd.js",
+  "types": "./dist/src/index.d.ts",
   "sideEffects": false,
   "files": [
     "src",
     "dist"
   ],
   "scripts": {
-    "compile": "babel src -d dist",
+    "compile": "microbundle build --format cjs,es,umd",
     "test": "npm run eslint && npm run tsc-test && npm run jest",
     "eslint": "eslint --ext .js,.ts,.tsx --ignore-pattern dist --ignore-pattern mdx-deck .",
     "jest": "jest",
     "tsc-test": "tsc --project . --noEmit",
-    "examples:minimal": "DIR=01_minimal EXT=js webpack-dev-server",
-    "examples:typescript": "DIR=02_typescript webpack-dev-server",
-    "examples:noprefetch": "DIR=03_noprefetch webpack-dev-server",
-    "examples:reducer": "DIR=04_reducer webpack-dev-server",
-    "examples:reactlazy": "DIR=05_reactlazy webpack-dev-server",
-    "examples:incremental": "DIR=06_incremental webpack-dev-server"
+    "apidoc": "documentation build --format md --markdown-toc false --parse-extension ts src/*.ts | add-text-to-markdown README.md --section API --write",
+    "examples:01_minimal": "DIR=01_minimal EXT=js webpack-dev-server",
+    "examples:02_typescript": "DIR=02_typescript webpack-dev-server",
+    "examples:03_noprefetch": "DIR=03_noprefetch webpack-dev-server"
   },
   "keywords": [
     "react",
@@ -35,63 +35,40 @@
     "suspense"
   ],
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "react-suspense-fetch": "0.0.3"
+  },
   "devDependencies": {
-    "@babel/cli": "^7.6.4",
-    "@babel/core": "^7.6.4",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/preset-env": "^7.6.3",
-    "@babel/preset-react": "^7.6.3",
-    "@testing-library/react": "^9.3.0",
-    "@types/node-fetch": "^2.5.2",
-    "@types/react": "^16.9.11",
-    "@types/react-dom": "^16.9.3",
-    "@typescript-eslint/eslint-plugin": "^2.5.0",
-    "@typescript-eslint/parser": "^2.5.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^10.0.3",
+    "@testing-library/react": "^9.4.0",
+    "@types/jest": "^24.0.23",
+    "@types/react": "^16.9.16",
+    "@types/react-dom": "^16.9.4",
+    "@typescript-eslint/eslint-plugin": "^2.12.0",
+    "@typescript-eslint/parser": "^2.12.0",
+    "add-text-to-markdown": "^2.0.0",
     "babel-loader": "^8.0.6",
-    "core-js": "^3.3.4",
-    "eslint": "^6.6.0",
+    "core-js": "^3.5.0",
+    "documentation": "^12.1.4",
+    "eslint": "^6.7.2",
     "eslint-config-airbnb": "^18.0.1",
-    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.16.0",
-    "eslint-plugin-react-hooks": "^2.2.0",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^24.9.0",
     "jest-fetch-mock": "^2.1.2",
+    "microbundle": "^0.12.0-next.6",
     "react": "experimental",
     "react-dom": "experimental",
+    "ts-jest": "^24.2.0",
     "ts-loader": "^6.2.1",
-    "typescript": "^3.6.4",
-    "use-memo-one": "^1.1.1",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.9",
+    "typescript": "^3.7.3",
+    "webpack": "^4.41.3",
+    "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
   },
   "peerDependencies": {
     "react": "experimental"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "useBuiltIns": "usage",
-          "corejs": 3
-        }
-      ],
-      "@babel/preset-react"
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-class-properties"
-    ]
-  },
-  "jest": {
-    "automock": false,
-    "setupFiles": [
-      "./setupJest.js"
-    ]
   }
 }

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.12.0-experimental.1] - 2019-12-18
+### Changed
+- New hooks based on react-suspense-fetch
+### Removed
+- Some of examples that are not supported yet
+
 ## [0.11.0-experimental.11] - 2019-11-22
 ### Changed
 - Simplified API without fallback

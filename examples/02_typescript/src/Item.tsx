@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
 
-import { Suspendable, useFetcher } from 'react-hooks-fetch';
-
-import { fetcher } from './App';
+import { useFetch } from './hooks';
 import DisplayData from './DisplayData';
 
-type Props = {
-  initialId: string;
-  initialSuspendable: Suspendable<{ data: { first_name: string } }>;
-};
-
-const Item: React.FC<Props> = ({ initialId, initialSuspendable }) => {
-  const [id, setId] = useState(initialId);
-  const result = useFetcher(fetcher, initialSuspendable);
+const Item: React.FC = () => {
+  const [id, setId] = useState('1');
+  const { result, refetch } = useFetch();
   return (
     <div>
       User ID: <input value={id} onChange={e => setId(e.target.value)} />
-      <DisplayData id={id} result={result} />
+      <DisplayData id={id} result={result} refetch={refetch} />
     </div>
   );
 };

@@ -1,33 +1,32 @@
 import React, { Suspense, useTransition } from 'react';
 import ReactDOM from 'react-dom';
 
-import { ErrorBoundary, createFetcher, useFetcher } from 'react-hooks-fetch';
+import { ErrorBoundary, createUseFetch } from 'react-hooks-fetch';
 
-const DisplayData = ({ result }) => {
+const DisplayData = ({ result, refetch }) => {
   const [startTransition, isPending] = useTransition({
     timeoutMs: 1000,
   });
-  const refetch = () => {
+  const onClick = () => {
     startTransition(() => {
-      result.refetch('2');
+      refetch('2');
     });
   };
   return (
     <div>
-      <div>First Name: {result.data.data.first_name}</div>
-      <button type="button" onClick={refetch}>Refetch user 2</button>
+      <div>First Name: {result.data.first_name}</div>
+      <button type="button" onClick={onClick}>Refetch user 2</button>
       {isPending && 'Pending...'}
     </div>
   );
 };
 
 const fetchFunc = async userId => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const fetcher = createFetcher(fetchFunc);
-const initialSuspendable = fetcher.run('1');
+const useFetch = createUseFetch(fetchFunc, '1');
 
 const Main = () => {
-  const result = useFetcher(fetcher, initialSuspendable);
-  return <DisplayData result={result} />;
+  const { result, refetch } = useFetch();
+  return <DisplayData result={result} refetch={refetch} />;
 };
 
 const App = () => (

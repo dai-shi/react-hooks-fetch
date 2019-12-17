@@ -1,26 +1,24 @@
 import React, { Suspense } from 'react';
 import { render, cleanup } from '@testing-library/react';
 
-import { createFetcher, useFetcher } from '../src/index';
+import { createUseFetch } from '../src/index';
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe('basic spec', () => {
   afterEach(cleanup);
 
   it('should have a function', () => {
-    expect(createFetcher).toBeDefined();
-    expect(useFetcher).toBeDefined();
+    expect(createUseFetch).toBeDefined();
   });
 
   it('should create a component', async () => {
-    fetch.mockResponse(JSON.stringify({ str: 'test data' }));
-    const fetchUrl = async url => (await fetch(url)).json();
-    const fetcher = createFetcher(fetchUrl);
-    const initialSuspendable = fetcher.run('http://...');
+    fetchMock.mockResponse(JSON.stringify({ str: 'test data' }));
+    const fetchUrl = async (url: string) => (await fetch(url)).json();
+    const useFetch = createUseFetch(fetchUrl, 'http://...');
     const DisplayData = () => {
-      const { data } = useFetcher(fetcher, initialSuspendable);
-      return <span>Data: {data.str}</span>;
+      const { result } = useFetch();
+      return <span>Data: {result.str}</span>;
     };
     const App = () => (
       <Suspense fallback={<span>Loading...</span>}>

@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/react-hooks-fetch.svg)](https://badge.fury.io/js/react-hooks-fetch)
 [![bundle size](https://badgen.net/bundlephobia/minzip/react-hooks-fetch)](https://bundlephobia.com/result?p=react-hooks-fetch)
 
-A React custom hook for data fetching with Suspense
+React custom hooks for data fetching with Suspense
 
 ## Important notes
 
@@ -39,43 +39,46 @@ npm install react-hooks-fetch
 ## Usage
 
 ```javascript
-import React, { Suspense } from 'react';
-import { ErrorBoundary, createFetcher, useFetcher } from 'react-hooks-fetch';
+import React, { Suspense, useTransition } from 'react';
+import ReactDOM from 'react-dom';
 
-const DisplayData = ({ result }) => {
+import { ErrorBoundary, createUseFetch } from 'react-hooks-fetch';
+
+const DisplayData = ({ result, refetch }) => {
   const [startTransition, isPending] = useTransition({
     timeoutMs: 1000,
   });
-  const refetch = () => {
+  const onClick = () => {
     startTransition(() => {
-      result.refetch('2');
+      refetch('2');
     });
   };
   return (
     <div>
-      <div>First Name: {result.data.data.first_name}</div>
-      <button type="button" onClick={refetch}>Refetch user 2</button>
+      <div>First Name: {result.data.first_name}</div>
+      <button type="button" onClick={onClick}>Refetch user 2</button>
       {isPending && 'Pending...'}
     </div>
   );
 };
 
 const fetchFunc = async userId => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const fetcher = createFetcher(fetchFunc);
-const initialSuspendable = fetcher.run('1')
+const useFetch = createUseFetch(fetchFunc, '1');
 
 const Main = () => {
-  const result = useFetcher(fetcher, initialSuspendable);
-  return <DisplayData result={result} />;
+  const { result, refetch } = useFetch();
+  return <DisplayData result={result} refetch={refetch} />;
 };
 
 const App = () => (
-  <ErrorBoundary fallback={err => <h1>{err.message}</h1>}>
+  <ErrorBoundary fallback={error => <h1>{error.message}</h1>}>
     <Suspense fallback={<span>Loading...</span>}>
       <Main />
     </Suspense>
   </ErrorBoundary>
 );
+
+ReactDOM.createRoot(document.getElementById('app')).render(<App />);
 ```
 
 ## Examples
@@ -93,25 +96,12 @@ You can also try them in codesandbox.io:
 [01](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/01_minimal)
 [02](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/02_typescript)
 [03](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/03_noprefetch)
-[04](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/04_reducer)
-[05](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/05_reactlazy)
-[06](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/06_incremental)
-
-## History
-
-This library has been changed over time.
-Here's the list of various implementations.
-
-- [Initial version](https://github.com/dai-shi/react-hooks-fetch/tree/dab13e04b81b92ab41a06705c837f8ad87fb9608)
-- [AbortController support](https://github.com/dai-shi/react-hooks-fetch/tree/767cba39180c88be2960061028004e32aaea6e4b)
-- [Suspense trial](https://github.com/dai-shi/react-hooks-fetch/tree/e7027c0042df35bee029849c3fea84f9bdfb1b55)
-- [Suspense&ErrorBoundary trial](https://github.com/dai-shi/react-hooks-fetch/tree/7f525b518096d4a454228fdea176ecc8d2a66183)
-- [Suspense support with useRef](https://github.com/dai-shi/react-hooks-fetch/tree/af0c67e752a8cf7c2e45d3bc547ea5be0b4e71e4)
-- [useReducer version](https://github.com/dai-shi/react-hooks-fetch/tree/56dd2c2566ff7c481e1b0603fa1c43fa98da565a)
-- [useState version](https://github.com/dai-shi/react-hooks-fetch/commit/893e988b96a31054f23f3d5370f30db7450e547f)
 
 ## Blogs
+
+See [History](./HISTORY.md) for previous implementations.
 
 - [React Hooks Tutorial on Developing a Custom Hook for Data Fetching](https://blog.axlight.com/posts/react-hooks-tutorial-on-developing-a-custom-hook-for-data-fetching/)
 - [useFetch: React custom hook for Fetch API with Suspense and Concurrent Mode in Mind](https://blog.axlight.com/posts/usefetch-react-custom-hook-for-fetch-api-with-suspense-and-concurrent-mode-in-mind/)
 - [Developing a React Library for Suspense for Data Fetching in Concurrent Mode](https://blog.axlight.com/posts/developing-a-react-library-for-suspense-for-data-fetching-in-concurrent-mode/)
+- [Diving Into React Suspense Render-as-You-Fetch for REST APIs](https://blog.axlight.com/posts/diving-into-react-suspense-render-as-you-fetch-for-rest-apis/)

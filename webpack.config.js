@@ -36,7 +36,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      'react-hooks-fetch': __dirname,
+      'react-hooks-fetch': `${__dirname}/src`,
     },
   },
   devServer: {
