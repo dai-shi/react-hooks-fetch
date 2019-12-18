@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.12.0-experimental.2] - 2019-12-19
+### Changed
+- Improve noprefetch API and example
+
 ## [0.12.0-experimental.1] - 2019-12-18
 ### Changed
 - New hooks based on react-suspense-fetch
