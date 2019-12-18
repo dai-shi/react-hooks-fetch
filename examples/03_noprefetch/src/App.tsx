@@ -16,9 +16,9 @@ const App: React.FC = () => (
     <Suspense fallback={<span>Loading...</span>}>
       <Item />
       <hr />
-      <Item />
+      <Item initialId="8" />
       <hr />
-      <Item />
+      <Item initialId="9" />
     </Suspense>
   </ErrorBoundary>
 );

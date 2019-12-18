@@ -27,14 +27,11 @@
     "react/jsx-one-expression-per-line": "off",
     "import/extensions": ["error", "never"],
     "import/prefer-default-export": "off",
-    "import/no-unresolved": ["error", { "ignore": ["react-hooks-fetch", "node-fetch"] }],
+    "import/no-unresolved": ["error", { "ignore": ["react-hooks-fetch"] }],
     "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }],
     "camelcase": "off",
     "@typescript-eslint/camelcase": "off",
-    "react/state-in-constructor": "off",
-    "react/prefer-stateless-function": "off",
-    "no-plusplus": "off",
-    "no-await-in-loop": "off"
+    "react/state-in-constructor": "off"
   },
   "overrides": [{
     "files": ["__tests__/**/*", "./setupJest.ts"],
