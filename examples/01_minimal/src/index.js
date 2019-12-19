@@ -21,7 +21,7 @@ const DisplayData = ({ result, refetch }) => {
   );
 };
 
-const fetchFunc = async userId => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
+const fetchFunc = async (userId) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
 const useFetch = createUseFetch(fetchFunc, '1');
 
 const Main = () => {
@@ -30,7 +30,7 @@ const Main = () => {
 };
 
 const App = () => (
-  <ErrorBoundary fallback={error => <h1>{error.message}</h1>}>
+  <ErrorBoundary fallback={(error) => <h1>{error.message}</h1>}>
     <Suspense fallback={<span>Loading...</span>}>
       <Main />
     </Suspense>

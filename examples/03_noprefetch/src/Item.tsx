@@ -12,7 +12,7 @@ const Item: React.FC<Props> = ({ initialId }) => {
   const { result, refetch } = useFetch(initialId);
   return (
     <div>
-      User ID: <input value={id} onChange={e => setId(e.target.value)} />
+      User ID: <input value={id} onChange={(e) => setId(e.target.value)} />
       <DisplayData id={id} result={result} refetch={refetch} />
     </div>
   );

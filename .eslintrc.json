@@ -28,7 +28,6 @@
     "import/extensions": ["error", "never"],
     "import/prefer-default-export": "off",
     "import/no-unresolved": ["error", { "ignore": ["react-hooks-fetch"] }],
-    "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }],
     "camelcase": "off",
     "@typescript-eslint/camelcase": "off",
     "react/state-in-constructor": "off"

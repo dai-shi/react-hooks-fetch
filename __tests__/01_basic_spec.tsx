@@ -3,7 +3,7 @@ import { render, cleanup } from '@testing-library/react';
 
 import { createUseFetch } from '../src/index';
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe('basic spec', () => {
   afterEach(cleanup);

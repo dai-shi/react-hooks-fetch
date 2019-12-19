@@ -8,7 +8,7 @@ const Item: React.FC = () => {
   const { result, refetch } = useFetch();
   return (
     <div>
-      User ID: <input value={id} onChange={e => setId(e.target.value)} />
+      User ID: <input value={id} onChange={(e) => setId(e.target.value)} />
       <DisplayData id={id} result={result} refetch={refetch} />
     </div>
   );
