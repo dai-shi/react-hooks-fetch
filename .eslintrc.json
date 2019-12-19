@@ -28,8 +28,7 @@
     "import/extensions": ["error", "never"],
     "import/prefer-default-export": "off",
     "import/no-unresolved": ["error", { "ignore": ["react-hooks-fetch"] }],
-    "camelcase": "off",
-    "@typescript-eslint/camelcase": "off",
+    "camelcase": ["error", { "properties": "never", "ignoreDestructuring": false, "allow": ["first_name"] }],
     "react/state-in-constructor": "off"
   },
   "overrides": [{
