@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.12.0-experimental.4] - 2019-12-21
+### Changed
+- Support ErrorBoundary retry
+
 ## [0.12.0-experimental.2] - 2019-12-19
 ### Changed
 - Improve noprefetch API and example

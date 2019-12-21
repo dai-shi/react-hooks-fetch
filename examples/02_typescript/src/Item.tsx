@@ -14,4 +14,14 @@ const Item: React.FC = () => {
   );
 };
 
+export const ErrorItem: React.FC = () => {
+  const { result, refetch } = useFetch();
+  return (
+    <div>
+      <DisplayData id="-1" result={result} refetch={refetch} />
+      <span>Refetch that causes a fetch error</span>
+    </div>
+  );
+};
+
 export default Item;

@@ -1,4 +1,3 @@
- 
 declare type FetchFunc<Result, Input> = (input: Input) => Promise<Result>;
 export declare const createUseFetch: <Result extends object, Input>(fetchFunc: FetchFunc<Result, Input>, initialInput: Input) => () => {
     result: Result;
