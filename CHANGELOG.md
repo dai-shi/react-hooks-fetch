@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Support clearing prefetched result
 
 ## [0.12.0-experimental.4] - 2019-12-21
 ### Changed

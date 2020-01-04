@@ -3,17 +3,29 @@ import { prefetch } from 'react-suspense-fetch';
 
 type FetchFunc<Result, Input> = (input: Input) => Promise<Result>;
 
+function assert(condition: unknown, message: string): asserts condition {
+  if (!condition) {
+    throw new Error(message);
+  }
+}
+
 export const createUseFetch = <Result extends object, Input>(
   fetchFunc: FetchFunc<Result, Input>,
   initialInput: Input,
 ) => {
-  const prefetched = prefetch(fetchFunc, initialInput);
+  let prefetched: Result | null = prefetch(fetchFunc, initialInput);
   const useFetch = () => {
-    const [result, setResult] = useState(prefetched);
+    const [result, setResult] = useState(() => {
+      assert(prefetched !== null, 'prefetched is cleared');
+      return prefetched;
+    });
     const refetch = useCallback((input: Input) => {
       setResult(prefetch(fetchFunc, input));
     }, []);
-    return { result, refetch };
+    const clearPrefetched = useCallback(() => {
+      prefetched = null;
+    }, []);
+    return { result, refetch, clearPrefetched };
   };
   return useFetch;
 };
