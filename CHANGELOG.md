@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.13.0-experimental.1] - 2020-01-13
+### Changed
+- Renew hooks API (no factory)
+
 ## [0.12.0-experimental.5] - 2020-01-04
 ### Changed
 - Support clearing prefetched result

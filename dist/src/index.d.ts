@@ -1,2 +1,3 @@
 export { ErrorBoundary } from './ErrorBoundary';
-export { createUseFetch, createUseFetchWithoutPrefetch } from './createUseFetch';
+export { useFetch, useFetchWithoutPrefetch } from './useFetch';
+export { prefetch } from 'react-suspense-fetch';

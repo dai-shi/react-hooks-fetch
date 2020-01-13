@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 
-import { useFetch } from './hooks';
+import { prefetch, useFetch } from 'react-hooks-fetch';
+
+import { fetchFunc } from './fetchFuncs';
 import DisplayData from './DisplayData';
+
+const suspendable = prefetch(fetchFunc, '1');
 
 const Item: React.FC = () => {
   const [id, setId] = useState('1');
-  const { result, refetch } = useFetch();
+  const { result, refetch } = useFetch(suspendable);
   return (
     <div>
       User ID: <input value={id} onChange={(e) => setId(e.target.value)} />
@@ -15,7 +19,7 @@ const Item: React.FC = () => {
 };
 
 export const ErrorItem: React.FC = () => {
-  const { result, refetch } = useFetch();
+  const { result, refetch } = useFetch(suspendable);
   return (
     <div>
       <DisplayData id="-1" result={result} refetch={refetch} />
