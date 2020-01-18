@@ -24,9 +24,9 @@ with React Hooks and Suspense.
 There's various design choices around Suspense for data fetching.
 Here's some decisions currently made:
 
-1. No global cache
-2. Simple and primitive API
-3. Making use of Proxies
+1.  No global cache
+2.  Simple and primitive API
+3.  Making use of Proxies
 
 This is an ongoing project and everything can be changed from day to day.
 
@@ -116,7 +116,7 @@ useFetch hook for React Suspense
 
 #### Parameters
 
-- `suspendable` **Suspendable&lt;Result, Input>** 
+-   `suspendable` **Suspendable&lt;Result, Input>** 
 
 #### Examples
 
@@ -142,8 +142,8 @@ useFetch hook for React Suspense without prefetch
 
 #### Parameters
 
-- `fetchFunc` **FetchFunc&lt;Result, Input>** 
-- `initialInput` **Input?** 
+-   `fetchFunc` **FetchFunc&lt;Result, Input>** 
+-   `initialInput` **Input?** 
 
 #### Examples
 
@@ -181,7 +181,7 @@ You can also try them in codesandbox.io:
 
 See [History](./HISTORY.md) for previous implementations.
 
-- [React Hooks Tutorial on Developing a Custom Hook for Data Fetching](https://blog.axlight.com/posts/react-hooks-tutorial-on-developing-a-custom-hook-for-data-fetching/)
-- [useFetch: React custom hook for Fetch API with Suspense and Concurrent Mode in Mind](https://blog.axlight.com/posts/usefetch-react-custom-hook-for-fetch-api-with-suspense-and-concurrent-mode-in-mind/)
-- [Developing a React Library for Suspense for Data Fetching in Concurrent Mode](https://blog.axlight.com/posts/developing-a-react-library-for-suspense-for-data-fetching-in-concurrent-mode/)
-- [Diving Into React Suspense Render-as-You-Fetch for REST APIs](https://blog.axlight.com/posts/diving-into-react-suspense-render-as-you-fetch-for-rest-apis/)
+-   [React Hooks Tutorial on Developing a Custom Hook for Data Fetching](https://blog.axlight.com/posts/react-hooks-tutorial-on-developing-a-custom-hook-for-data-fetching/)
+-   [useFetch: React custom hook for Fetch API with Suspense and Concurrent Mode in Mind](https://blog.axlight.com/posts/usefetch-react-custom-hook-for-fetch-api-with-suspense-and-concurrent-mode-in-mind/)
+-   [Developing a React Library for Suspense for Data Fetching in Concurrent Mode](https://blog.axlight.com/posts/developing-a-react-library-for-suspense-for-data-fetching-in-concurrent-mode/)
+-   [Diving Into React Suspense Render-as-You-Fetch for REST APIs](https://blog.axlight.com/posts/diving-into-react-suspense-render-as-you-fetch-for-rest-apis/)
