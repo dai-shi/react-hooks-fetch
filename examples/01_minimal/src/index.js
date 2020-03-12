@@ -1,31 +1,30 @@
-import React, { Suspense, useTransition } from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 
-import { ErrorBoundary, prefetch, useFetch } from 'react-hooks-fetch';
+import {
+  ErrorBoundary,
+  createFetchStore,
+  useFetch,
+} from 'react-hooks-fetch';
+
+const fetchFunc = async (userId) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
+const store = createFetchStore(fetchFunc);
+store.prefetch('1');
 
 const DisplayData = ({ result, refetch }) => {
-  const [startTransition, isPending] = useTransition({
-    timeoutMs: 1000,
-  });
   const onClick = () => {
-    startTransition(() => {
-      refetch('2');
-    });
+    refetch('2');
   };
   return (
     <div>
       <div>First Name: {result.data.first_name}</div>
       <button type="button" onClick={onClick}>Refetch user 2</button>
-      {isPending && 'Pending...'}
     </div>
   );
 };
 
-const fetchFunc = async (userId) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const suspendable = prefetch(fetchFunc, '1');
-
 const Main = () => {
-  const { result, refetch } = useFetch(suspendable);
+  const [result, refetch] = useFetch(store, '1');
   return <DisplayData result={result} refetch={refetch} />;
 };
 
@@ -37,4 +36,5 @@ const App = () => (
   </ErrorBoundary>
 );
 
-ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+// Legacy Mode
+ReactDOM.render(<App />, document.getElementById('app'));
