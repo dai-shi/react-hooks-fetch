@@ -16,6 +16,7 @@ const isObject = (x: unknown): x is object => typeof x === 'object' && x !== nul
  *
  * const fetchFunc = async (userId) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
  * const store = createFetchStore(fetchFunc);
+ * store.prefetch('1');
  */
 export function createFetchStore<Result, Input>(
   fetchFunc: FetchFunc<Result, Input>,

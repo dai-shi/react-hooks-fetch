@@ -24,7 +24,7 @@ export function useFetch<Result, Input>(
  * @example
  * import { useFetch } from 'react-hooks-fetch';
  *
- * const [data, refetch] = useFetch(store, initialInput);
+ * const [result, refetch] = useFetch(store, initialInput);
  */
 export function useFetch<Result, Input>(
   store: FetchStore<Result, Input>,

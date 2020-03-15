@@ -91,6 +91,7 @@ import { createFetchStore } from 'react-hooks-fetch';
 
 const fetchFunc = async (userId) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
 const store = createFetchStore(fetchFunc);
+store.prefetch('1');
 ```
 
 ### ErrorBoundary
@@ -132,7 +133,7 @@ useFetch hook
 ```javascript
 import { useFetch } from 'react-hooks-fetch';
 
-const [data, refetch] = useFetch(store, initialInput);
+const [result, refetch] = useFetch(store, initialInput);
 ```
 
 ## Examples
