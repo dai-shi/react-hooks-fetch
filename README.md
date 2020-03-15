@@ -8,7 +8,7 @@ React custom hooks for data fetching with Suspense
 
 ## Important notes
 
-If you are looking for useEffect-based React hooks for Fecth API,
+If you are looking for useEffect-based React hooks for Fetch API,
 please visit <https://github.com/dai-shi/react-hooks-async>.
 
 This is a library for async functions with Suspense
