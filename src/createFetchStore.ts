@@ -19,10 +19,20 @@ const isObject = (x: unknown): x is object => typeof x === 'object' && x !== nul
  */
 export function createFetchStore<Result, Input>(
   fetchFunc: FetchFunc<Result, Input>,
+  preloaded?: { input: Input; result: Result }[],
 ) {
   type GetResult = () => Result;
   const cache = new Map<Input, GetResult>();
   const weakCache = new WeakMap<object, GetResult>();
+  if (preloaded) {
+    preloaded.forEach((item) => {
+      if (isObject(item.input)) {
+        weakCache.set(item.input, () => item.result);
+      } else {
+        cache.set(item.input, () => item.result);
+      }
+    });
+  }
   const createGetResult = (input: Input) => {
     let promise: Promise<void> | null = null;
     let result: Result | null = null;

@@ -1,8 +1,13 @@
 # Change Log
 
 ## [Unreleased]
+
+## [0.14.0] - 2020-03-15
 ### Changed
-- New API (no react-suspense-fetch)
+- New API for Data Fetching with Suspense
+  - does not depend on react-suspense-fetch
+
+----
 
 ## [0.13.0-experimental.1] - 2020-01-13
 ### Changed
