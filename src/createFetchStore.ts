@@ -1,13 +1,12 @@
 type FetchFunc<Result, Input> = (input: Input) => Promise<Result>;
 
-type Listener = () => void;
-type Unsubscribe = () => void;
-
 export type FetchStore<Result, Input> = {
-  getResult: (input: Input) => Result;
   prefetch: (input: Input) => void;
-  subscribe: (input: Input, listener: Listener) => Unsubscribe;
+  evict: (input: Input) => void;
+  getResult: (input: Input) => Result;
 };
+
+const isObject = (x: unknown): x is object => typeof x === 'object' && x !== null;
 
 /**
  * create fetch store
@@ -21,11 +20,9 @@ export type FetchStore<Result, Input> = {
 export function createFetchStore<Result, Input>(
   fetchFunc: FetchFunc<Result, Input>,
 ) {
-  type CacheItem = {
-    getResult: () => Result;
-    listeners: Set<Listener>;
-  };
-  const cache = new Map<Input, CacheItem>();
+  type GetResult = () => Result;
+  const cache = new Map<Input, GetResult>();
+  const weakCache = new WeakMap<object, GetResult>();
   const createGetResult = (input: Input) => {
     let promise: Promise<void> | null = null;
     let result: Result | null = null;
@@ -42,43 +39,36 @@ export function createFetchStore<Result, Input>(
     const getResult = () => {
       if (promise) throw promise;
       if (error !== null) throw error;
-      if (result === null) throw new Error(); // should not happen
-      return result;
+      return result as Result;
     };
     return getResult;
   };
   const prefetch = (input: Input) => {
-    const cacheItem = cache.get(input);
-    if (cacheItem) {
-      cacheItem.getResult = createGetResult(input);
-      cacheItem.listeners.forEach((listener) => listener());
-    } else {
-      cache.set(input, {
-        getResult: createGetResult(input),
-        listeners: new Set<Listener>(),
-      });
+    if (isObject(input)) {
+      if (!weakCache.has(input)) {
+        weakCache.set(input, createGetResult(input));
+      }
+      return;
+    }
+    if (!cache.has(input)) {
+      cache.set(input, createGetResult(input));
     }
   };
-  const subscribe = (input: Input, listener: () => void) => {
-    const cacheItem = cache.get(input);
-    if (!cacheItem) throw new Error('needs to prefetch in advance');
-    const { listeners } = cacheItem;
-    listeners.add(listener);
-    return () => {
-      listeners.delete(listener);
-      if (listeners.size === 0 && cacheItem === cache.get(input)) {
-        cache.delete(input);
-      }
-    };
+  const evict = (input: Input) => {
+    if (isObject(input)) {
+      weakCache.delete(input);
+    } else {
+      cache.delete(input);
+    }
   };
   const store: FetchStore<Result, Input> = {
-    getResult: (input: Input) => {
-      const cacheItem = cache.get(input);
-      if (!cacheItem) throw new Error('needs to prefetch in advance');
-      return cacheItem.getResult();
-    },
     prefetch,
-    subscribe,
+    evict,
+    getResult: (input: Input) => {
+      const getResult = isObject(input) ? weakCache.get(input) : cache.get(input);
+      if (!getResult) throw new Error('call prefetch in advance');
+      return getResult();
+    },
   };
   return store;
 }
