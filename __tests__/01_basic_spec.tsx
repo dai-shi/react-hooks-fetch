@@ -3,8 +3,6 @@ import { render, cleanup } from '@testing-library/react';
 
 import { createFetchStore, useFetch } from '../src/index';
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 describe('basic spec', () => {
   afterEach(cleanup);
 
@@ -14,23 +12,25 @@ describe('basic spec', () => {
   });
 
   it('should create a component', async () => {
-    fetchMock.mockResponse(JSON.stringify({ str: 'test data' }));
-    const fetchUrl = async (url: string) => (await fetch(url)).json();
-    const store = createFetchStore(fetchUrl);
     const initialUrl = 'http://...';
+    const responses: Record<string, string> = { [initialUrl]: 'test data' };
+    const store = createFetchStore((url: string) => Promise.resolve(responses[url]));
     store.prefetch(initialUrl);
+
     const DisplayData = () => {
       const [result] = useFetch(store, initialUrl);
-      return <span>Data: {result.str}</span>;
+      expect(result).toBe(responses[initialUrl]);
+      return <span>{result}</span>;
     };
+
     const App = () => (
       <Suspense fallback={<span>Loading...</span>}>
         <DisplayData />
       </Suspense>
     );
-    const { container } = render(<App />);
-    expect(container).toMatchSnapshot();
-    await sleep(10); // not ideal...
-    expect(container).toMatchSnapshot();
+
+    const { getByText, findByText } = render(<App />);
+    getByText(/loading/i);
+    await findByText(responses[initialUrl]);
   });
 });
