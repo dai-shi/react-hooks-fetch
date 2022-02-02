@@ -13,3 +13,4 @@ Here's the list of various implementations.
 - [useReducer version](https://github.com/dai-shi/react-hooks-fetch/tree/56dd2c2566ff7c481e1b0603fa1c43fa98da565a)
 - [useState version](https://github.com/dai-shi/react-hooks-fetch/tree/893e988b96a31054f23f3d5370f30db7450e547f)
 - [Render-as-You-Fetch experiment](https://github.com/dai-shi/react-hooks-fetch/tree/bb53c6feb9b59f66901a9bf066f1fefa9f741bcb)
+- [First createFetchStore version](https://github.com/dai-shi/react-hooks-fetch/tree/c12237fce9a78ac986a7e3a12b3213d0c2d6aaff)

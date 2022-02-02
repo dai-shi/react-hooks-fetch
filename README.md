@@ -1,8 +1,10 @@
 # react-hooks-fetch
 
-[![Build Status](https://travis-ci.com/dai-shi/react-hooks-fetch.svg?branch=master)](https://travis-ci.com/dai-shi/react-hooks-fetch)
-[![npm version](https://badge.fury.io/js/react-hooks-fetch.svg)](https://badge.fury.io/js/react-hooks-fetch)
-[![bundle size](https://badgen.net/bundlephobia/minzip/react-hooks-fetch)](https://bundlephobia.com/result?p=react-hooks-fetch)
+[![CI](https://img.shields.io/github/workflow/status/dai-shi/react-hooks-fetch/CI)](https://github.com/dai-shi/react-hooks-fetch/actions?query=workflow%3ACI)
+[![npm](https://img.shields.io/npm/v/react-hooks-fetch)](https://www.npmjs.com/package/react-hooks-fetch)
+[![size](https://img.shields.io/bundlephobia/minzip/react-hooks-fetch)](https://bundlephobia.com/result?p=react-hooks-fetch)
+[![discord](https://img.shields.io/discord/627656437971288081)](https://discord.gg/MrQdmzd)
+
 
 React custom hooks for data fetching with Suspense
 
