@@ -35,7 +35,7 @@
     "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }]
   },
   "overrides": [{
-    "files": ["__tests__/**/*", "./setupJest.ts"],
+    "files": ["__tests__/**/*"],
     "env": {
       "jest": true
     },
