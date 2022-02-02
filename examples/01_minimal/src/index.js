@@ -28,6 +28,7 @@ const Main = () => {
   return <DisplayData result={result} refetch={refetch} />;
 };
 
+/* eslint-disable react/no-unstable-nested-components */
 const App = () => (
   <ErrorBoundary fallback={(error) => <h1>{error.message}</h1>}>
     <Suspense fallback={<span>Loading...</span>}>

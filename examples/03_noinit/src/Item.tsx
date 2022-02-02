@@ -6,7 +6,7 @@ import { store } from './fetchStore';
 import DisplayData from './DisplayData';
 
 type Props = {
-  initialId?: string;
+  initialId?: string; // eslint-disable-line react/require-default-props
 };
 
 const Item: React.FC<Props> = ({ initialId }) => {
