@@ -85,8 +85,8 @@ create fetch store
 
 #### Parameters
 
-*   `fetchFunc` **FetchFunc\<Result, Input>** 
-*   `options` **Options\<Result, Input>?** 
+*   `fetchFunc` **FetchFunc\<Input, Result>** 
+*   `options` **Options\<Input, Result>?** 
 
 #### Examples
 
@@ -108,7 +108,7 @@ useFetch hook
 
 #### Parameters
 
-*   `store` **FetchStore\<Result, Input>** 
+*   `store` **FetchStore\<Input, Result>** 
 *   `initialInput` **Input?** 
 
 #### Examples
