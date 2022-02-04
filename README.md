@@ -6,20 +6,16 @@
 [![discord](https://img.shields.io/discord/627656437971288081)](https://discord.gg/MrQdmzd)
 
 
-React custom hooks for data fetching with Suspense
-
-## Important notes
-
-If you are looking for useEffect-based React hooks for Fetch API,
-please visit <https://github.com/dai-shi/react-hooks-async>.
-
-This is a library for async functions with Suspense
+Minimal data fetching library with React Suspense
 
 ## Introduction
 
-[Suspense for data fetching](https://reactjs.org/docs/concurrent-mode-suspense.html) is a new feature coming in React.
-This library provides `useFetch` hook for Render-as-You-Fetch.
-It discourages Fetch-on-Render pattern.
+This library provides a React hook `useFetch` for any async functions.
+It utilizes React Suspense, and the library requires to create
+a store in advance with `createFetch`.
+The API is designed to force fetching data before rendering.
+
+Project status: Experimental. We need to collect feedbacks.
 
 ## Install
 
@@ -32,13 +28,12 @@ npm install react-hooks-fetch
 ```javascript
 import React, { Suspense, useTransition } from 'react';
 import ReactDOM from 'react-dom';
+import { ErrorBoundary } from 'react-error-boundary';
 
-import { ErrorBoundary, createFetchStore, useFetch } from 'react-hooks-fetch';
+import { createFetch, useFetch } from 'react-hooks-fetch';
 
 const DisplayData = ({ result, refetch }) => {
-  const [startTransition, isPending] = useTransition({
-    timeoutMs: 1000,
-  });
+  const [isPending, startTransition] = useTransition();
   const onClick = () => {
     startTransition(() => {
       refetch('2');
@@ -53,8 +48,11 @@ const DisplayData = ({ result, refetch }) => {
   );
 };
 
-const fetchFunc = async (userId) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const store = createFetchStore(fetchFunc);
+const store = createFetch(async (userId) => {
+  const res = await fetch(`https://reqres.in/api/users/${userId}?delay=3`);
+  const data = await res.json();
+  return data;
+});
 store.prefetch('1');
 
 const Main = () => {
@@ -63,7 +61,7 @@ const Main = () => {
 };
 
 const App = () => (
-  <ErrorBoundary fallback={error => <h1>{error.message}</h1>}>
+  <ErrorBoundary fallback={<h1>Error</h1>}>
     <Suspense fallback={<span>Loading...</span>}>
       <Main />
     </Suspense>

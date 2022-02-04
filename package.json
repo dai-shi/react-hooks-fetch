@@ -1,6 +1,6 @@
 {
   "name": "react-hooks-fetch",
-  "description": "React custom hooks for data fetching with Suspense",
+  "description": "Minimal data fetching library with React Suspense",
   "version": "0.14.0",
   "author": "Daishi Kato",
   "repository": {
