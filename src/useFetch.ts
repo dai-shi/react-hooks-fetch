@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { FetchStore } from './createFetch';
 
@@ -6,12 +6,8 @@ type Refetch<Input> = (input: Input) => void;
 
 export function useFetch<Result, Input>(
   store: FetchStore<Result, Input>,
-): [undefined, Refetch<Input>];
-
-export function useFetch<Result, Input>(
-  store: FetchStore<Result, Input>,
   initialInput: Input,
-): [Result, Refetch<Input>];
+): [undefined extends Input ? Result | undefined : Result, Refetch<Input>];
 
 export function useFetch<Result, Input>(
   store: FetchStore<Result, Input>,
@@ -30,12 +26,20 @@ export function useFetch<Result, Input>(
   store: FetchStore<Result, Input>,
   initialInput?: Input,
 ) {
+  const [input, setInput] = useState(initialInput);
   const [result, setResult] = useState(() => {
     if (initialInput === undefined) return undefined;
     return store.getResult(initialInput);
   });
+  useEffect(() => {
+    if (input !== undefined) {
+      return store.use(input);
+    }
+    return undefined;
+  }, [store, input]);
   const refetch = useCallback((nextInput: Input) => {
     store.prefetch(nextInput);
+    setInput(nextInput);
     setResult(() => store.getResult(nextInput));
   }, [store]);
   return [result, refetch];

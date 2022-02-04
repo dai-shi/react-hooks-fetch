@@ -33,6 +33,7 @@
     "no-restricted-syntax": "off",
     "no-unused-vars": "off",
     "no-redeclare": "off",
+    "symbol-description": "off",
     "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }]
   },
   "overrides": [{

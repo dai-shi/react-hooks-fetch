@@ -3,8 +3,11 @@ type FetchFunc<Result, Input> = (input: Input) => Promise<Result>;
 export type FetchStore<Result, Input> = {
   prefetch: (input: Input) => void;
   evict: (input: Input) => void;
+  use: (input: Input, mark?: symbol) => () => void;
   getResult: (input: Input) => Result;
 };
+
+type UsedMarks = Set<symbol>;
 
 type Options<Result, Input> = {
   preloaded?: Iterable<{ input: Input; result: Result }>;
@@ -32,7 +35,7 @@ export function createFetch<Result, Input>(
   const preloaded = options?.preloaded;
   const areEqual = options?.areEqual;
   type GetResult = () => Result;
-  const cache = new Map<Input, GetResult>();
+  const cache = new Map<Input, [GetResult, UsedMarks]>();
   const setCache = (input: Input, getResult: GetResult) => {
     if (areEqual) {
       for (const key of cache.keys()) {
@@ -43,7 +46,7 @@ export function createFetch<Result, Input>(
     } else if (cache.has(input)) {
       return false;
     }
-    cache.set(input, getResult);
+    cache.set(input, [getResult, new Set()]);
     return true;
   };
   const getCache = (input: Input) => {
@@ -100,11 +103,26 @@ export function createFetch<Result, Input>(
   const evict = (input: Input) => {
     deleteCache(input);
   };
+  const use = (input: Input, mark = Symbol()) => {
+    const usedMarks = getCache(input)?.[1];
+    if (!usedMarks) throw new Error('call prefetch in advance');
+    usedMarks.add(mark);
+    return () => {
+      // check if it's already evicted
+      if (usedMarks === getCache(input)?.[1]) {
+        usedMarks.delete(mark);
+        if (!usedMarks.size) {
+          deleteCache(input);
+        }
+      }
+    };
+  };
   const store: FetchStore<Result, Input> = {
     prefetch,
     evict,
+    use,
     getResult: (input: Input) => {
-      const getResult = getCache(input);
+      const getResult = getCache(input)?.[0];
       if (!getResult) throw new Error('call prefetch in advance');
       return getResult();
     },
