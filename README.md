@@ -34,7 +34,7 @@ import { createFetch, useFetch } from 'react-hooks-fetch';
 // Create a store with an async function.
 // The async function can take one input argument.
 // The input value becomes the "key" of cache.
-// By default, keys are compared by references.
+// By default, keys are compared strict equal `===`.
 const store = createFetch(async (userId) => {
   const res = await fetch(`https://reqres.in/api/users/${userId}?delay=3`);
   const data = await res.json();
@@ -48,7 +48,7 @@ const store = createFetch(async (userId) => {
 store.prefetch('1');
 
 // 3️⃣
-// Define a component to use the store.
+// Define a component to use store.
 // The `refetch` function take the input argument,
 // and it will start fetching before rendering.
 const Main = () => {

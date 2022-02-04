@@ -4,13 +4,13 @@ import { FetchStore } from './createFetch';
 
 type Refetch<Input> = (input: Input) => void;
 
-export function useFetch<Result, Input>(
-  store: FetchStore<Result, Input>,
+export function useFetch<Input, Result>(
+  store: FetchStore<Input, Result>,
   initialInput: Input,
 ): [undefined extends Input ? Result | undefined : Result, Refetch<Input>];
 
-export function useFetch<Result, Input>(
-  store: FetchStore<Result, Input>,
+export function useFetch<Input, Result>(
+  store: FetchStore<Input, Result>,
   initialInput?: Input,
 ): [Result | undefined, Refetch<Input>];
 
@@ -22,8 +22,8 @@ export function useFetch<Result, Input>(
  *
  * const [result, refetch] = useFetch(store, initialInput);
  */
-export function useFetch<Result, Input>(
-  store: FetchStore<Result, Input>,
+export function useFetch<Input, Result>(
+  store: FetchStore<Input, Result>,
   initialInput?: Input,
 ) {
   const [input, setInput] = useState(initialInput);

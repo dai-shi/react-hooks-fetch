@@ -1,6 +1,6 @@
-type FetchFunc<Result, Input> = (input: Input) => Promise<Result>;
+type FetchFunc<Input, Result> = (input: Input) => Promise<Result>;
 
-export type FetchStore<Result, Input> = {
+export type FetchStore<Input, Result> = {
   prefetch: (input: Input) => void;
   evict: (input: Input) => void;
   use: (input: Input, mark?: symbol) => () => void;
@@ -9,7 +9,7 @@ export type FetchStore<Result, Input> = {
 
 type UsedMarks = Set<symbol>;
 
-type Options<Result, Input> = {
+type Options<Input, Result> = {
   preloaded?: Iterable<{ input: Input; result: Result }>;
   areEqual?: (a: Input, b: Input) => boolean;
 };
@@ -28,9 +28,9 @@ type Options<Result, Input> = {
  * const store = createFetch(fetchFunc);
  * store.prefetch('1');
  */
-export function createFetch<Result, Input>(
-  fetchFunc: FetchFunc<Result, Input>,
-  options?: Options<Result, Input>,
+export function createFetch<Input, Result>(
+  fetchFunc: FetchFunc<Input, Result>,
+  options?: Options<Input, Result>,
 ) {
   const preloaded = options?.preloaded;
   const areEqual = options?.areEqual;
@@ -117,7 +117,7 @@ export function createFetch<Result, Input>(
       }
     };
   };
-  const store: FetchStore<Result, Input> = {
+  const store: FetchStore<Input, Result> = {
     prefetch,
     evict,
     use,
