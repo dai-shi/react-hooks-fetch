@@ -10,7 +10,7 @@ Minimal data fetching library with React Suspense
 ## Introduction
 
 This library provides a React hook `useFetch` for any async functions.
-It utilizes React Suspense, and the library requires to create
+It utilizes React Suspense and requires to create
 a store in advance with `createFetch`.
 The API is designed to force fetching data before rendering.
 
@@ -25,11 +25,26 @@ npm install react-hooks-fetch
 ## Usage
 
 ```javascript
-import React, { Suspense, useTransition } from 'react';
-import ReactDOM from 'react-dom';
+import React, { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { createFetch, useFetch } from 'react-hooks-fetch';
+
+// 1️⃣
+// Create a store with an async function.
+// The async function can take one input argument.
+// The input value becomes the "key" of cache.
+const store = createFetch(async (userId) => {
+  const res = await fetch(`https://reqres.in/api/users/${userId}?delay=3`);
+  const data = await res.json();
+  return data;
+});
+
+// 2️⃣
+// We need to start fetching somewhere before rendering.
+// If we allow `undefined` value for the initial render,
+// this can be omitted.
+store.prefetch('1');
 
 const DisplayData = ({ result, refetch }) => {
   const [isPending, startTransition] = useTransition();
@@ -47,18 +62,25 @@ const DisplayData = ({ result, refetch }) => {
   );
 };
 
-const store = createFetch(async (userId) => {
-  const res = await fetch(`https://reqres.in/api/users/${userId}?delay=3`);
-  const data = await res.json();
-  return data;
-});
-store.prefetch('1');
-
+// 3️⃣
+// Define a component to use the store.
+// The `refetch` function take the input argument,
+// and it will start fetching before rendering.
 const Main = () => {
   const [result, refetch] = useFetch(store, '1');
-  return <DisplayData result={result} refetch={refetch} />;
+  const handleClick = () => {
+    refetch('2');
+  };
+  return (
+    <div>
+      <div>First Name: {result.data.first_name}</div>
+      <button type="button" onClick={handleClick}>Fetch user 2</button>
+    </div>
+  );
 };
 
+// 4️⃣
+// The outer component should have ErrorBoundary and Suspense boundary.
 const App = () => (
   <ErrorBoundary fallback={<h1>Error</h1>}>
     <Suspense fallback={<span>Loading...</span>}>
@@ -66,8 +88,6 @@ const App = () => (
     </Suspense>
   </ErrorBoundary>
 );
-
-ReactDOM.createRoot(document.getElementById('app')).render(<App />);
 ```
 
 ## API
@@ -126,9 +146,9 @@ PORT=8080 npm run examples:01_minimal
 and open <http://localhost:8080> in your web browser.
 
 You can also try them in codesandbox.io:
-[01](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/01\_minimal)
-[02](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/02\_typescript)
-[03](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/master/examples/03\_noinit)
+[01](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/main/examples/01\_minimal)
+[02](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/main/examples/02\_typescript)
+[03](https://codesandbox.io/s/github/dai-shi/react-hooks-fetch/tree/main/examples/03\_noinit)
 
 ## Blogs
 
