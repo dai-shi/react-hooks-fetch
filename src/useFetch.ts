@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { FetchStore } from './createFetchStore';
+import { FetchStore } from './createFetch';
 
 type Refetch<Input> = (input: Input) => void;
 

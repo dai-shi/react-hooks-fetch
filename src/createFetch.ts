@@ -6,21 +6,31 @@ export type FetchStore<Result, Input> = {
   getResult: (input: Input) => Result;
 };
 
+type Options<Result, Input> = {
+  preloaded?: Iterable<{ input: Input; result: Result }>;
+  areEqual?: (a: Input, b: Input) => boolean;
+};
+
 /**
  * create fetch store
  *
  * @example
- * import { createFetchStore } from 'react-hooks-fetch';
+ * import { createFetch } from 'react-hooks-fetch';
  *
- * const fetchFunc = async (userId) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
- * const store = createFetchStore(fetchFunc);
+ * const fetchFunc = async (userId) => {
+ *   const res = await fetch(`https://reqres.in/api/users/${userId}?delay=3`));
+ *   const data = await res.json();
+ *   return data;
+ * };
+ * const store = createFetch(fetchFunc);
  * store.prefetch('1');
  */
-export function createFetchStore<Result, Input>(
+export function createFetch<Result, Input>(
   fetchFunc: FetchFunc<Result, Input>,
-  preloaded?: { input: Input; result: Result }[],
-  areEqual?: (a: Input, b: Input) => boolean,
+  options?: Options<Result, Input>,
 ) {
+  const preloaded = options?.preloaded;
+  const areEqual = options?.areEqual;
   type GetResult = () => Result;
   const cache = new Map<Input, GetResult>();
   const setCache = (input: Input, getResult: GetResult) => {
@@ -60,9 +70,9 @@ export function createFetchStore<Result, Input>(
     return cache.delete(input);
   };
   if (preloaded) {
-    preloaded.forEach((item) => {
+    for (const item of preloaded) {
       setCache(item.input, () => item.result);
-    });
+    }
   }
   const createGetResult = (input: Input) => {
     let promise: Promise<void> | null = null;

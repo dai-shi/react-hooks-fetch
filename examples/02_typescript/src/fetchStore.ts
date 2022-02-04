@@ -1,4 +1,4 @@
-import { createFetchStore } from 'react-hooks-fetch';
+import { createFetch } from 'react-hooks-fetch';
 
 export type Result = { data: { first_name: string } };
 
@@ -8,5 +8,5 @@ const fetchFunc = async (userId: string) => {
   return result;
 };
 
-export const store = createFetchStore(fetchFunc);
+export const store = createFetch(fetchFunc);
 store.prefetch('1');

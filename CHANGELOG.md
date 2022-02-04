@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Changed
-- New simplified API
+- New simplified API (no WeakMap)
 ### Removed
 - ErrorBoundary (use react-error-boundary instead)
 

@@ -2,10 +2,10 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import { createFetchStore, useFetch } from 'react-hooks-fetch';
+import { createFetch, useFetch } from 'react-hooks-fetch';
 
 const fetchFunc = async (userId) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const store = createFetchStore(fetchFunc);
+const store = createFetch(fetchFunc);
 store.prefetch('1');
 
 const DisplayData = ({ result, refetch }) => {

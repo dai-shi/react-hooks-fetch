@@ -1,20 +1,20 @@
 import React, { Suspense } from 'react';
 import { render, cleanup } from '@testing-library/react';
 
-import { createFetchStore, useFetch } from '../src/index';
+import { createFetch, useFetch } from '../src/index';
 
 describe('basic spec', () => {
   afterEach(cleanup);
 
   it('should have a function', () => {
-    expect(createFetchStore).toBeDefined();
+    expect(createFetch).toBeDefined();
     expect(useFetch).toBeDefined();
   });
 
   it('should create a component', async () => {
     const initialUrl = 'http://...';
     const responses: Record<string, string> = { [initialUrl]: 'test data' };
-    const store = createFetchStore((url: string) => Promise.resolve(responses[url]));
+    const store = createFetch((url: string) => Promise.resolve(responses[url]));
     store.prefetch(initialUrl);
 
     const DisplayData = () => {

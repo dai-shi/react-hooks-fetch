@@ -1,2 +1,2 @@
-export { createFetchStore } from './createFetchStore';
+export { createFetch } from './createFetch';
 export { useFetch } from './useFetch';
