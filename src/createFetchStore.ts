@@ -6,8 +6,6 @@ export type FetchStore<Result, Input> = {
   getResult: (input: Input) => Result;
 };
 
-const isObject = (x: unknown): x is object => typeof x === 'object' && x !== null;
-
 /**
  * create fetch store
  *
@@ -21,23 +19,55 @@ const isObject = (x: unknown): x is object => typeof x === 'object' && x !== nul
 export function createFetchStore<Result, Input>(
   fetchFunc: FetchFunc<Result, Input>,
   preloaded?: { input: Input; result: Result }[],
+  areEqual?: (a: Input, b: Input) => boolean,
 ) {
   type GetResult = () => Result;
   const cache = new Map<Input, GetResult>();
-  const weakCache = new WeakMap<object, GetResult>();
+  const setCache = (input: Input, getResult: GetResult) => {
+    if (areEqual) {
+      for (const key of cache.keys()) {
+        if (areEqual(key, input)) {
+          return false;
+        }
+      }
+    } else if (cache.has(input)) {
+      return false;
+    }
+    cache.set(input, getResult);
+    return true;
+  };
+  const getCache = (input: Input) => {
+    if (areEqual) {
+      for (const [key, value] of cache) {
+        if (areEqual(key, input)) {
+          return value;
+        }
+      }
+      return undefined;
+    }
+    return cache.get(input);
+  };
+  const deleteCache = (input: Input) => {
+    if (areEqual) {
+      for (const key of cache.keys()) {
+        if (areEqual(key, input)) {
+          cache.delete(key);
+          return true;
+        }
+      }
+      return false;
+    }
+    return cache.delete(input);
+  };
   if (preloaded) {
     preloaded.forEach((item) => {
-      if (isObject(item.input)) {
-        weakCache.set(item.input, () => item.result);
-      } else {
-        cache.set(item.input, () => item.result);
-      }
+      setCache(item.input, () => item.result);
     });
   }
   const createGetResult = (input: Input) => {
     let promise: Promise<void> | null = null;
     let result: Result | null = null;
-    let error: Error | null = null;
+    let error: unknown | null = null;
     promise = (async () => {
       try {
         result = await fetchFunc(input);
@@ -55,28 +85,16 @@ export function createFetchStore<Result, Input>(
     return getResult;
   };
   const prefetch = (input: Input) => {
-    if (isObject(input)) {
-      if (!weakCache.has(input)) {
-        weakCache.set(input, createGetResult(input));
-      }
-      return;
-    }
-    if (!cache.has(input)) {
-      cache.set(input, createGetResult(input));
-    }
+    setCache(input, createGetResult(input));
   };
   const evict = (input: Input) => {
-    if (isObject(input)) {
-      weakCache.delete(input);
-    } else {
-      cache.delete(input);
-    }
+    deleteCache(input);
   };
   const store: FetchStore<Result, Input> = {
     prefetch,
     evict,
     getResult: (input: Input) => {
-      const getResult = isObject(input) ? weakCache.get(input) : cache.get(input);
+      const getResult = getCache(input);
       if (!getResult) throw new Error('call prefetch in advance');
       return getResult();
     },

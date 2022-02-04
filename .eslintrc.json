@@ -30,6 +30,7 @@
     "import/no-unresolved": ["error", { "ignore": ["react-hooks-fetch"] }],
     "camelcase": ["error", { "properties": "never", "ignoreDestructuring": false, "allow": ["first_name"] }],
     "react/state-in-constructor": "off",
+    "no-restricted-syntax": "off",
     "no-unused-vars": "off",
     "no-redeclare": "off",
     "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }]
