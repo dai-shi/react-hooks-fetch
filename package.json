@@ -32,7 +32,7 @@
     "eslint": "eslint --ext .js,.ts,.tsx --ignore-pattern dist --ignore-pattern mdx-deck .",
     "jest": "jest",
     "tsc-test": "tsc --project . --noEmit",
-    "apidoc": "documentation readme --section API --markdown-toc false --parse-extension ts src/*.ts",
+    "apidoc": "documentation readme --section API --markdown-toc false --parse-extension ts --require-extension ts src/*.ts",
     "examples:01_minimal": "DIR=01_minimal EXT=js webpack serve",
     "examples:02_typescript": "DIR=02_typescript webpack serve",
     "examples:03_noinit": "DIR=03_noinit webpack serve"
