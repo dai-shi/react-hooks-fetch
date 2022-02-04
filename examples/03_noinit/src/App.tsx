@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react';
-
-import { ErrorBoundary } from 'react-hooks-fetch';
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 
 import { store } from './fetchStore';
 import Item from './Item';
@@ -8,7 +7,7 @@ import Item from './Item';
 store.prefetch('1');
 store.prefetch('2');
 
-const renderError = (error: Error) => (
+const ErrorFallback = ({ error }: FallbackProps) => (
   <div>
     <h1>Something went wrong.</h1>
     <p>{error.message}</p>
@@ -16,7 +15,7 @@ const renderError = (error: Error) => (
 );
 
 const App: React.FC = () => (
-  <ErrorBoundary fallback={renderError}>
+  <ErrorBoundary FallbackComponent={ErrorFallback}>
     <Suspense fallback={<span>Loading...</span>}>
       <Item initialId="1" />
       <hr />

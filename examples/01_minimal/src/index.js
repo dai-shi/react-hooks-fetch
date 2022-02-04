@@ -1,11 +1,8 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
+import { ErrorBoundary } from 'react-error-boundary';
 
-import {
-  ErrorBoundary,
-  createFetchStore,
-  useFetch,
-} from 'react-hooks-fetch';
+import { createFetchStore, useFetch } from 'react-hooks-fetch';
 
 const fetchFunc = async (userId) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
 const store = createFetchStore(fetchFunc);
@@ -28,9 +25,12 @@ const Main = () => {
   return <DisplayData result={result} refetch={refetch} />;
 };
 
-/* eslint-disable react/no-unstable-nested-components */
+const ErrorFallback = ({ error }) => (
+  <h1>{error.message}</h1>
+);
+
 const App = () => (
-  <ErrorBoundary fallback={(error) => <h1>{error.message}</h1>}>
+  <ErrorBoundary FallbackComponent={ErrorFallback}>
     <Suspense fallback={<span>Loading...</span>}>
       <Main />
     </Suspense>

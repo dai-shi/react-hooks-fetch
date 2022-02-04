@@ -1,5 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+// eslint-disable-next-line spaced-comment
+/// <reference types="react/next" />
+
 import React, { useTransition } from 'react';
 
 type Props = {
@@ -13,9 +14,7 @@ type Props = {
 };
 
 const DisplayData: React.FC<Props> = ({ id, result, refetch }) => {
-  const [startTransition, isPending] = useTransition({
-    timeoutMs: 1000,
-  });
+  const [isPending, startTransition] = useTransition();
   const onClick = () => {
     startTransition(() => {
       refetch(id);

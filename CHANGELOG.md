@@ -1,6 +1,10 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- New simplified API
+### Removed
+- ErrorBoundary (use react-error-boundary instead)
 
 ## [0.14.0] - 2020-03-15
 ### Changed
