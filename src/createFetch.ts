@@ -78,21 +78,23 @@ export function createFetch<Input, Result>(
     }
   }
   const createGetResult = (input: Input) => {
-    let promise: Promise<void> | null = null;
-    let result: Result | null = null;
-    let error: unknown | null = null;
-    promise = (async () => {
-      try {
-        result = await fetchFunc(input);
-      } catch (e) {
+    let status: 'pending' | 'fulfilled' | 'rejected' = 'pending';
+    let result: Result | undefined;
+    let error: unknown | undefined;
+    const promise = new Promise((resolve, reject) => {
+      fetchFunc(input).then((r) => {
+        result = r;
+        status = 'fulfilled';
+        resolve(r);
+      }).catch((e) => {
         error = e;
-      } finally {
-        promise = null;
-      }
-    })();
+        status = 'rejected';
+        reject(e);
+      });
+    });
     const getResult = () => {
-      if (promise) throw promise;
-      if (error !== null) throw error;
+      if (status === 'pending') throw promise;
+      if (status === 'rejected') throw error;
       return result as Result;
     };
     return getResult;
