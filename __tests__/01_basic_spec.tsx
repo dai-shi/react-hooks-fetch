@@ -18,7 +18,7 @@ describe('basic spec', () => {
     store.prefetch(initialUrl);
 
     const DisplayData = () => {
-      const [result] = useFetch(store, initialUrl);
+      const { result } = useFetch(store, initialUrl);
       expect(result).toBe(responses[initialUrl]);
       return <span>{result}</span>;
     };

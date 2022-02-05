@@ -7,7 +7,7 @@ import DisplayData from './DisplayData';
 
 const Item: React.FC = () => {
   const [id, setId] = useState('1');
-  const [result, refetch] = useFetch(store, '1' as string);
+  const { result, refetch } = useFetch(store, '1' as string);
   return (
     <div>
       User ID: <input value={id} onChange={(e) => setId(e.target.value)} />
@@ -17,7 +17,7 @@ const Item: React.FC = () => {
 };
 
 export const ErrorItem: React.FC = () => {
-  const [result, refetch] = useFetch(store, '1' as string);
+  const { result, refetch } = useFetch(store, '1' as string);
   return (
     <div>
       <DisplayData id="-1" result={result} refetch={refetch} />

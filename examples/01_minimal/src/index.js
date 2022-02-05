@@ -21,7 +21,7 @@ const DisplayData = ({ result, refetch }) => {
 };
 
 const Main = () => {
-  const [result, refetch] = useFetch(store, '1');
+  const { result, refetch } = useFetch(store, '1');
   return <DisplayData result={result} refetch={refetch} />;
 };
 

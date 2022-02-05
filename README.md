@@ -52,7 +52,7 @@ store.prefetch('1');
 // The `refetch` function take the input argument,
 // and it will start fetching before rendering.
 const Main = () => {
-  const [result, refetch] = useFetch(store, '1');
+  const { result, refetch } = useFetch(store, '1');
   const handleClick = () => {
     refetch('2');
   };
@@ -116,7 +116,7 @@ useFetch hook
 ```javascript
 import { useFetch } from 'react-hooks-fetch';
 
-const [result, refetch] = useFetch(store, initialInput);
+const { result, refetch } = useFetch(store, initialInput);
 ```
 
 ## Examples

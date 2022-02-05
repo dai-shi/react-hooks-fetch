@@ -11,7 +11,7 @@ type Props = {
 
 const Item: React.FC<Props> = ({ initialId }) => {
   const [id, setId] = useState(initialId);
-  const [result, refetch] = useFetch(store, initialId);
+  const { result, refetch } = useFetch(store, initialId);
   return (
     <div>
       User ID: <input value={id || ''} onChange={(e) => setId(e.target.value)} />
