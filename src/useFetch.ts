@@ -20,7 +20,7 @@ const initializeState = <Input, Result>(
   store: FetchStore<Input, Result>,
   initialInput: Input | undefined,
   dispatch: Dispatch<{ type: 'NEW_INPUT', input: Input }>,
-) => ({
+): State<Input, Result> => ({
     store,
     input: initialInput,
     result: initialInput === undefined ? undefined : store.getResult(initialInput),
@@ -61,37 +61,43 @@ export function useFetch<Input, Result>(
   initialInput?: Input,
 ) {
   type Action = { type: 'NEW_STORE' } | { type: 'NEW_INPUT', input: Input };
-  const [state, dispatch] = useReducer<
-    Reducer<State<Input, Result>, Action>,
+  type ReducerState = [State<Input, Result>, FetchStore<Input, Result>]
+  const [[state, storeFromUseReducer], dispatch] = useReducer<
+    Reducer<ReducerState, Action>,
     undefined
   >(
-    (prev, action): State<Input, Result> => {
+    (prev, action): ReducerState => {
       if (action.type === 'NEW_STORE') {
-        if (prev.store === store) {
-          // not changed
-          return prev;
-        }
-        return initializeState(store, initialInput, (a: Action) => dispatch(a));
+        return [
+          initializeState(store, initialInput, (a: Action) => dispatch(a)),
+          store,
+        ];
       }
       if (action.type === 'NEW_INPUT') {
-        return {
-          ...prev,
-          input: action.input,
-          result: store.getResult(action.input),
-        };
+        return [
+          {
+            ...prev[0],
+            input: action.input,
+            result: store.getResult(action.input),
+          },
+          prev[1],
+        ];
       }
       return prev;
     },
     undefined,
-    (): State<Input, Result> => initializeState(
+    (): ReducerState => [
+      initializeState(
+        store,
+        initialInput,
+        (a: Action) => dispatch(a),
+      ),
       store,
-      initialInput,
-      (a: Action) => dispatch(a),
-    ),
+    ],
   );
-  useEffect(() => {
+  if (storeFromUseReducer !== store) {
     dispatch({ type: 'NEW_STORE' });
-  }, [store]);
+  }
   const { input } = state;
   useEffect(() => {
     if (input === undefined) {
