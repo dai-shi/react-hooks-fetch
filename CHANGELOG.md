@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+## [0.15.0] - 2022-02-07
 ### Changed
 - New simplified API (no WeakMap)
 ### Removed
