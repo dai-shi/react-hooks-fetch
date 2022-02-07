@@ -9,18 +9,18 @@ import { FetchStore } from './createFetch';
 
 type Refetch<Input> = (input: Input) => void;
 
-type State<Input, Result> = {
+type FetchState<Input, Result> = {
   store: FetchStore<Input, Result>;
   input: Input | undefined;
   result: Result | undefined;
   refetch: Refetch<Input>;
 };
 
-const initializeState = <Input, Result>(
+const initializeFetchState = <Input, Result>(
   store: FetchStore<Input, Result>,
   initialInput: Input | undefined,
   dispatch: Dispatch<{ type: 'NEW_INPUT', input: Input }>,
-): State<Input, Result> => ({
+): FetchState<Input, Result> => ({
     store,
     input: initialInput,
     result: initialInput === undefined ? undefined : store.getResult(initialInput),
@@ -61,15 +61,15 @@ export function useFetch<Input, Result>(
   initialInput?: Input,
 ) {
   type Action = { type: 'NEW_STORE' } | { type: 'NEW_INPUT', input: Input };
-  type ReducerState = [State<Input, Result>, FetchStore<Input, Result>]
+  type State = [FetchState<Input, Result>, FetchStore<Input, Result>]
   const [[state, storeFromUseReducer], dispatch] = useReducer<
-    Reducer<ReducerState, Action>,
+    Reducer<State, Action>,
     undefined
   >(
-    (prev, action): ReducerState => {
+    (prev, action): State => {
       if (action.type === 'NEW_STORE') {
         return [
-          initializeState(store, initialInput, (a: Action) => dispatch(a)),
+          initializeFetchState(store, initialInput, (a: Action) => dispatch(a)),
           store,
         ];
       }
@@ -86,12 +86,8 @@ export function useFetch<Input, Result>(
       return prev;
     },
     undefined,
-    (): ReducerState => [
-      initializeState(
-        store,
-        initialInput,
-        (a: Action) => dispatch(a),
-      ),
+    (): State => [
+      initializeFetchState(store, initialInput, (a: Action) => dispatch(a)),
       store,
     ],
   );
