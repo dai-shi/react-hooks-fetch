@@ -143,3 +143,9 @@ See [History](./HISTORY.md) for previous implementations.
 *   [useFetch: React custom hook for Fetch API with Suspense and Concurrent Mode in Mind](https://blog.axlight.com/posts/usefetch-react-custom-hook-for-fetch-api-with-suspense-and-concurrent-mode-in-mind/)
 *   [Developing a React Library for Suspense for Data Fetching in Concurrent Mode](https://blog.axlight.com/posts/developing-a-react-library-for-suspense-for-data-fetching-in-concurrent-mode/)
 *   [Diving Into React Suspense Render-as-You-Fetch for REST APIs](https://blog.axlight.com/posts/diving-into-react-suspense-render-as-you-fetch-for-rest-apis/)
+
+## Translations
+
+This is also available in other languages:
+
+- ![ko](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/South-Korea.png) **Korean**: [melonbarCode/react-hooks-fetch](https://github.com/melonbarCode/react-hooks-fetch)
