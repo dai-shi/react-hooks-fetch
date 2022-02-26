@@ -149,3 +149,4 @@ See [History](./HISTORY.md) for previous implementations.
 This is also available in other languages:
 
 - ![ko](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/South-Korea.png) **Korean**: [melonbarCode/react-hooks-fetch](https://github.com/melonbarCode/react-hooks-fetch)
+- :cn: **Chinese**: [kaichii/react-hooks-fetch](https://github.com/kaichii/react-hooks-fetch/blob/main/README-zh.md)
