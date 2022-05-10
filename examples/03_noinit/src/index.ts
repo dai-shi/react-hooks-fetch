@@ -1,8 +1,5 @@
-// eslint-disable-next-line spaced-comment
-/// <reference types="react-dom/experimental" />
-
 import React from 'react';
-import { createRoot } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import App from './App';
 

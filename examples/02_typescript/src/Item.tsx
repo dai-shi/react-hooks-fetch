@@ -5,7 +5,7 @@ import { useFetch } from 'react-hooks-fetch';
 import { store } from './fetchStore';
 import DisplayData from './DisplayData';
 
-const Item: React.FC = () => {
+const Item = () => {
   const [id, setId] = useState('1');
   const { result, refetch } = useFetch(store, '1' as string);
   return (
@@ -16,7 +16,7 @@ const Item: React.FC = () => {
   );
 };
 
-export const ErrorItem: React.FC = () => {
+export const ErrorItem = () => {
   const { result, refetch } = useFetch(store, '1' as string);
   return (
     <div>

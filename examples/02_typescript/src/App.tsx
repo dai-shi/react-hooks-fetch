@@ -18,7 +18,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   );
 };
 
-const App: React.FC = () => (
+const App = () => (
   <ErrorBoundary FallbackComponent={ErrorFallback}>
     <Suspense fallback={<span>Loading...</span>}>
       <Item />

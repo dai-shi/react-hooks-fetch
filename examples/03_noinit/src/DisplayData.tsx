@@ -1,6 +1,3 @@
-// eslint-disable-next-line spaced-comment
-/// <reference types="react/next" />
-
 import React, { useTransition } from 'react';
 
 type Props = {
@@ -13,7 +10,7 @@ type Props = {
   refetch: (input: string) => void;
 };
 
-const DisplayData: React.FC<Props> = ({ id, result, refetch }) => {
+const DisplayData = ({ id, result, refetch }: Props) => {
   const [isPending, startTransition] = useTransition();
   const onClick = () => {
     startTransition(() => {

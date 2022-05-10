@@ -9,7 +9,7 @@ type Props = {
   initialId?: string; // eslint-disable-line react/require-default-props
 };
 
-const Item: React.FC<Props> = ({ initialId }) => {
+const Item = ({ initialId }: Props) => {
   const [id, setId] = useState(initialId);
   const { result, refetch } = useFetch(store, initialId);
   return (
