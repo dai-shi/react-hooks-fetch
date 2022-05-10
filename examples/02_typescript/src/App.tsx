@@ -1,12 +1,14 @@
 import React, { Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
+import { FetchProvider, usePrefetch } from 'react-hooks-fetch';
 
-import { store } from './fetchStore';
+import { desc } from './fetchStore';
 import Item, { ErrorItem } from './Item';
 
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
+  const prefetch = usePrefetch(desc);
   const retry = () => {
-    store.prefetch('1');
+    prefetch('1');
     resetErrorBoundary();
   };
   return (
@@ -19,21 +21,23 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
 };
 
 const App = () => (
-  <ErrorBoundary FallbackComponent={ErrorFallback}>
-    <Suspense fallback={<span>Loading...</span>}>
-      <Item />
-      <hr />
-      <Item />
-      <hr />
-      <Item />
-      <hr />
-      <ErrorItem />
-      <hr />
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+  <FetchProvider initialInputs={[[desc, '1']]}>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Suspense fallback={<span>Loading...</span>}>
+        <Item />
+        <hr />
+        <Item />
+        <hr />
+        <Item />
+        <hr />
         <ErrorItem />
-      </ErrorBoundary>
-    </Suspense>
-  </ErrorBoundary>
+        <hr />
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <ErrorItem />
+        </ErrorBoundary>
+      </Suspense>
+    </ErrorBoundary>
+  </FetchProvider>
 );
 
 export default App;

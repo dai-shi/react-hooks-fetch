@@ -8,5 +8,4 @@ const fetchFunc = async (userId: string) => {
   return result;
 };
 
-export const store = createFetch(fetchFunc);
-store.prefetch('1');
+export const desc = createFetch(fetchFunc);

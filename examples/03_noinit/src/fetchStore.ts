@@ -8,4 +8,9 @@ const fetchFunc = async (userId: string) => {
   return result;
 };
 
-export const store = createFetch(fetchFunc);
+export const desc1 = createFetch(fetchFunc);
+export const desc2 = createFetch(fetchFunc);
+export const desc3 = createFetch(fetchFunc);
+export const desc4 = createFetch(fetchFunc);
+
+export type DescType = typeof desc1;

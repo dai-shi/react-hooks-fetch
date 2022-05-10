@@ -1,2 +1,3 @@
 export { createFetch } from './createFetch';
-export { useFetch } from './useFetch';
+export { useFetch, usePrefetch } from './useFetch';
+export { FetchProvider } from './context';

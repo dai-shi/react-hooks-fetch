@@ -1,27 +1,30 @@
-import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom';
+import React, { Suspense, useTransition } from 'react';
+import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import { createFetch, useFetch } from 'react-hooks-fetch';
+import { FetchProvider, createFetch, useFetch } from 'react-hooks-fetch';
 
 const fetchFunc = async (userId) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const store = createFetch(fetchFunc);
-store.prefetch('1');
+const desc = createFetch(fetchFunc);
 
 const DisplayData = ({ result, refetch }) => {
+  const [isPending, startTransition] = useTransition();
   const onClick = () => {
-    refetch('2');
+    startTransition(() => {
+      refetch('2');
+    });
   };
   return (
     <div>
       <div>First Name: {result.data.first_name}</div>
       <button type="button" onClick={onClick}>Refetch user 2</button>
+      {isPending && 'Pending...'}
     </div>
   );
 };
 
 const Main = () => {
-  const { result, refetch } = useFetch(store, '1');
+  const { result, refetch } = useFetch(desc);
   return <DisplayData result={result} refetch={refetch} />;
 };
 
@@ -30,12 +33,13 @@ const ErrorFallback = ({ error }) => (
 );
 
 const App = () => (
-  <ErrorBoundary FallbackComponent={ErrorFallback}>
-    <Suspense fallback={<span>Loading...</span>}>
-      <Main />
-    </Suspense>
-  </ErrorBoundary>
+  <FetchProvider initialInputs={[[desc, '1']]}>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Suspense fallback={<span>Loading...</span>}>
+        <Main />
+      </Suspense>
+    </ErrorBoundary>
+  </FetchProvider>
 );
 
-// Legacy Mode
-ReactDOM.render(<App />, document.getElementById('app'));
+createRoot(document.getElementById('app')).render(<App />);
