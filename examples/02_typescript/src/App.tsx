@@ -4,7 +4,7 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { FetchProvider, useRefetch } from 'react-hooks-fetch';
 
 import { desc } from './fetchStore';
-import Item, { ErrorItem } from './Item';
+import Item, { ErrorItem, DummyErrorItem } from './Item';
 
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   const refetch = useRefetch(desc);
@@ -36,7 +36,7 @@ const App = () => (
         <ErrorItem />
         <hr />
         <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <ErrorItem />
+          <DummyErrorItem />
         </ErrorBoundary>
       </Suspense>
     </ErrorBoundary>

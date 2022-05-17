@@ -29,4 +29,15 @@ export const ErrorItem = () => {
   );
 };
 
+export const DummyErrorItem = () => {
+  const { result } = useFetch(desc);
+  const [override, setOverride] = useState<typeof result | null>(null);
+  return (
+    <div>
+      <DisplayData id="-1" result={override || result} refetch={() => setOverride({} as typeof result)} />
+      <span>Refetch that causes a fetch error</span>
+    </div>
+  );
+};
+
 export default Item;
