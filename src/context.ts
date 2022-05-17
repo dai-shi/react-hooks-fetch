@@ -10,13 +10,33 @@ import {
 
 import { createContext, useContextSelector, useContextUpdate } from 'use-context-selector';
 
-import { FetchDesc, FetchState } from './types';
-import { createFetchState } from './createFetch';
+import { FetchFunc, FetchState } from './types';
+
+export const createFetchState = <Input, Result>(
+  fn: FetchFunc<Input, Result>,
+  input: Input,
+) => {
+  const state: FetchState<Input, Result> = {
+    input,
+  };
+  state.promise = new Promise<void>((resolve, reject) => {
+    fn(input).then((r) => {
+      state.result = r;
+      resolve();
+    }).catch((e) => {
+      state.error = e;
+      reject(e);
+    }).finally(() => {
+      delete state.promise;
+    });
+  });
+  return state;
+};
 
 const NO_PROVIDER = 'NO_PROVIDER';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type FetchMap = Map<FetchDesc<any, any>, FetchState<any, any>>;
+type FetchMap = Map<FetchFunc<any, any>, FetchState<any, any>>;
 
 type MapState = readonly [
   FetchMap,
@@ -27,7 +47,7 @@ const FetchContext = createContext<MapState | null>(null);
 
 type FetchProviderProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, react/require-default-props
-  initialInputs?: Iterable<readonly [FetchDesc<any, any>, any]>
+  initialInputs?: Iterable<readonly [FetchFunc<any, any>, any]>
   children: ReactNode;
 };
 
@@ -40,7 +60,7 @@ type FetchProviderProps = {
  * import { FetchProvider } from 'react-hooks-fetch';
  *
  * const App = () => (
- *   <FetchProvider initialInputs={[[desc, input]]}>
+ *   <FetchProvider initialInputs={[[fn, input]]}>
  *     ...
  *   </FetchProvider>
  * );
@@ -49,8 +69,8 @@ export const FetchProvider = ({ initialInputs, children }: FetchProviderProps) =
   const createMap = () => {
     const map = new Map();
     if (initialInputs) {
-      for (const [desc, input] of initialInputs) {
-        map.set(desc, createFetchState(desc, input));
+      for (const [fn, input] of initialInputs) {
+        map.set(fn, createFetchState(fn, input));
       }
     }
     return map;
@@ -63,7 +83,7 @@ export const FetchProvider = ({ initialInputs, children }: FetchProviderProps) =
 };
 
 export const useFetchState = <Input, Result>(
-  desc: FetchDesc<Input, Result>,
+  fn: FetchFunc<Input, Result>,
 ) => {
   const state = useContextSelector(
     FetchContext,
@@ -71,7 +91,7 @@ export const useFetchState = <Input, Result>(
       if (!mapState) {
         return NO_PROVIDER;
       }
-      return mapState[0].get(desc) as FetchState<Input, Result> | undefined;
+      return mapState[0].get(fn) as FetchState<Input, Result> | undefined;
     },
   );
   if (state === NO_PROVIDER) {
@@ -81,7 +101,7 @@ export const useFetchState = <Input, Result>(
 };
 
 export const useSetFetchState = <Input, Result>(
-  desc: FetchDesc<Input, Result>,
+  fn: FetchFunc<Input, Result>,
 ) => {
   const update = useContextUpdate(FetchContext);
   const setMapState = useContextSelector(
@@ -100,8 +120,8 @@ export const useSetFetchState = <Input, Result>(
     nextState: FetchState<Input, Result>,
   ) => {
     update(() => {
-      setMapState((prev) => new Map(prev).set(desc, nextState));
+      setMapState((prev) => new Map(prev).set(fn, nextState));
     }, { suspense: true });
-  }, [update, setMapState, desc]);
+  }, [update, setMapState, fn]);
   return setFetchState;
 };

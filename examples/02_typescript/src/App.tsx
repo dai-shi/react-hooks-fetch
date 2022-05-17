@@ -3,11 +3,11 @@ import { flushSync } from 'react-dom';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { FetchProvider, useRefetch } from 'react-hooks-fetch';
 
-import { desc } from './fetchStore';
+import { fetchFunc } from './fetchStore';
 import Item, { ErrorItem, DummyErrorItem } from './Item';
 
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
-  const refetch = useRefetch(desc);
+  const refetch = useRefetch(fetchFunc);
   const retry = () => {
     flushSync(() => {
       refetch('1');
@@ -24,7 +24,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
 };
 
 const App = () => (
-  <FetchProvider initialInputs={[[desc, '1']]}>
+  <FetchProvider initialInputs={[[fetchFunc, '1']]}>
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Suspense fallback={<span>Loading...</span>}>
         <Item />

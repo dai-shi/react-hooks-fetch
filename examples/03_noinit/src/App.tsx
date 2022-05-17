@@ -3,10 +3,10 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { FetchProvider } from 'react-hooks-fetch';
 
 import {
-  desc1,
-  desc2,
-  desc3,
-  desc4,
+  fetchFunc1,
+  fetchFunc2,
+  fetchFunc3,
+  fetchFunc4,
 } from './fetchStore';
 import Item from './Item';
 
@@ -19,19 +19,19 @@ const ErrorFallback = ({ error }: FallbackProps) => (
 
 const App = () => (
   <FetchProvider initialInputs={[
-    [desc1, '1'],
-    [desc2, '2'],
+    [fetchFunc1, '1'],
+    [fetchFunc2, '2'],
   ]}
   >
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Suspense fallback={<span>Loading...</span>}>
-        <Item desc={desc1} />
+        <Item fetchFunc={fetchFunc1} />
         <hr />
-        <Item desc={desc2} />
+        <Item fetchFunc={fetchFunc2} />
         <hr />
-        <Item desc={desc3} />
+        <Item fetchFunc={fetchFunc3} />
         <hr />
-        <Item desc={desc4} />
+        <Item fetchFunc={fetchFunc4} />
       </Suspense>
     </ErrorBoundary>
   </FetchProvider>

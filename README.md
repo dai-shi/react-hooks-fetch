@@ -10,9 +10,8 @@ Minimal data fetching library with React Suspense
 ## Introduction
 
 This library provides a React hook `useFetch` for any async functions.
-It utilizes React Suspense and requires to create
-a descriptor in advance with `createFetch`.
-`FetchProvider` is to give initial inputs to all descriptors.
+It utilizes React Suspense and
+`FetchProvider` is required with initial inputs to all async functions.
 
 Project status: Experimental. We need to collect feedbacks.
 
@@ -35,23 +34,23 @@ npm install react-hooks-fetch
 import React, { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import { FetchProvider, createFetch, useFetch } from 'react-hooks-fetch';
+import { FetchProvider, useFetch } from 'react-hooks-fetch';
 
 // 1️⃣
-// Create a fetch descriptor with an async function.
-// The async function can take one input argument.
-const desc = createFetch(async (userId) => {
+// Create a fetch function.
+// The function can take one input argument.
+const fetchFunc = async (userId) => {
   const res = await fetch(`https://reqres.in/api/users/${userId}?delay=3`);
   const data = await res.json();
   return data;
-});
+};
 
 // 2️⃣
-// Define a component to use the fetch descriptor.
-// The `refetch` function take the input argument,
+// Define a component to use the fetch function.
+// The `refetch` function take an input argument,
 // and it will start fetching before rendering.
 const Main = () => {
-  const { result, refetch } = useFetch(store);
+  const { result, refetch } = useFetch(fetchFunc);
   const handleClick = () => {
     refetch('2');
   };
@@ -67,7 +66,7 @@ const Main = () => {
 // FetchProvider is required with initialInputs.
 // We should put ErrorBoundary and Suspense inside FetchProvider.
 const App = () => (
-  <FetchProvider initialInputs={[[desc, '1']]}>
+  <FetchProvider initialInputs={[[fetchFunc, '1']]}>
     <ErrorBoundary fallback={<h1>Error</h1>}>
       <Suspense fallback={<span>Loading...</span>}>
         <Main />
@@ -100,34 +99,11 @@ Put this component higher in the component tree
 import { FetchProvider } from 'react-hooks-fetch';
 
 const App = () => (
-  <FetchProvider initialInputs={[[desc, input]]}>
+  <FetchProvider initialInputs={[[fn, input]]}>
     ...
   </FetchProvider>
 );
 ```
-
-### createFetch
-
-create fetch descriptor
-
-#### Parameters
-
-*   `fetchFunc` **FetchFunc\<Input, Result>** 
-
-#### Examples
-
-```javascript
-import { createFetch } from 'react-hooks-fetch';
-
-const fetchFunc = async (userId) => {
-  const res = await fetch(`https://reqres.in/api/users/${userId}?delay=3`));
-  const data = await res.json();
-  return data;
-};
-const desc = createFetch(fetchFunc);
-```
-
-Returns **FetchDesc\<Input, Result>** 
 
 ### useRefetch
 
@@ -135,7 +111,7 @@ useRefetch hook
 
 #### Parameters
 
-*   `desc` **FetchDesc\<Input, Result>** 
+*   `fn` **FetchFunc\<Input, Result>** 
 
 #### Examples
 
@@ -152,7 +128,7 @@ useFetch hook
 
 #### Parameters
 
-*   `desc` **FetchDesc\<Input, Result>** 
+*   `fn` **FetchFunc\<Input, Result>** 
 *   `options` **{allowUndefined: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)}?** 
 
 #### Examples

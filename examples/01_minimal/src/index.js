@@ -2,10 +2,9 @@ import React, { Suspense, useTransition } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import { FetchProvider, createFetch, useFetch } from 'react-hooks-fetch';
+import { FetchProvider, useFetch } from 'react-hooks-fetch';
 
 const fetchFunc = async (userId) => (await fetch(`https://reqres.in/api/users/${userId}?delay=3`)).json();
-const desc = createFetch(fetchFunc);
 
 const DisplayData = ({ result, refetch }) => {
   const [isPending, startTransition] = useTransition();
@@ -24,7 +23,7 @@ const DisplayData = ({ result, refetch }) => {
 };
 
 const Main = () => {
-  const { result, refetch } = useFetch(desc);
+  const { result, refetch } = useFetch(fetchFunc);
   return <DisplayData result={result} refetch={refetch} />;
 };
 
@@ -33,7 +32,7 @@ const ErrorFallback = ({ error }) => (
 );
 
 const App = () => (
-  <FetchProvider initialInputs={[[desc, '1']]}>
+  <FetchProvider initialInputs={[[fetchFunc, '1']]}>
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Suspense fallback={<span>Loading...</span>}>
         <Main />

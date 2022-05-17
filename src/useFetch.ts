@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
 
-import { FetchDesc } from './types';
-import { useFetchState, useSetFetchState } from './context';
-import { createFetchState } from './createFetch';
+import { FetchFunc } from './types';
+import { createFetchState, useFetchState, useSetFetchState } from './context';
 
 /**
  * useRefetch hook
@@ -14,17 +13,17 @@ import { createFetchState } from './createFetch';
  * Refetch('1');
  */
 export function useRefetch<Input, Result>(
-  desc: FetchDesc<Input, Result>,
+  fn: FetchFunc<Input, Result>,
 ) {
-  const setFetchState = useSetFetchState(desc);
+  const setFetchState = useSetFetchState(fn);
   const refetch = useCallback((input: Input) => {
-    setFetchState(createFetchState(desc, input));
-  }, [setFetchState, desc]);
+    setFetchState(createFetchState(fn, input));
+  }, [setFetchState, fn]);
   return refetch;
 }
 
 export function useFetch<Input, Result>(
-  desc: FetchDesc<Input, Result>,
+  fn: FetchFunc<Input, Result>,
   options: { allowUndefined: true },
 ): {
   input: Input | undefined;
@@ -33,7 +32,7 @@ export function useFetch<Input, Result>(
 };
 
 export function useFetch<Input, Result>(
-  desc: FetchDesc<Input, Result>,
+  fn: FetchFunc<Input, Result>,
 ): {
   input: Input;
   result: Result;
@@ -49,10 +48,10 @@ export function useFetch<Input, Result>(
  * const { input, result, refetch } = useFetch(desc);
  */
 export function useFetch<Input, Result>(
-  desc: FetchDesc<Input, Result>,
+  fn: FetchFunc<Input, Result>,
   options?: { allowUndefined: boolean },
 ) {
-  let state = useFetchState(desc);
+  let state = useFetchState(fn);
   if (!state && options?.allowUndefined) {
     state = { input: undefined as unknown as Input };
   }
@@ -68,6 +67,6 @@ export function useFetch<Input, Result>(
   return {
     input: state.input,
     result: state.result as Result,
-    refetch: useRefetch(desc),
+    refetch: useRefetch(fn),
   };
 }

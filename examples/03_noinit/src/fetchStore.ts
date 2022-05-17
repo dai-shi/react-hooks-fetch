@@ -1,5 +1,3 @@
-import { createFetch } from 'react-hooks-fetch';
-
 export type Result = { data: { first_name: string } };
 
 const fetchFunc = async (userId: string) => {
@@ -8,9 +6,7 @@ const fetchFunc = async (userId: string) => {
   return result;
 };
 
-export const desc1 = createFetch(fetchFunc);
-export const desc2 = createFetch(fetchFunc);
-export const desc3 = createFetch(fetchFunc);
-export const desc4 = createFetch(fetchFunc);
-
-export type DescType = typeof desc1;
+export const fetchFunc1 = (userId: string) => fetchFunc(userId);
+export const fetchFunc2 = (userId: string) => fetchFunc(userId);
+export const fetchFunc3 = (userId: string) => fetchFunc(userId);
+export const fetchFunc4 = (userId: string) => fetchFunc(userId);

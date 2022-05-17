@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 
 import { useFetch } from 'react-hooks-fetch';
 
-import { desc } from './fetchStore';
+import { fetchFunc } from './fetchStore';
 import DisplayData from './DisplayData';
 
 const Item = () => {
-  const { input, result, refetch } = useFetch(desc);
+  const { input, result, refetch } = useFetch(fetchFunc);
   const [id, setId] = useState(input);
   useEffect(() => {
     setId(input);
@@ -20,7 +20,7 @@ const Item = () => {
 };
 
 export const ErrorItem = () => {
-  const { result, refetch } = useFetch(desc);
+  const { result, refetch } = useFetch(fetchFunc);
   return (
     <div>
       <DisplayData id="-1" result={result} refetch={refetch} />
@@ -30,7 +30,7 @@ export const ErrorItem = () => {
 };
 
 export const DummyErrorItem = () => {
-  const { result } = useFetch(desc);
+  const { result } = useFetch(fetchFunc);
   const [override, setOverride] = useState<typeof result | null>(null);
   return (
     <div>

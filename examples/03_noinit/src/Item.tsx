@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 
 import { useFetch } from 'react-hooks-fetch';
 
-import { DescType } from './fetchStore';
+import { Result } from './fetchStore';
 import DisplayData from './DisplayData';
 
 type Props = {
-  desc: DescType;
+  fetchFunc: (userId: string) => Promise<Result>;
 };
 
-const Item = ({ desc }: Props) => {
-  const { input, result, refetch } = useFetch(desc, { allowUndefined: true });
+const Item = ({ fetchFunc }: Props) => {
+  const { input, result, refetch } = useFetch(fetchFunc, { allowUndefined: true });
   const [id, setId] = useState(input);
   return (
     <div>
