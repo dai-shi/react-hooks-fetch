@@ -1,2 +1,2 @@
-export { createFetch } from './createFetch';
-export { useFetch } from './useFetch';
+export { useFetch, useRefetch } from './useFetch';
+export { FetchProvider } from './FetchProvider';

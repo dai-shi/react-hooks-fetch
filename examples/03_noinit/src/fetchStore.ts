@@ -1,5 +1,3 @@
-import { createFetch } from 'react-hooks-fetch';
-
 export type Result = { data: { first_name: string } };
 
 const fetchFunc = async (userId: string) => {
@@ -8,4 +6,7 @@ const fetchFunc = async (userId: string) => {
   return result;
 };
 
-export const store = createFetch(fetchFunc);
+export const fetchFunc1 = (userId: string) => fetchFunc(userId);
+export const fetchFunc2 = (userId: string) => fetchFunc(userId);
+export const fetchFunc3 = (userId: string) => fetchFunc(userId);
+export const fetchFunc4 = (userId: string) => fetchFunc(userId);

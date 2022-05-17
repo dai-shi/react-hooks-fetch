@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 
 import { useFetch } from 'react-hooks-fetch';
 
-import { store } from './fetchStore';
+import { Result } from './fetchStore';
 import DisplayData from './DisplayData';
 
 type Props = {
-  initialId?: string; // eslint-disable-line react/require-default-props
+  fetchFunc: (userId: string) => Promise<Result>;
 };
 
-const Item = ({ initialId }: Props) => {
-  const [id, setId] = useState(initialId);
-  const { result, refetch } = useFetch(store, initialId);
+const Item = ({ fetchFunc }: Props) => {
+  const { input, result, refetch } = useFetch(fetchFunc, { allowUndefined: true });
+  const [id, setId] = useState(input);
   return (
     <div>
       User ID: <input value={id || ''} onChange={(e) => setId(e.target.value)} />

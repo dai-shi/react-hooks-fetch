@@ -1,36 +1,37 @@
 import React, { Suspense } from 'react';
 import { render, cleanup } from '@testing-library/react';
 
-import { createFetch, useFetch } from '../src/index';
+import { FetchProvider, useFetch, useRefetch } from '../src/index';
 
 describe('basic spec', () => {
   afterEach(cleanup);
 
   it('should have a function', () => {
-    expect(createFetch).toBeDefined();
+    expect(FetchProvider).toBeDefined();
     expect(useFetch).toBeDefined();
+    expect(useRefetch).toBeDefined();
   });
 
   it('should create a component', async () => {
     const initialUrl = 'http://...';
     const responses: Record<string, string> = { [initialUrl]: 'test data' };
-    const store = createFetch((url: string) => Promise.resolve(responses[url]));
-    store.prefetch(initialUrl);
-
+    const fn = (url: string) => Promise.resolve(responses[url]);
     const DisplayData = () => {
-      const { result } = useFetch(store, initialUrl);
+      const { result } = useFetch(fn);
       expect(result).toBe(responses[initialUrl]);
       return <span>{result}</span>;
     };
 
     const App = () => (
-      <Suspense fallback={<span>Loading...</span>}>
-        <DisplayData />
-      </Suspense>
+      <FetchProvider initialInputs={[[fn, initialUrl]]}>
+        <Suspense fallback={<span>Loading...</span>}>
+          <DisplayData />
+        </Suspense>
+      </FetchProvider>
     );
 
-    const { getByText, findByText } = render(<App />);
-    getByText(/loading/i);
+    const { findByText } = render(<App />);
+    await findByText('Loading...');
     await findByText(responses[initialUrl]);
   });
 });
