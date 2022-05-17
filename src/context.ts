@@ -6,18 +6,12 @@ import {
   createElement,
   useCallback,
   useState,
-  // wip
-  createContext,
-  useContext,
 } from 'react';
 
-// import { createContext, useContextSelector, useContextUpdate } from 'use-context-selector';
+import { createContext, useContextSelector, useContextUpdate } from 'use-context-selector';
 
 import { FetchDesc, FetchState } from './types';
 import { createFetchState } from './createFetch';
-
-const useContextUpdate = (_Ctx: any) => (fn: any) => fn();
-const useContextSelector = (Ctx: any, selector: any) => selector(useContext(Ctx));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FetchMap = Map<FetchDesc<any, any>, FetchState<any, any>>;
@@ -105,7 +99,7 @@ export const useSetFetchState = <Input, Result>(
   ) => {
     update(() => {
       setMapState((prev) => new Map(prev).set(desc, nextState));
-    });
+    }, { suspense: true });
   }, [update, setMapState, desc]);
   return setFetchState;
 };
