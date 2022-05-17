@@ -11,14 +11,15 @@ Minimal data fetching library with React Suspense
 
 This library provides a React hook `useFetch` for any async functions.
 It utilizes React Suspense and requires to create
-a store in advance with `createFetch`.
-The API is designed to force fetching data before rendering.
+a descriptor in advance with `createFetch`.
+`FetchProvider` is to give initial inputs to all descriptors.
 
 Project status: Experimental. We need to collect feedbacks.
 
 Design choices:
 
 *   No string keys
+*   Force prefetching
 *   Cache size one
 *   React context based
 
