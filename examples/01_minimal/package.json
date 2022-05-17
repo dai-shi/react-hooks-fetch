@@ -5,6 +5,7 @@
   "dependencies": {
     "react": "latest",
     "react-dom": "latest",
+    "react-error-boundary": "latest",
     "react-hooks-fetch": "latest",
     "react-scripts": "latest"
   },
