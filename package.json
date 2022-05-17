@@ -1,7 +1,7 @@
 {
   "name": "react-hooks-fetch",
   "description": "Minimal data fetching library with React Suspense",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "author": "Daishi Kato",
   "repository": {
     "type": "git",
@@ -81,6 +81,17 @@
     "webpack-dev-server": "^4.9.0"
   },
   "peerDependencies": {
-    "react": ">=16.8.0"
+    "react": ">=16.8.0",
+    "react-dom": "*",
+    "react-native": "*",
+    "scheduler": ">=0.19.0"
+  },
+  "peerDependenciesMeta": {
+    "react-dom": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    }
   }
 }

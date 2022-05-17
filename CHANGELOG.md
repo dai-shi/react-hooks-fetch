@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
+## [0.16.1] - 2022-05-17
+### Changed
+- Fix peer dependencies
+
 ## [0.16.0] - 2022-05-17
 ### Changed
-- New context-based API (cache size one)
+- New context-based API (cache size one) #36
 
 ## [0.15.0] - 2022-02-07
 ### Changed
