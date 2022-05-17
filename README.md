@@ -128,6 +128,23 @@ const desc = createFetch(fetchFunc);
 
 Returns **FetchDesc\<Input, Result>** 
 
+### useRefetch
+
+useRefetch hook
+
+#### Parameters
+
+*   `desc` **FetchDesc\<Input, Result>** 
+
+#### Examples
+
+```javascript
+import { useFetch } from 'react-hooks-fetch';
+
+const Refetch = useRefetch(desc);
+Refetch('1');
+```
+
 ### useFetch
 
 useFetch hook
@@ -143,23 +160,6 @@ useFetch hook
 import { useFetch } from 'react-hooks-fetch';
 
 const { input, result, refetch } = useFetch(desc);
-```
-
-### usePrefetch
-
-usePrefetch hook
-
-#### Parameters
-
-*   `desc` **FetchDesc\<Input, Result>** 
-
-#### Examples
-
-```javascript
-import { useFetch } from 'react-hooks-fetch';
-
-const prefetch = usePrefetch(desc);
-prefetch('1');
 ```
 
 ## Examples

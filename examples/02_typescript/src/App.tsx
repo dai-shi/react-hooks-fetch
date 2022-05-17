@@ -1,14 +1,14 @@
 import React, { Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
-import { FetchProvider, usePrefetch } from 'react-hooks-fetch';
+import { FetchProvider, useRefetch } from 'react-hooks-fetch';
 
 import { desc } from './fetchStore';
 import Item, { ErrorItem } from './Item';
 
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
-  const prefetch = usePrefetch(desc);
+  const refetch = useRefetch(desc);
   const retry = () => {
-    prefetch('1');
+    refetch('1');
     resetErrorBoundary();
   };
   return (

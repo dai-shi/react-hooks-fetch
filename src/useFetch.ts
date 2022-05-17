@@ -4,6 +4,25 @@ import { FetchDesc } from './types';
 import { useFetchState, useSetFetchState } from './context';
 import { createFetchState } from './createFetch';
 
+/**
+ * useRefetch hook
+ *
+ * @example
+ * import { useFetch } from 'react-hooks-fetch';
+ *
+ * const Refetch = useRefetch(desc);
+ * Refetch('1');
+ */
+export function useRefetch<Input, Result>(
+  desc: FetchDesc<Input, Result>,
+) {
+  const setFetchState = useSetFetchState(desc);
+  const refetch = useCallback((input: Input) => {
+    setFetchState(createFetchState(desc, input));
+  }, [setFetchState, desc]);
+  return refetch;
+}
+
 export function useFetch<Input, Result>(
   desc: FetchDesc<Input, Result>,
   options: { allowUndefined: true },
@@ -46,32 +65,9 @@ export function useFetch<Input, Result>(
   if ('error' in state) {
     throw state.error;
   }
-  const setFetchState = useSetFetchState(desc);
-  const refetch = useCallback((input: Input) => {
-    setFetchState(createFetchState(desc, input));
-  }, [setFetchState, desc]);
   return {
     input: state.input,
     result: state.result as Result,
-    refetch,
+    refetch: useRefetch(desc),
   };
-}
-
-/**
- * usePrefetch hook
- *
- * @example
- * import { useFetch } from 'react-hooks-fetch';
- *
- * const prefetch = usePrefetch(desc);
- * prefetch('1');
- */
-export function usePrefetch<Input, Result>(
-  desc: FetchDesc<Input, Result>,
-) {
-  const setFetchState = useSetFetchState(desc);
-  const prefetch = useCallback((input: Input) => {
-    setFetchState(createFetchState(desc, input));
-  }, [setFetchState, desc]);
-  return prefetch;
 }
