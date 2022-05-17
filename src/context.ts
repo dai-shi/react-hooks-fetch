@@ -13,6 +13,8 @@ import { createContext, useContextSelector, useContextUpdate } from 'use-context
 import { FetchDesc, FetchState } from './types';
 import { createFetchState } from './createFetch';
 
+const NO_PROVIDER = 'NO_PROVIDER';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FetchMap = Map<FetchDesc<any, any>, FetchState<any, any>>;
 
@@ -67,12 +69,12 @@ export const useFetchState = <Input, Result>(
     FetchContext,
     (mapState) => {
       if (!mapState) {
-        return 'NO_PROVIDER';
+        return NO_PROVIDER;
       }
       return mapState[0].get(desc) as FetchState<Input, Result> | undefined;
     },
   );
-  if (state === 'NO_PROVIDER') {
+  if (state === NO_PROVIDER) {
     throw new Error('missing Provider');
   }
   return state;
@@ -86,12 +88,12 @@ export const useSetFetchState = <Input, Result>(
     FetchContext,
     (mapState) => {
       if (!mapState) {
-        return 'NO_PROVIDER';
+        return NO_PROVIDER;
       }
       return mapState[1];
     },
   );
-  if (setMapState === 'NO_PROVIDER') {
+  if (setMapState === NO_PROVIDER) {
     throw new Error('missing Provider');
   }
   const setFetchState = useCallback((
