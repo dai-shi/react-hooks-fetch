@@ -10,7 +10,14 @@ import {
 
 import { createContext, useContextSelector, useContextUpdate } from 'use-context-selector';
 
-import { FetchFunc, FetchState } from './types';
+export type FetchFunc<Input, Result> = (input: Input) => Promise<Result>;
+
+export type FetchState<Input, Result> = {
+  input: Input;
+  result?: Result;
+  error?: unknown;
+  promise?: Promise<void>;
+}
 
 export const createFetchState = <Input, Result>(
   fn: FetchFunc<Input, Result>,

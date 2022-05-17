@@ -1,7 +1,11 @@
 import { useCallback } from 'react';
 
-import { FetchFunc } from './types';
-import { createFetchState, useFetchState, useSetFetchState } from './context';
+import {
+  FetchFunc,
+  createFetchState,
+  useFetchState,
+  useSetFetchState,
+} from './FetchProvider';
 
 /**
  * useRefetch hook
