@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+## [0.16.0] - 2022-05-17
 ### Changed
 - New context-based API (cache size one)
 

@@ -1,7 +1,7 @@
 {
   "name": "react-hooks-fetch",
   "description": "Minimal data fetching library with React Suspense",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "author": "Daishi Kato",
   "repository": {
     "type": "git",
