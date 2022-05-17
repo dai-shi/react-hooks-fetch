@@ -32,6 +32,6 @@ describe('basic spec', () => {
 
     const { findByText } = render(<App />);
     await findByText('Loading...');
-    await findByText(responses[initialUrl]);
+    await findByText(responses[initialUrl] as string);
   });
 });
