@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+import { flushSync } from 'react-dom';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { FetchProvider, useRefetch } from 'react-hooks-fetch';
 
@@ -8,7 +9,9 @@ import Item, { ErrorItem } from './Item';
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   const refetch = useRefetch(desc);
   const retry = () => {
-    refetch('1');
+    flushSync(() => {
+      refetch('1');
+    });
     resetErrorBoundary();
   };
   return (
