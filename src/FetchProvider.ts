@@ -61,7 +61,7 @@ type FetchProviderProps = {
 /**
  * FetchProvider component
  *
- * Put this component higher in the component tree
+ * Put this component higher in the component tree.
  *
  * @example
  * import { FetchProvider } from 'react-hooks-fetch';

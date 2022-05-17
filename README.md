@@ -10,8 +10,8 @@ Minimal data fetching library with React Suspense
 ## Introduction
 
 This library provides a React hook `useFetch` for any async functions.
-It utilizes React Suspense and `FetchProvider` is required
-with initial inputs to be provided for all async functions.
+It utilizes React Suspense and `FetchProvider` is required with initial inputs.
+The initial inputs are used to run all async function in the initial render.
 
 Project status: Experimental. We need to collect feedbacks.
 
@@ -84,7 +84,7 @@ const App = () => (
 
 FetchProvider component
 
-Put this component higher in the component tree
+Put this component higher in the component tree.
 
 #### Parameters
 
