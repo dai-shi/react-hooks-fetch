@@ -6,11 +6,13 @@ import { createFetchState, useFetchState, useSetFetchState } from './context';
 /**
  * useRefetch hook
  *
+ * This returns only `refetch` part of what `useFetch` returns.
+ *
  * @example
  * import { useFetch } from 'react-hooks-fetch';
  *
- * const Refetch = useRefetch(desc);
- * Refetch('1');
+ * const refetch = useRefetch(desc);
+ * refetch('1');
  */
 export function useRefetch<Input, Result>(
   fn: FetchFunc<Input, Result>,
@@ -41,6 +43,8 @@ export function useFetch<Input, Result>(
 
 /**
  * useFetch hook
+ *
+ * This is the main hook to be used.
  *
  * @example
  * import { useFetch } from 'react-hooks-fetch';

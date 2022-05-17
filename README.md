@@ -109,6 +109,8 @@ const App = () => (
 
 useRefetch hook
 
+This returns only `refetch` part of what `useFetch` returns.
+
 #### Parameters
 
 *   `fn` **FetchFunc\<Input, Result>** 
@@ -118,13 +120,15 @@ useRefetch hook
 ```javascript
 import { useFetch } from 'react-hooks-fetch';
 
-const Refetch = useRefetch(desc);
-Refetch('1');
+const refetch = useRefetch(desc);
+refetch('1');
 ```
 
 ### useFetch
 
 useFetch hook
+
+This is the main hook to be used.
 
 #### Parameters
 
