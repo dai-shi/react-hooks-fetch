@@ -1,6 +1,6 @@
 # react-hooks-fetch
 
-[![CI](https://img.shields.io/github/workflow/status/dai-shi/react-hooks-fetch/CI)](https://github.com/dai-shi/react-hooks-fetch/actions?query=workflow%3ACI)
+[![CI](https://img.shields.io/github/actions/workflow/status/dai-shi/react-hooks-fetch/ci.yml?branch=main)](https://github.com/dai-shi/react-hooks-fetch/actions?query=workflow%3ACI)
 [![npm](https://img.shields.io/npm/v/react-hooks-fetch)](https://www.npmjs.com/package/react-hooks-fetch)
 [![size](https://img.shields.io/bundlephobia/minzip/react-hooks-fetch)](https://bundlephobia.com/result?p=react-hooks-fetch)
 [![discord](https://img.shields.io/discord/627656437971288081)](https://discord.gg/MrQdmzd)
