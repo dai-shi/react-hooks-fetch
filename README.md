@@ -1,3 +1,7 @@
+This project is no longer maintained. It was a long journey to explore the possibilities for data fetching with hooks and suspense, but with React 19, the official way to do data fetching with suspense is to use server components. If you need a client-side solution, check out [Jotai](https://github.com/pmndrs/jotai), which provides similar capabilities to this library in its latest state.
+
+---
+
 # react-hooks-fetch
 
 [![CI](https://img.shields.io/github/actions/workflow/status/dai-shi/react-hooks-fetch/ci.yml?branch=main)](https://github.com/dai-shi/react-hooks-fetch/actions?query=workflow%3ACI)
